@@ -23,24 +23,21 @@ class QueriedDataPool(Queryable):
     def __init__(self):
         self._subscriber: List[DataSubscriber] = []
 
-        self.queries: NDArray[Number, Shape["query_nr, ... query_dim"]] = None
-        self.results: NDArray[Number, Shape["query_nr, ... result_dim"]] = None
+        self.queries: NDArray[Shape["query_nr, ... query_dim"], Number] = None
+        self.results: NDArray[Shape["query_nr, ... result_dim"], Number] = None
 
-        self.last_queries: NDArray[Number, Shape["query_nr, ... query_dim"]] = None
+        self.last_queries: NDArray[Shape["query_nr, ... query_dim"], Number] = None
 
     def subscribe(self, subscriber):
         self._subscriber.append(subscriber)
 
 
-    def add(self, data_points: Tuple[NDArray[Number, Shape["query_nr, ... query_dim"]], NDArray[Number, Shape["query_nr, ... result_dim"]]]):
+    def add(self, data_points: Tuple[NDArray[Shape["query_nr, ... query_dim"], Number], NDArray[Shape["query_nr, ... result_dim"], Number]]):
         queries, results = data_points
 
-        if self.queries is None:
-            self.queries = queries
-            self.results = results
-        else:
-            self.queries = np.concatenate((self.queries, queries))
-            self.results = np.concatenate((self.results, results))
+
+        self.queries = np.concatenate((self.queries, queries))
+        self.results = np.concatenate((self.results, results))
         
         self.last_queries = queries
 
