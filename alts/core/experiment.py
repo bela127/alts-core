@@ -21,7 +21,7 @@ class Experiment():
 
         self.initial_query_sampler = bp.initial_query_sampler(self.oracle)
         self.query_optimizer = bp.query_optimizer(self.experiment_modules)
-        self.stopping_criteria = bp.stopping_criteria()
+        self.stopping_criteria = bp.stopping_criteria(self)
 
 
 

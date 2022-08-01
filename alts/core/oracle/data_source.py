@@ -18,3 +18,7 @@ class DataSource(Queryable):
 
     def query(self, queries: NDArray[Number, Shape["query_nr, ... query_dim"]]) -> Tuple[NDArray[Number, Shape["query_nr, ... query_dim"]], NDArray[Number, Shape["query_nr, ... result_dim"]]]:
         raise NotImplementedError
+    
+    @property
+    def exhausted(self):
+        return False

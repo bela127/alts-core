@@ -27,6 +27,7 @@ class QueriedDataPool(Queryable):
         self.results: NDArray[Shape["query_nr, ... result_dim"], Number] = None
 
         self.last_queries: NDArray[Shape["query_nr, ... query_dim"], Number] = None
+        self.last_results: NDArray[Shape["query_nr, ... result_dim"], Number] = None
 
     def subscribe(self, subscriber):
         self._subscriber.append(subscriber)
@@ -40,6 +41,7 @@ class QueriedDataPool(Queryable):
         self.results = np.concatenate((self.results, results))
         
         self.last_queries = queries
+        self.last_results = results
 
         for subscriber in self._subscriber:
             subscriber.update()
@@ -53,6 +55,7 @@ class QueriedDataPool(Queryable):
         obj.results = np.empty((0,*obj._oracle_data_pool.result_shape))
 
         obj.last_queries = np.empty((0,*obj._oracle_query_pool.query_shape))
+        obj.last_results = np.empty((0,*obj._oracle_data_pool.result_shape))
 
 
         return obj
