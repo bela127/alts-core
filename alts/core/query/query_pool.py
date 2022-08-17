@@ -21,7 +21,7 @@ class QueryPool():
     _last_queries: Optional[NDArray[Number, Shape["query_count, ... query_shape"]]] = field(init=False, default=None)
 
 
-    def add_queries(self, queries):
+    def add_queries(self, queries: NDArray[Number, Shape["query_count, ... query_shape"]]):
         if self._queries is None:
             self._queries = queries
         else: 
@@ -49,3 +49,6 @@ class QueryPool():
         if self._queries is None:
             raise LookupError("there are infinit queries continues pool")
         return self._queries
+
+    def copy(self):
+        return QueryPool(query_count=self.query_count, query_ranges=self.query_ranges, query_shape=self.query_shape)
