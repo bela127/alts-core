@@ -8,12 +8,12 @@ if TYPE_CHECKING:
     from typing import Callable, Optional
     from alts.core.experiment import Experiment
 
-from alts.core.configuration import Configurable
+from alts.core.configuration import Configurable, post_init
 
 
 
 class Evaluator(Configurable):
-    experiment: Experiment
+    experiment: Experiment = post_init()
 
     def register(self, experiment: Experiment):
         self.experiment = experiment

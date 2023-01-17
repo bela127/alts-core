@@ -3,21 +3,23 @@ from typing import TYPE_CHECKING
 
 from dataclasses import dataclass, field
 
-from alts.core.configuration import Configurable
+from alts.core.configuration import Configurable, Required, is_set, post_init
 
 if TYPE_CHECKING:
+    from typing_extensions import Self
     from typing import Tuple, List
     from alts.core.experiment import Experiment
 
 @dataclass
 class StoppingCriteria(Configurable):
-    exp: Experiment = field(init=False)
+    exp: Experiment = post_init()
 
-    def next(self, iteration: int) -> bool:
+    @property
+    def next(self) -> bool:
         return True
     
-    def __call__(self, exp: Experiment = None, **kwargs) -> Self:
+    def __call__(self, exp: Required[Experiment] = None, **kwargs) -> Self:
         obj = super().__call__( **kwargs)
-        obj.exp = exp
+        obj.exp = is_set(exp)
         return obj
     

@@ -26,7 +26,10 @@ def load_module(dirpath: str, file_name: str):
         raise ImportError()
     else:
         module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
+        if spec.loader is None:
+            raise ImportError()
+        else:
+            spec.loader.exec_module(module)
         return module
 
 def set_exp_path_and_name(module: ModuleType, exp_path: str):
@@ -41,7 +44,7 @@ def set_exp_path_and_name(module: ModuleType, exp_path: str):
             blueprints: List[Blueprint] = module.blueprints
             for blueprint in blueprints:
                 blueprint.exp_path = exp_path
-                blueprint.exp_name = module.__name__ + str(blueprint.exp_name)
+                blueprint.exp_name = f"{module.__name__}-{str(blueprint.exp_name)}"
             return blueprints
         except AttributeError:
             print("loaded file contains no blueprints, skipping file!")

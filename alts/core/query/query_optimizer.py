@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from dataclasses import dataclass
+from alts.core.configuration import Required, init
 
 from alts.core.experiment_module import ExperimentModule
 
@@ -17,30 +18,15 @@ if TYPE_CHECKING:
     
 @dataclass
 class QueryOptimizer(ExperimentModule):
-    selection_criteria: SelectionCriteria
-    num_queries: int
+    selection_criteria: SelectionCriteria = init()
 
-    def select(self, num_queries = None) -> Tuple[NDArray[Number, Shape["query_nr, ... query_dims"]], NDArray[Number, Shape["query_nr, query_score[1]"]]]:
-        if num_queries is None: num_queries = self.num_queries
+    def __post_init__(self):
+        super().__post_init__()
+        self.selection_criteria = self.selection_criteria(exp_modules = self.exp_modules)
+
+    def select(self, num_queries = None) -> Tuple[NDArray[Shape["query_nr, ... query_dims"], Number], NDArray[Shape["query_nr, [query_score]"], Number]]:
         raise NotImplementedError
 
-    def __call__(self, exp_modules: ExperimentModules = None, **kwargs) -> Self:
+    def __call__(self, exp_modules: Required[ExperimentModules] = None, **kwargs) -> Self:
         obj = super().__call__(exp_modules, **kwargs)
-        obj.selection_criteria = obj.selection_criteria(exp_modules)
-        return obj
-
-@dataclass
-class NoQueryOptimizer(QueryOptimizer):
-    query_sampler: QuerySampler
-
-    def select(self, num_queries = None):
-        if num_queries is None: num_queries = self.num_queries
-
-        queries = self.query_sampler.sample(self.num_queries)
-
-        return queries, None
-
-    def __call__(self, exp_modules: ExperimentModules = None, **kwargs) -> Self:
-        obj = super().__call__(exp_modules, **kwargs)
-        obj.query_sampler = obj.query_sampler(obj.selection_criteria)
         return obj

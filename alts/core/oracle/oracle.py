@@ -1,12 +1,12 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
-from alts.core.oracle.data_source import DataSource
-from alts.core.oracle.augmentation import Augmentation
-from alts.core.query.query_pool import QueryPool
-from alts.core.queryable import Queryable
+from alts.core.configuration import Configurable, Required, is_set
+
+from alts.core.oracle.query_queue import QueryQueue
+from alts.core.data.constrains import QueryConstrained, QueryConstrain
 
 
 if TYPE_CHECKING:
@@ -15,36 +15,18 @@ if TYPE_CHECKING:
     from nptyping import NDArray, Number, Shape
 
 
-@dataclass
-class Oracle(Queryable):
+class Oracle(QueryConstrained):
     """
-    Uses the given retrievement strategy in order to retrieve data from the given data source
+    Request a query
     """
-    data_source: DataSource
-    augmentation: Augmentation
+    query_queue: QueryQueue
 
+    def __init__(self, query_queue: QueryQueue) -> None:
+        self.query_queue = is_set(query_queue)
 
-    def query(self, query_candidates: NDArray[Number, Shape["query_nr, ... query_dim"]]) -> Tuple[NDArray[Number, Shape["query_nr, ... query_dim"]], NDArray[Number, Shape["query_nr, ... result_dim"]]]:
-        data_points = self.data_source.query(query_candidates)
-        augmented_data_points = self.augmentation.apply(data_points)
-
-        return augmented_data_points
+    def request(self, query_candidates: NDArray[Shape["query_nr, ... query_dim"], Number]):
+        self.query_queue.add(query_candidates)
 
     @property
-    def query_pool(self):
-        return self.data_source.query_pool
-
-    @property
-    def data_pool(self):
-        return self.data_source.data_pool
-
-    def __call__(self, *args, **kwargs) -> Self:
-        obj = super().__call__(*args, **kwargs)
-
-        obj.data_source = obj.data_source()
-        obj.augmentation = obj.augmentation()
-
-        return obj
-
-
-
+    def query_constrain(self) -> QueryConstrain:
+        return self.query_queue.query_constrain

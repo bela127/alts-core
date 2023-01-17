@@ -4,36 +4,26 @@ from typing import TYPE_CHECKING
 
 from dataclasses import dataclass, field
 
-from alts.core.configuration import Configurable
-from alts.core.queryable import Queryable
-
+from alts.core.configuration import Configurable, Required, is_set
+from alts.core.data.constrains import QueryConstrained, QueryConstrain
+from alts.core.oracle.oracle import Oracle
+from alts.core.experiment_module import ExperimentModule
 
 
 if TYPE_CHECKING:
     from typing_extensions import Self #type: ignore
-    from alts.core.query.query_pool import QueryPool
     from typing import Optional
     from nptyping import NDArray, Number, Shape
 
 
 @dataclass
-class QuerySampler(Configurable):
+class QuerySampler(ExperimentModule, QueryConstrained):
     num_queries: int = 1
 
-    queryable: Queryable = field(init=False, default=None)
-
     @abstractmethod
-    def sample(self, num_queries: Optional[int] = None) -> NDArray[Number, Shape["query_nr, ... query_dims"]]:
+    def sample(self, num_queries: Optional[int] = None) -> NDArray[Shape["query_nr, ... query_dims"], Number]:
         raise NotImplementedError
 
     @property
-    def query_pool(self) -> QueryPool:
-        return self.queryable.query_pool
-
-    def __call__(self, queryable: Queryable = None, **kwargs) -> Self:
-        obj = super().__call__(**kwargs)
-        if isinstance(queryable, Queryable):
-            obj.queryable = queryable
-        else:
-            raise ValueError
-        return obj
+    def query_constrain(self) -> QueryConstrain:
+        return self.exp_modules.oracle.query_constrain

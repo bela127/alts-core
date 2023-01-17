@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 import numpy as np
 
 if TYPE_CHECKING:
-    from typing import Tuple, List, Union, Optional
+    from typing import Tuple, Optional
     from nptyping import NDArray, Number, Shape
 
 
@@ -15,13 +15,13 @@ class QueryPool():
 
     query_count: Optional[int]
     query_shape: Tuple[int, ...]
-    query_ranges: Optional[NDArray[Number, Shape["... query_dims,[xi_min, xi_max]"]]]
+    query_ranges: Optional[NDArray[Shape["... query_dims,[xi_min, xi_max]"], Number]]
 
-    _queries: Optional[NDArray[Number, Shape["query_count, ... query_shape"]]] = field(init=False, default=None)
-    _last_queries: Optional[NDArray[Number, Shape["query_count, ... query_shape"]]] = field(init=False, default=None)
+    _queries: Optional[NDArray[Shape["query_count, ... query_shape"], Number]] = field(init=False, default=None)
+    _last_queries: Optional[NDArray[Shape["query_count, ... query_shape"], Number]] = field(init=False, default=None)
 
 
-    def add_queries(self, queries: NDArray[Number, Shape["query_count, ... query_shape"]]):
+    def add_queries(self, queries: NDArray[Shape["query_count, ... query_shape"], Number]):
         if self._queries is None:
             self._queries = queries
         else: 
@@ -34,7 +34,7 @@ class QueryPool():
             raise LookupError("there are infinit queries continues pool")
         return self._last_queries
 
-    def queries_from_norm_pos(self, norm_pos: NDArray[Number, Shape["query_nr, ... query_dims"]]) -> NDArray[Number, Shape["query_nr, ... query_dims"]]:
+    def queries_from_norm_pos(self, norm_pos: NDArray[Shape["query_nr, ... query_dims"], Number]) -> NDArray[Shape["query_nr, ... query_dims"], Number]:
         if self.query_ranges is None:
             raise LookupError("can not look up a position in a discrete pool")
         elements = self.query_ranges[..., 0] + (self.query_ranges[..., 1] - self.query_ranges[..., 0]) * norm_pos

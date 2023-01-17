@@ -2,7 +2,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from alts.core.configuration import Configurable
+from alts.core.configuration import Configurable, Required, is_set, post_init
 
 if TYPE_CHECKING:
     from typing_extensions import Self #type: ignore
@@ -10,9 +10,9 @@ if TYPE_CHECKING:
 
 @dataclass
 class ExperimentModule(Configurable):
-    exp_modules: ExperimentModules = field(init=False)
+    exp_modules: ExperimentModules = post_init()
 
-    def __call__(self, exp_modules: ExperimentModules = None, **kwargs) -> Self:
+    def __call__(self, exp_modules: Required[ExperimentModules] = None, **kwargs) -> Self:
         obj = super().__call__( **kwargs)
-        obj.exp_modules = exp_modules
+        obj.exp_modules = is_set(exp_modules)
         return obj
