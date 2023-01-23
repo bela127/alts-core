@@ -22,7 +22,7 @@ class Evaluator(Configurable):
 class LogingEvaluator(Evaluator):
     folder: str = "log"
     root_path: str = "./eval"
-    path = None
+    path = "./eval"
 
 
     def register(self, experiment: Experiment):

@@ -8,7 +8,7 @@ from alts.core.evaluator import Evaluator
 from alts.core.experiment import Experiment
 
 if TYPE_CHECKING:
-    from typing import Tuple, Union, Iterable
+    from typing import Tuple, Union, Iterable, List
     from alts.core.blueprint import Blueprint
 
 
@@ -33,13 +33,13 @@ class ExperimentRunner():
             experiment.run()
         
 
-    def run_experiments(self, blueprints: Union[List[Blueprint], None] = None):
+    def run_experiments(self, blueprints: Union[Iterable[Blueprint], None] = None):
         if blueprints is None: blueprints = self.blueprints
 
         for blueprint in blueprints:
             self.run_experiment(blueprint)
 
-    def run_experiments_parallel(self, blueprints: Union[List[Blueprint], None] = None):
+    def run_experiments_parallel(self, blueprints: Union[Iterable[Blueprint], None] = None):
         if blueprints is None: blueprints = self.blueprints
 
         with Pool(None) as p:

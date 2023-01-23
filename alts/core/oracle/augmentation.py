@@ -1,10 +1,9 @@
 from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
-from alts.core.data.data_pool import DataPool
 
 from alts.core.oracle.data_source import DataSource
-from alts.core.query.query_pool import QueryPool
+from alts.core.data.constrains import QueryConstrain, ResultConstrain
 
 
 if TYPE_CHECKING:
@@ -30,12 +29,12 @@ class Augmentation(DataSource):
         return self.data_source.query(queries)
 
     @property
-    def query_pool(self) -> QueryPool:
-        return self.data_source.query_pool
+    def query_constrain(self) -> QueryConstrain:
+        return self.data_source.query_constrain
 
     @property
-    def data_pool(self) -> DataPool:
-        return self.data_source.data_pool
+    def result_constrain(self) -> ResultConstrain:
+        return self.data_source.result_constrain
     
     @property
     def exhausted(self):

@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 class QueryConstrain():
     count: Optional[int]
     shape: Tuple[int, ...]
-    ranges: Union[NDArray[Shape["... query_dims,[xi_min, xi_max]"], Number], NDArray[npt.Shape["... query_dims,[xi]"], Number]]
+    ranges: Union[NDArray[Shape["... query_dims,[xi_min, xi_max]"], Number], NDArray[Shape["... query_dims,[xi]"], Number]]
 
 
     def add_queries(self, queries: NDArray[Shape["query_count, ... query_shape"], Number]):
@@ -35,7 +35,7 @@ class QueryConstrain():
         if self.ranges is None:
             raise LookupError("can not look up a position in a discrete pool")
         if np.any(np.isinf(self.ranges)):
-            self.ranges = np.nan_to_num(self.ranges, nan=0, posinf=np.finfo(np.float64).max, neginf=np.finfo(np.float64).min)
+            self.ranges = np.nan_to_num(self.ranges, nan=0, posinf=float(np.finfo(np.float64).max), neginf=float(np.finfo(np.float64).min))
             raise RuntimeWarning("QueryConstrain ranges are infinity, they will be converted to max float64, but most probably you forgot to provide constrains!")
         elements = self.ranges[..., 0] + (self.ranges[..., 1] - self.ranges[..., 0]) * norm_pos
         return elements
