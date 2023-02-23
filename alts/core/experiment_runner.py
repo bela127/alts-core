@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from multiprocessing import Pool
+import os
 
 from alts.core.evaluator import Evaluator
 
@@ -39,10 +40,10 @@ class ExperimentRunner():
         for blueprint in blueprints:
             self.run_experiment(blueprint)
 
-    def run_experiments_parallel(self, blueprints: Union[Iterable[Blueprint], None] = None):
+    def run_experiments_parallel(self, blueprints: Union[Iterable[Blueprint], None] = None, nr_processes: int = int(os.cpu_count() / 2)):
         if blueprints is None: blueprints = self.blueprints
 
-        with Pool(None) as p:
+        with Pool(nr_processes) as p:
             p.map(self.run_experiment, blueprints)
 
 

@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
-from alts.core.configuration import Configurable, Required, is_set
+from alts.core.configuration import Configurable, Required, is_set, pre_init, post_init, init
 from alts.core.data.constrains import QueryConstrained, QueryConstrain
 
 if TYPE_CHECKING:
@@ -14,10 +14,10 @@ if TYPE_CHECKING:
 
 @dataclass
 class QueryQueue(Configurable, QueryConstrained):
-    queries: NDArray[Shape["query_nr, ... query_shape"], Number] = field(init=False)
-    _query_constrain: QueryConstrain = field(init=False)
+    queries: NDArray[Shape["query_nr, ... query_shape"], Number] = post_init()
+    _query_constrain: QueryConstrain = post_init()
 
-    _last: NDArray[Shape[" ... query_shape"], Number] = field(init=False)
+    _last: NDArray[Shape[" ... query_shape"], Number] = post_init()
 
     def __post_init__(self):
         super().__post_init__()

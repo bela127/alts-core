@@ -16,6 +16,8 @@ if TYPE_CHECKING:
     from alts.core.data_process.process import Process
     from alts.core.data_process.time_behavior import TimeBehavior
     from alts.core.data_process.time_source import TimeSource
+    from alts.core.oracle.query_queue import QueryQueue
+
 
 
 @dataclass
@@ -25,15 +27,14 @@ class Blueprint():
     time_source: TimeSource
     time_behavior: TimeBehavior
 
+    query_queue: QueryQueue
+
     process: Process
 
     stopping_criteria: StoppingCriteria
 
-    observable_stream: ObservableFilter
     stream_data_pool: QueriedDataPool
-    observable_process: ObservableFilter
     process_data_pool: QueriedDataPool
-    observable_results: ObservableFilter
     result_data_pool: QueriedDataPool
 
     initial_query_sampler: QuerySampler

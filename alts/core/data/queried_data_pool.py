@@ -13,8 +13,7 @@ if TYPE_CHECKING:
 
     from nptyping import  NDArray, Number, Shape
 
-    from alts.core.data.constrains import ResultConstrain, QueryConstrain
-    from alts.core.data_process.observable_filter import ObservableFilter
+    from alts.core.data.constrains import ResultConstrain, QueryConstrain, Constrained
 
 
 class QueriedDataPool(Queryable, Subscribable):
@@ -48,10 +47,10 @@ class QueriedDataPool(Queryable, Subscribable):
 
         self.update()
         
-    def __call__(self, observable: Required[ObservableFilter] = None, **kwargs) -> Self:
+    def __call__(self, constrained: Required[Constrained] = None, **kwargs) -> Self:
         obj = super().__call__( **kwargs)
-        obj._query_constrain = is_set(observable).query_constrain
-        obj._result_constrain = is_set(observable).result_constrain
+        obj._query_constrain = is_set(constrained).query_constrain
+        obj._result_constrain = is_set(constrained).result_constrain
 
         return obj
     

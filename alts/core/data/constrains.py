@@ -68,5 +68,11 @@ class ResultConstrained():
     def result_constrain(self) -> ResultConstrain:
         raise NotImplementedError()
 
+class DelayedConstrained():
+    
+    @abstractproperty
+    def delayed_constrain(self) -> ResultConstrain:
+        raise NotImplementedError()
+
 class Constrained(QueryConstrained, ResultConstrained):
     pass
