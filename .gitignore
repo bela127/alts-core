@@ -134,8 +134,8 @@ src/settings/
 ## Code statistics
 *__loc_out__/
 
-## exxperiments
-*fig*
+## experiments
+#/fig/*
 experiment_results
-log*
+*/log/*
 eval
