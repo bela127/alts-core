@@ -35,7 +35,7 @@ def load_module(dirpath: str, file_name: str):
 def set_exp_path_and_name(module: ModuleType, exp_path: str):
     try:
         blueprint: Blueprint = module.blueprint
-        blueprint.exp_path = exp_path
+        blueprint.exp_path = os.path.join(exp_path, "eval", module.__name__)
         blueprint.exp_name = module.__name__
         return [blueprint]
     except AttributeError:
@@ -43,8 +43,7 @@ def set_exp_path_and_name(module: ModuleType, exp_path: str):
             print("loaded file not a blueprint, test for multiple blueprints")
             blueprints: List[Blueprint] = module.blueprints
             for blueprint in blueprints:
-                blueprint.exp_path = exp_path
-                blueprint.exp_name = f"{module.__name__}-{str(blueprint.exp_name)}"
+                blueprint.exp_path = os.path.join(exp_path, "eval", module.__name__)
             return blueprints
         except AttributeError:
             print("loaded file contains no blueprints, skipping file!")
