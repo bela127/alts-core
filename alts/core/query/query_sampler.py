@@ -6,7 +6,6 @@ from dataclasses import dataclass, field
 
 from alts.core.configuration import Configurable, Required, is_set
 from alts.core.data.constrains import QueryConstrained, QueryConstrain
-from alts.core.oracle.oracle import Oracle
 from alts.core.experiment_module import ExperimentModule
 
 
@@ -26,4 +25,4 @@ class QuerySampler(ExperimentModule, QueryConstrained):
 
     @property
     def query_constrain(self) -> QueryConstrain:
-        return self.exp_modules.oracle.query_constrain
+        return self.exp_modules.oracles.process.query_constrain

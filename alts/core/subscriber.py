@@ -38,7 +38,7 @@ class StreamSubscriber(Subscriber):
 
     def subscribe(self) -> None:
         super().subscribe()
-        self.exp_modules.stream_data_pool.subscribe(self, self.stream_update)
+        self.exp_modules.data_pools.stream.subscribe(self, self.stream_update)
         
 
 class ProcessSubscriber(Subscriber):
@@ -48,7 +48,7 @@ class ProcessSubscriber(Subscriber):
 
     def subscribe(self) -> None:
         super().subscribe()
-        self.exp_modules.process_data_pool.subscribe(self, self.process_update)
+        self.exp_modules.data_pools.process.subscribe(self, self.process_update)
         
 
 class ResultSubscriber(Subscriber):
@@ -58,7 +58,7 @@ class ResultSubscriber(Subscriber):
 
     def subscribe(self) -> None:
         super().subscribe()
-        self.exp_modules.result_data_pool.subscribe(self, self.result_update)
+        self.exp_modules.data_pools.result.subscribe(self, self.result_update)
 
 class ExperimentSubscriber(Subscriber):
 

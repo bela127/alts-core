@@ -52,7 +52,7 @@ def is_set(param):
     if param is not None:
         return param
     else:
-        raise ValueError()
+        raise ValueError("set a values for all 'Required' params")
 
 def post_init():
     return field(init=False, repr=False)

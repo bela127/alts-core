@@ -28,7 +28,7 @@ class QuerySelector(StreamSubscriber, ProcessSubscriber, ResultSubscriber):
         query_candidates, scores = self.query_optimizer.select()
         query_flag, queries = self.query_decider.decide(query_candidates, scores)
         if query_flag:
-            self.exp_modules.oracle.request(queries)
+            self.exp_modules.oracles.process.add(queries)
     
 class ResultQuerySelector(QuerySelector):
     

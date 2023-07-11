@@ -13,20 +13,24 @@ from alts.core.configuration import is_set, init, post_init, pre_init
 
 from alts.core.data_process.time_source import TimeSource
 from alts.core.data.constrains import DelayedConstrained
-from alts.core.data.queried_data_pool import QueriedDataPool
+from alts.core.data.data_pools import SPRDataPools
 from alts.core.queryable import Queryable
 
 @dataclass
 class Process(Queryable, DelayedConstrained):
 
     time_source: TimeSource = post_init()
-    stream_data_pool: QueriedDataPool = post_init()
+    data_pools: SPRDataPools = post_init()
 
     last_queries: NDArray[Shape["data_nr, ... query_shape"], Number] = post_init()
     last_results: NDArray[Shape["data_nr, ... result_shape"], Number] = post_init()
     has_new_data: bool = pre_init(default=False)
     ready: bool = pre_init(default=True)
 
+    def __post_init__(self):
+        super().__post_init__()
+        self.data_pools.process = self.data_pools.process(constrained = self)
+        self.data_pools.result = self.data_pools.result(constrained = self)
     
     def update(self):
         raise NotImplementedError()
@@ -34,8 +38,9 @@ class Process(Queryable, DelayedConstrained):
     def delayed_results(self) -> Tuple[NDArray[Shape["data_nr, ... query_shape"], Number], NDArray[Shape["data_nr, ... result_shape"], Number]]:
         raise NotImplementedError()
     
-    def __call__(self, time_source: Required[TimeSource] = None, stream_data_pool: Required[QueriedDataPool] = None, **kwargs) -> Self:
+    def __call__(self, time_source: Required[TimeSource] = None, data_pools: Required[SPRDataPools] = None, **kwargs) -> Self:
         obj = super().__call__(**kwargs)
         obj.time_source = is_set(time_source)
-        obj.stream_data_pool = is_set(stream_data_pool)
+        obj.data_pools = is_set(data_pools)
+
         return obj
