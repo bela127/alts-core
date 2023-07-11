@@ -10,6 +10,7 @@ from alts.core.subscribable import Subscribable
 if TYPE_CHECKING:
     from alts.core.data.queried_data_pool import QueriedDataPool
     from alts.core.query.query_selector import QuerySelector
+    from alts.core.data_process.time_source import TimeSource
 
     from typing_extensions import Self #type: ignore
 
@@ -17,6 +18,7 @@ if TYPE_CHECKING:
 class ExperimentModules(Configurable, Subscribable):
     query_selector: QuerySelector = init()
 
+    time_source: TimeSource = post_init()
     stream_data_pool: QueriedDataPool = post_init()
     process_data_pool: QueriedDataPool = post_init()
     result_data_pool: QueriedDataPool = post_init()
@@ -29,8 +31,9 @@ class ExperimentModules(Configurable, Subscribable):
     def run(self):
         self.update()
 
-    def __call__(self, stream_data_pool: Required[QueriedDataPool] = None, process_data_pool: Required[QueriedDataPool] = None, result_data_pool: Required[QueriedDataPool] = None, oracle: Required[Oracle] = None, **kwargs) -> Self:
+    def __call__(self, time_source: Required[TimeSource] = None, stream_data_pool: Required[QueriedDataPool] = None, process_data_pool: Required[QueriedDataPool] = None, result_data_pool: Required[QueriedDataPool] = None, oracle: Required[Oracle] = None, **kwargs) -> Self:
         obj = super().__call__(**kwargs)
+        obj.time_source = is_set(time_source)
         obj.stream_data_pool = is_set(stream_data_pool)
         obj.process_data_pool = is_set(process_data_pool)
         obj.result_data_pool = is_set(result_data_pool)

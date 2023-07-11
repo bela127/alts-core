@@ -32,7 +32,7 @@ class Experiment():
 
         self.oracle = Oracle(self.query_queue)
 
-        self.experiment_modules = bp.experiment_modules(stream_data_pool = self.stream_data_pool, process_data_pool= self.process_data_pool, result_data_pool= self.result_data_pool, oracle= self.oracle)
+        self.experiment_modules = bp.experiment_modules(time_source=self.time_source, stream_data_pool = self.stream_data_pool, process_data_pool= self.process_data_pool, result_data_pool= self.result_data_pool, oracle= self.oracle)
 
         self.initial_query_sampler = bp.initial_query_sampler(exp_modules = self.experiment_modules)
         self.stopping_criteria = bp.stopping_criteria(exp = self)
