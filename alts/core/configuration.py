@@ -21,6 +21,13 @@ class InitError(AttributeError):
 class NotSet():
     def __repr__(self) -> str:
         return "NOTSET"
+    
+    def __getattribute__(self, __name: str) -> Any:
+        try:
+            attr_result = super().__getattribute__(__name)
+        except AttributeError as e:
+            raise e
+        return attr_result
 
 NOTSET = NotSet()
 
