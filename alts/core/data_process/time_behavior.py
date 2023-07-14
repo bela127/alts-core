@@ -20,7 +20,7 @@ class TimeBehavior(Queryable):
 
     def __post_init__(self):
         super().__post_init__()
-        self.data_pools.stream = self.data_pools.stream(constrained = self)
+        self.data_pools.stream = self.data_pools.stream(query_constrain = self.query_constrain, result_constrain=self.result_constrain)
 
 
     def query(self, times: NDArray[Shape["time_step_nr, [time]"], Number]) -> Tuple[NDArray[Shape["time_step_nr, [time]"], Number], NDArray[Shape["time_step_nr, ... var_shape"], Number]]:
