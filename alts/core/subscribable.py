@@ -25,6 +25,6 @@ class Subscribable(Configurable):
     def update(self):
         for subscriber, callable in self.__subscriber:
             try:
-                callable()
+                callable(self)
             except TypeError as e:
-                raise TypeError(f"The subscriber '{subscriber.__class__}' should implement a callable {str(callable)} with an 'subscription' argument. Results in {str(e)}") from e
+                raise TypeError(f"The subscriber '{subscriber.__class__.__name__}' with callable {str(e)}. Provide an 'subscription' argument.") from e
