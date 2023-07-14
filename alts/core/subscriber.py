@@ -1,29 +1,31 @@
 from __future__ import annotations
 from abc import abstractmethod
 from typing import TYPE_CHECKING
-from alts.core.configuration import Required
+from alts.core.configuration import Required, post_init
 
-from alts.core.experiment_module import ExperimentModule
-from alts.core.experiment_modules import ExperimentModules
-
+from alts.core.configuration import Configurable
 
 if TYPE_CHECKING:
     from typing import Tuple, Callable
     from typing_extensions import Self #type: ignore
     from nptyping import NDArray, Number, Shape
+    from alts.core.data.data_pools import SPRDataPools
+    from alts.core.data_process.time_source import TimeSource
+    from alts.core.subscribable import Subscribable
+    from alts.core.oracle.oracles import Oracles, POracles
+    from alts.core.experiment_modules import ExperimentModules
 
 
-class Subscriber(ExperimentModule):
+
+
+class Subscriber():
 
     def __init__(self):
-        self.__post_init__()
-
-    def __post_init__(self):
-        super().__post_init__()
-        self.subscribe()
+        super().__init__()
+        self.subscribe()        
 
     @abstractmethod
-    def update(self) -> None:
+    def update(self, subscription: Subscribable) -> None:
         pass
 
     @abstractmethod
@@ -31,41 +33,67 @@ class Subscriber(ExperimentModule):
         pass
 
 
-class StreamSubscriber(Subscriber):
+class DataPoolsSubscriber(Subscriber):
+    data_pools: SPRDataPools
 
-    def stream_update(self):
-        self.update()
+class StreamDataSubscriber(DataPoolsSubscriber):
+
+    def stream_update(self, subscription: Subscribable):
+        self.update(subscription)
 
     def subscribe(self) -> None:
         super().subscribe()
-        self.exp_modules.data_pools.stream.subscribe(self, self.stream_update)
+        self.data_pools.stream.subscribe(self, self.stream_update)
         
 
-class ProcessSubscriber(Subscriber):
+class ProcessDataSubscriber(DataPoolsSubscriber):
 
-    def process_update(self):
-        self.update()
+    def process_update(self, subscription: Subscribable):
+        self.update(subscription)
 
     def subscribe(self) -> None:
         super().subscribe()
-        self.exp_modules.data_pools.process.subscribe(self, self.process_update)
+        self.data_pools.process.subscribe(self, self.process_update)
         
 
-class ResultSubscriber(Subscriber):
+class ResultDataSubscriber(DataPoolsSubscriber):
 
-    def result_update(self):
-        self.update()
+    def result_update(self, subscription: Subscribable):
+        self.update(subscription)
 
     def subscribe(self) -> None:
         super().subscribe()
-        self.exp_modules.data_pools.result.subscribe(self, self.result_update)
+        self.data_pools.result.subscribe(self, self.result_update)
 
-class ExperimentSubscriber(Subscriber):
+class ExpModSubscriber(Subscriber):
+    exp_modules: ExperimentModules = post_init()
 
-    def experiment_update(self):
-        self.update()
+    def experiment_update(self, subscription: Subscribable):
+        self.update(subscription)
 
     def subscribe(self) -> None:
         super().subscribe()
         self.exp_modules.subscribe(self, self.experiment_update)
-        
+
+class TimeSubscriber(Subscriber):
+    time_source: TimeSource = post_init()
+
+    def time_update(self, subscription: Subscribable):
+        self.update(subscription)
+
+    def subscribe(self) -> None:
+        super().subscribe()
+        self.time_source.subscribe(self, self.time_update)
+
+class OraclesSubscriber(Subscriber):
+    oracles: Oracles
+
+class ProcessOracleSubscriber(OraclesSubscriber):
+    oracles: POracles
+
+    def process_query(self, subscription: Subscribable):
+        self.update(subscription)
+
+    def subscribe(self) -> None:
+        super().subscribe()
+        self.oracles.process.subscribe(self, self.process_query)
