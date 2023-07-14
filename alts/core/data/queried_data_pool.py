@@ -47,10 +47,9 @@ class QueriedDataPool(Queryable, Subscribable):
 
         self.update()
         
-    def __call__(self, constrained: Required[Constrained] = None, **kwargs) -> Self:
+    def __call__(self, query_constrain: Required[QueryConstrain] = None, result_constrain: Required[ResultConstrain] = None, **kwargs) -> Self:
         obj = super().__call__( **kwargs)
-        obj._query_constrain = is_set(constrained).query_constrain
-        obj._result_constrain = is_set(constrained).result_constrain
-
+        obj._query_constrain = is_set(query_constrain)
+        obj._result_constrain = is_set(result_constrain)
         return obj
     
