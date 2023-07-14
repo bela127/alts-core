@@ -25,15 +25,14 @@ class Blueprint():
     repeat: int
 
     time_source: TimeSource
-    time_behavior: TimeBehavior
 
     oracles: POracles
+
+    data_pools: SPRDataPools
 
     process: Process
 
     stopping_criteria: StoppingCriteria
-
-    data_pools: SPRDataPools
 
     initial_query_sampler: QuerySampler
 

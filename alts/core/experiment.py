@@ -16,12 +16,11 @@ class Experiment():
 
         self.data_pools = bp.data_pools()
 
+        self.oracles = bp.oracles()
+
         self.time_source = bp.time_source()
-        self.time_behavior = bp.time_behavior(data_pools=self.data_pools)
 
-        self.process = bp.process(time_source=self.time_source, data_pools=self.data_pools)
-
-        self.oracles = bp.oracles(process=self.process)
+        self.process = bp.process(time_source=self.time_source, oracles = self.oracles, data_pools=self.data_pools)
 
         self.experiment_modules = bp.experiment_modules(time_source=self.time_source, data_pools=self.data_pools, oracles=self.oracles)
 
