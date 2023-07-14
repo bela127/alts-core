@@ -29,6 +29,10 @@ class ExperimentModules(Subscribable):
     def run(self):
         self.update()
 
+    @property
+    def next(self): #TODO: For what?
+        return True
+
     def __call__(self, time_source: Required[TimeSource] = None, data_pools: Required[SPRDataPools] = None, oracles: Required[POracles] = None, **kwargs) -> Self:
         obj = super().__call__(**kwargs)
         obj.time_source = is_set(time_source)
