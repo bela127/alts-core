@@ -30,7 +30,6 @@ class QueryQueue(QueryConstrained, DelayedSubscribable):
         self.queries = np.concatenate((self.queries, queries))
         self._latest_add = queries[-1:]
         self.request_update()
-        self.update()
     
     def pop(self, query_nr = 1) -> NDArray[Shape["query_nr, ... query_shape"], Number]:
         poped = self.queries[:query_nr,...]

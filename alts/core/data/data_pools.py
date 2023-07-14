@@ -1,15 +1,18 @@
 from __future__ import annotations
+from typing import TYPE_CHECKING
 
 from dataclasses import dataclass
-from typing import Any
-from alts.core.subscribable import Subscribable
+from typing_extensions import Self
 from alts.core.data.queried_data_pool import QueriedDataPool
-from alts.core.configuration import is_set, init, post_init, pre_init
+from alts.core.configuration import Configurable, is_set, init, post_init, pre_init
 
 
-class DataPools(Subscribable):
+class DataPools(Configurable):
 
-    def __call__(self, *args: Any, **kwds: Any) -> Any:
+    def trigger_subscriber(self):
+        pass
+
+    def __call__(self, *args: Any, **kwds: Any) -> Self:
         return self
 
 @dataclass
@@ -17,3 +20,9 @@ class SPRDataPools(DataPools):
     stream: QueriedDataPool = init()
     process: QueriedDataPool = init()
     result: QueriedDataPool = init()
+
+    def trigger_subscriber(self):
+        super().trigger_subscriber()
+        self.process.update()
+        self.result.update()
+        self.stream.update()

@@ -43,6 +43,8 @@ class Experiment():
 
         while True:
             self.process.step()
+            self.data_pools.trigger_subscriber()
+
             self.experiment_modules.run()
             self.iteration += 1
 

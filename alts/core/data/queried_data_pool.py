@@ -49,7 +49,6 @@ class QueriedDataPool(Queryable, DelayedSubscribable):
         self.last_results = results
 
         self.request_update()
-        self.update()
         
     def __call__(self, query_constrain: Required[QueryConstrain] = None, result_constrain: Required[ResultConstrain] = None, **kwargs) -> Self:
         obj = super().__call__( **kwargs)
