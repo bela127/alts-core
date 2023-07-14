@@ -6,6 +6,7 @@ import numpy as np
 
 from alts.core.configuration import Configurable, Required, is_set, pre_init, post_init, init
 from alts.core.data.constrains import QueryConstrained, QueryConstrain
+from alts.core.subscribable import Subscribable
 
 if TYPE_CHECKING:
     from typing_extensions import Self
@@ -13,11 +14,12 @@ if TYPE_CHECKING:
     from typing import  Tuple
 
 @dataclass
-class QueryQueue(Configurable, QueryConstrained):
+class QueryQueue(QueryConstrained, Subscribable):
     queries: NDArray[Shape["query_nr, ... query_shape"], Number] = post_init()
     _query_constrain: QueryConstrain = post_init()
 
-    _last: NDArray[Shape[" ... query_shape"], Number] = post_init()
+    _latest_add: NDArray[Shape[" ... query_shape"], Number] = post_init()
+    _latest_pop: NDArray[Shape[" ... query_shape"], Number] = post_init()
 
     def __post_init__(self):
         super().__post_init__()
@@ -25,17 +27,30 @@ class QueryQueue(Configurable, QueryConstrained):
 
     def add(self, queries: NDArray[Shape["query_nr, ... query_shape"], Number]):
         self.queries = np.concatenate((self.queries, queries))
-        self._last = queries[-1:]
+        self._latest_add = queries[-1:]
+        self.update()
     
     def pop(self, query_nr = 1) -> NDArray[Shape["query_nr, ... query_shape"], Number]:
         poped = self.queries[:query_nr,...]
         self.queries = self.queries[query_nr:,...]
+        self._latest_pop = poped
         return poped
 
     @property
-    def last(self):
-        return self._last
+    def last(self)-> NDArray[Shape["1, ... query_shape"], Number]:
+        return self.queries[-1:,...]
+    
+    @property
+    def first(self)-> NDArray[Shape["1, ... query_shape"], Number]:
+        return self.queries[:1,...]
 
+    @property
+    def latest_add(self)-> NDArray[Shape["1, ... query_shape"], Number]:
+        return self._latest_add
+    
+    @property
+    def latest_pop(self)-> NDArray[Shape["1, ... query_shape"], Number]:
+        return self._latest_pop
 
     @property
     def empty(self):
