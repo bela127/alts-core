@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from typing_extensions import Self #type: ignore
 
 @dataclass
-class ExperimentModules(Configurable, Subscribable):
+class ExperimentModules(Subscribable):
     query_selector: QuerySelector = init()
 
     time_source: TimeSource = post_init()
