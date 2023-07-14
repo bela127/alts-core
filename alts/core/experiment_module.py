@@ -16,3 +16,7 @@ class ExperimentModule(Configurable):
         obj = super().__call__( **kwargs)
         obj.exp_modules = is_set(exp_modules)
         return obj
+    
+    @property
+    def data_pools(self):
+        return self.exp_modules.data_pools
