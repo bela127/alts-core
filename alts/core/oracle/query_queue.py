@@ -6,7 +6,7 @@ import numpy as np
 
 from alts.core.configuration import Configurable, Required, is_set, pre_init, post_init, init
 from alts.core.data.constrains import QueryConstrained, QueryConstrain
-from alts.core.subscribable import Subscribable
+from alts.core.subscribable import DelayedSubscribable
 
 if TYPE_CHECKING:
     from typing_extensions import Self
@@ -14,12 +14,13 @@ if TYPE_CHECKING:
     from typing import  Tuple
 
 @dataclass
-class QueryQueue(QueryConstrained, Subscribable):
+class QueryQueue(QueryConstrained, DelayedSubscribable):
     queries: NDArray[Shape["query_nr, ... query_shape"], Number] = post_init()
     _query_constrain: QueryConstrain = post_init()
 
     _latest_add: NDArray[Shape[" ... query_shape"], Number] = post_init()
     _latest_pop: NDArray[Shape[" ... query_shape"], Number] = post_init()
+
 
     def __post_init__(self):
         super().__post_init__()
@@ -28,6 +29,7 @@ class QueryQueue(QueryConstrained, Subscribable):
     def add(self, queries: NDArray[Shape["query_nr, ... query_shape"], Number]):
         self.queries = np.concatenate((self.queries, queries))
         self._latest_add = queries[-1:]
+        self.request_update()
         self.update()
     
     def pop(self, query_nr = 1) -> NDArray[Shape["query_nr, ... query_shape"], Number]:

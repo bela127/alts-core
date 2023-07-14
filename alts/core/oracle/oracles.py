@@ -13,11 +13,17 @@ if TYPE_CHECKING:
     from alts.core.configuration import Required
 
 class Oracles(Configurable):
-    pass
+
+    def trigger_subscriber(self):
+        pass
 
 @dataclass
 class POracles(Oracles):
     process: QueryQueue = init()
+
+    def trigger_subscriber(self):
+        super().trigger_subscriber()
+        self.process.update()
 
     def __call__(self, *args: Any, **kwds: Any) -> Self:
         return self

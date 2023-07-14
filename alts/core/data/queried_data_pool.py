@@ -1,11 +1,13 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
+from dataclasses import dataclass
+
 import numpy as np
-from alts.core.configuration import Required, is_set
+from alts.core.configuration import Required, is_set, pre_init, post_init
 
 from alts.core.queryable import Queryable
-from alts.core.subscribable import Subscribable
+from alts.core.subscribable import DelayedSubscribable
 
 if TYPE_CHECKING:
     from typing_extensions import Self #type: ignore
@@ -16,9 +18,10 @@ if TYPE_CHECKING:
     from alts.core.data.constrains import ResultConstrain, QueryConstrain, Constrained
 
 
-class QueriedDataPool(Queryable, Subscribable):
-    _query_constrain: QueryConstrain
-    _result_constrain: ResultConstrain
+@dataclass
+class QueriedDataPool(Queryable, DelayedSubscribable):
+    _query_constrain: QueryConstrain = post_init()
+    _result_constrain: ResultConstrain = post_init()
 
     def __init__(self):
         super().__init__()
@@ -45,6 +48,7 @@ class QueriedDataPool(Queryable, Subscribable):
         self.last_queries = queries
         self.last_results = results
 
+        self.request_update()
         self.update()
         
     def __call__(self, query_constrain: Required[QueryConstrain] = None, result_constrain: Required[ResultConstrain] = None, **kwargs) -> Self:
