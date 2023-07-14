@@ -29,8 +29,8 @@ class Process(Queryable, DelayedConstrained):
 
     def __post_init__(self):
         super().__post_init__()
-        self.data_pools.process = self.data_pools.process(constrained = self)
-        self.data_pools.result = self.data_pools.result(constrained = self)
+        self.data_pools.process = self.data_pools.process(query_constrain=self.query_constrain, result_constrain=self.result_constrain)
+        self.data_pools.result = self.data_pools.result(query_constrain=self.query_constrain, result_constrain=self.delayed_constrain)
     
     def update(self):
         raise NotImplementedError()
