@@ -14,7 +14,6 @@ if TYPE_CHECKING:
     from alts.core.stopping_criteria import StoppingCriteria
     from alts.core.data_process.observable_filter import ObservableFilter
     from alts.core.data_process.process import Process
-    from alts.core.data_process.time_behavior import TimeBehavior
     from alts.core.data_process.time_source import TimeSource
     from alts.core.oracle.oracles import POracles
 

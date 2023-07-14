@@ -47,7 +47,7 @@ class Experiment():
 
     def time_dependent_loop(self, iteration: int):
         times = self.time_source.step(iteration)
-        times, vars = self.time_behavior.query(times)
+        times, vars = self.process.time_behavior.query(times)
         self.data_pools.stream.add((times, vars))
         return times, vars
 

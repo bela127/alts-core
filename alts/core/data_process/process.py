@@ -8,8 +8,12 @@ if TYPE_CHECKING:
     from typing import Tuple
     from nptyping import NDArray, Number, Shape
     from alts.core.configuration import Required
+    from alts.core.oracle.oracles import POracles
+    from alts.core.data_process.time_behavior import TimeBehavior
 
-from alts.core.configuration import is_set, init, post_init, pre_init
+
+
+from alts.core.configuration import is_set, init, post_init, pre_init, NOTSET
 
 from alts.core.data_process.time_source import TimeSource
 from alts.core.data.constrains import DelayedConstrained
@@ -21,6 +25,9 @@ class Process(Queryable, DelayedConstrained):
 
     time_source: TimeSource = post_init()
     data_pools: SPRDataPools = post_init()
+    oracles: POracles = post_init()
+
+    time_behavior: TimeBehavior = init()
 
     last_queries: NDArray[Shape["data_nr, ... query_shape"], Number] = post_init()
     last_results: NDArray[Shape["data_nr, ... result_shape"], Number] = post_init()
@@ -29,6 +36,8 @@ class Process(Queryable, DelayedConstrained):
 
     def __post_init__(self):
         super().__post_init__()
+        self.oracles.process = self.oracles.process(query_constrain=self.query_constrain)
+        self.time_behavior = self.time_behavior(data_pools=self.data_pools)
         self.data_pools.process = self.data_pools.process(query_constrain=self.query_constrain, result_constrain=self.result_constrain)
         self.data_pools.result = self.data_pools.result(query_constrain=self.query_constrain, result_constrain=self.delayed_constrain)
     
@@ -38,9 +47,10 @@ class Process(Queryable, DelayedConstrained):
     def delayed_results(self) -> Tuple[NDArray[Shape["data_nr, ... query_shape"], Number], NDArray[Shape["data_nr, ... result_shape"], Number]]:
         raise NotImplementedError()
     
-    def __call__(self, time_source: Required[TimeSource] = None, data_pools: Required[SPRDataPools] = None, **kwargs) -> Self:
+    def __call__(self, time_source: Required[TimeSource] = None, oracles: Required[POracles] = None, data_pools: Required[SPRDataPools] = None, **kwargs) -> Self:
         obj = super().__call__(**kwargs)
         obj.time_source = is_set(time_source)
         obj.data_pools = is_set(data_pools)
+        obj.oracles = is_set(oracles)
 
         return obj
