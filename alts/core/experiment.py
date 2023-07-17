@@ -24,27 +24,21 @@ class Experiment():
 
         self.experiment_modules = bp.experiment_modules(time_source=self.time_source, data_pools=self.data_pools, oracles=self.oracles)
 
-        self.initial_query_sampler = bp.initial_query_sampler(exp_modules = self.experiment_modules)
         self.stopping_criteria = bp.stopping_criteria(exp = self)
 
         self.iteration = 0
 
-
-    def init_queries(self):
-        queries = self.initial_query_sampler.sample()
-        self.oracles.process.add(queries)
-        return queries
-
     def run(self) -> int:
         self.time_source.step(self.iteration)
-
-        self.init_queries()
+        self.process.init()
+        self.experiment_modules.init()
 
         while True:
-            self.process.step()
-            self.data_pools.trigger_subscriber()
+            self.oracles.trigger_subscriber()
+            self.process.step(self.iteration)
 
-            self.experiment_modules.run()
+            self.data_pools.trigger_subscriber()
+            self.experiment_modules.step(self.iteration)
             self.iteration += 1
 
             if not self.stopping_criteria.next: break

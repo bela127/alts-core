@@ -7,15 +7,14 @@ from dataclasses import dataclass
 if TYPE_CHECKING:
     from typing import Iterable, Optional
 
-    from alts.core.data.data_pools import SPRDataPools
-    from alts.core.query.query_sampler import QuerySampler
+    from alts.core.data.data_pools import DataPools
     from alts.core.evaluator import Evaluator
     from alts.core.experiment_modules import ExperimentModules
     from alts.core.stopping_criteria import StoppingCriteria
     from alts.core.data_process.observable_filter import ObservableFilter
     from alts.core.data_process.process import Process
     from alts.core.data_process.time_source import TimeSource
-    from alts.core.oracle.oracles import POracles
+    from alts.core.oracle.oracles import Oracles
 
 
 
@@ -25,15 +24,13 @@ class Blueprint():
 
     time_source: TimeSource
 
-    oracles: POracles
+    oracles: Oracles
 
-    data_pools: SPRDataPools
+    data_pools: DataPools
 
     process: Process
 
     stopping_criteria: StoppingCriteria
-
-    initial_query_sampler: QuerySampler
 
     experiment_modules: ExperimentModules
 
