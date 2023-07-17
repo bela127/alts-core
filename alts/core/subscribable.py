@@ -16,9 +16,9 @@ class Subscribable(Configurable):
 
     def __post_init__(self):
         super().__post_init__()
-        self.__subscriber: List[Tuple[Subscriber,Callable[[],None]]] = []
+        self.__subscriber: List[Tuple[Subscriber,Callable[[Subscribable],None]]] = []
         
-    def subscribe(self, subscriber: Subscriber, callable: Optional[Callable[[],None]] = None):
+    def subscribe(self, subscriber: Subscriber, callable: Optional[Callable[[Subscribable],None]] = None):
         if callable is None:
             self.__subscriber.append((subscriber, subscriber.update))
         else:
