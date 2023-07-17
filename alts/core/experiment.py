@@ -30,16 +30,15 @@ class Experiment():
         self.iteration = 0
 
 
-    def init_query(self):
+    def init_queries(self):
         queries = self.initial_query_sampler.sample()
         self.oracles.process.add(queries)
         return queries
 
     def run(self) -> int:
         self.time_source.step(self.iteration)
-        self.process.stream_update()
 
-        self.init_query()
+        self.init_queries()
 
         while True:
             self.process.step()
@@ -51,6 +50,5 @@ class Experiment():
             if not self.stopping_criteria.next: break
 
             self.time_source.step(self.iteration)
-            self.process.stream_update()
             
         return self.exp_nr
