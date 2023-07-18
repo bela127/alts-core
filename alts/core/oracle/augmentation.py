@@ -16,6 +16,10 @@ class Augmentation(DataSource):
 
     data_source: DataSource
 
+    def __post_init__(self):
+        super().__post_init__()
+        self.data_source = self.data_source()
+
     @property
     def query_shape(self):
         return self.data_source.query_shape
@@ -39,8 +43,3 @@ class Augmentation(DataSource):
     @property
     def exhausted(self):
         return self.data_source.exhausted
-    
-    def __call__(self, **kwargs) -> Self:
-        obj =  super().__call__(**kwargs)
-        obj.data_source = obj.data_source()
-        return obj
