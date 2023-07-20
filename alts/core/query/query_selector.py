@@ -16,7 +16,7 @@ if TYPE_CHECKING:
     from alts.core.subscribable import Subscribable
 
 @dataclass
-class QuerySelector(ExperimentModule, StreamDataSubscriber, ProcessDataSubscriber, ResultDataSubscriber):
+class QuerySelector(ExperimentModule):
     query_optimizer: QueryOptimizer = init()
     query_decider: QueryDecider = init()
 
@@ -31,12 +31,21 @@ class QuerySelector(ExperimentModule, StreamDataSubscriber, ProcessDataSubscribe
         query_flag, queries = self.query_decider.decide(query_candidates, scores)
         if query_flag:
             self.exp_modules.oracles.process.add(queries)
-    
-class ResultQuerySelector(QuerySelector):
+
+class ResultQuerySelector(QuerySelector, ResultDataSubscriber):
     
     def result_update(self, subscription: Subscribable):
         super().result_update(subscription)
         self.decide()
 
-    def update(self, subscription: Subscribable) -> None:
-        super().update(subscription)
+class StreamQuerySelector(QuerySelector, StreamDataSubscriber):
+    
+    def stream_update(self, subscription: Subscribable):
+        super().stream_update(subscription)
+        self.decide()
+
+class ProcessQuerySelector(QuerySelector, ProcessDataSubscriber):
+    
+    def process_update(self, subscription: Subscribable):
+        super().process_update(subscription)
+        self.decide()
