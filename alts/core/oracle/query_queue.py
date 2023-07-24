@@ -5,18 +5,19 @@ from typing import TYPE_CHECKING
 import numpy as np
 
 from alts.core.configuration import Configurable, Required, is_set, pre_init, post_init, init
-from alts.core.data.constrains import QueryConstrained, QueryConstrain
+from alts.core.data.constrains import QueryConstrained
 from alts.core.subscribable import DelayedSubscribable
 
 if TYPE_CHECKING:
     from typing_extensions import Self
     from nptyping import NDArray, Shape, Number
     from typing import  Tuple
+    from alts.core.data.constrains import QueryConstrainedGetter, QueryConstrain
 
 @dataclass
 class QueryQueue(QueryConstrained, DelayedSubscribable):
     queries: NDArray[Shape["query_nr, ... query_shape"], Number] = post_init()
-    _query_constrain: QueryConstrain = post_init()
+    _query_constrain: QueryConstrainedGetter = post_init()
 
     _latest_add: NDArray[Shape[" ... query_shape"], Number] = post_init()
     _latest_pop: NDArray[Shape[" ... query_shape"], Number] = post_init()
@@ -24,7 +25,7 @@ class QueryQueue(QueryConstrained, DelayedSubscribable):
 
     def __post_init__(self):
         super().__post_init__()
-        self.queries = np.empty((0, *is_set(self.query_constrain).shape))
+        self.queries = np.empty((0, *self.query_constrain().shape))
 
     def add(self, queries: NDArray[Shape["query_nr, ... query_shape"], Number]):
         self.queries = np.concatenate((self.queries, queries))
@@ -57,12 +58,11 @@ class QueryQueue(QueryConstrained, DelayedSubscribable):
     def empty(self):
         return self.queries.shape[0] == 0
 
-    @property
     def query_constrain(self) -> QueryConstrain:
-        return self._query_constrain
+        return self._query_constrain()
        
 
-    def __call__(self, query_constrain: Required[QueryConstrain], **kwargs) -> Self:
+    def __call__(self, query_constrain: Required[QueryConstrainedGetter], **kwargs) -> Self:
         obj =  super().__call__(**kwargs)
         obj._query_constrain = is_set(query_constrain)
         return obj

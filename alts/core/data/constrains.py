@@ -6,6 +6,8 @@ from abc import abstractproperty
 
 import numpy as np
 
+from typing import Callable
+
 if TYPE_CHECKING:
     from typing import Tuple, Optional, Union
     from nptyping import NDArray, Number, Shape
@@ -58,21 +60,22 @@ class ResultConstrain():
 
 class QueryConstrained():
     
-    @abstractproperty
     def query_constrain(self) -> QueryConstrain:
         raise NotImplementedError()
 
 class ResultConstrained():
     
-    @abstractproperty
     def result_constrain(self) -> ResultConstrain:
         raise NotImplementedError()
 
 class DelayedConstrained():
     
-    @abstractproperty
     def delayed_constrain(self) -> ResultConstrain:
         raise NotImplementedError()
 
 class Constrained(QueryConstrained, ResultConstrained):
     pass
+
+ResultConstrainGetter = Callable[[],ResultConstrain]
+
+QueryConstrainedGetter = Callable[[],QueryConstrain]

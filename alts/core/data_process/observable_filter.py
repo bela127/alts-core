@@ -5,7 +5,7 @@ from abc import abstractmethod
 from dataclasses import dataclass, field
 
 from alts.core.configuration import Configurable, Required, is_set, post_init
-from alts.core.data.constrains import Constrained, QueryConstrain, ResultConstrain
+from alts.core.data.constrains import Constrained, QueryConstrainedGetter, ResultConstrainGetter,QueryConstrain, ResultConstrain
 
 if TYPE_CHECKING:
     from typing_extensions import Self
@@ -14,19 +14,17 @@ if TYPE_CHECKING:
 
 @dataclass
 class ObservableFilter(Configurable, Constrained):
-    _query_constrain: QueryConstrain = post_init()
-    _result_constrain: ResultConstrain = post_init()
+    _query_constrain: QueryConstrainedGetter = post_init()
+    _result_constrain: ResultConstrainGetter = post_init()
 
     def filter(self, data_points: Tuple[NDArray[Shape["input_nr, ... input_dim"], Number], NDArray[Shape["input_nr, ... result_dim"], Number]]) -> Tuple[NDArray[Shape["input_nr, ... input_dim"], Number], NDArray[Shape["query_nr, ... filtered_result_dim"], Number]]:
         return data_points
 
-    @property
     def query_constrain(self) -> QueryConstrain:
-        return self._query_constrain
+        return self._query_constrain()
     
-    @property
     def result_constrain(self) -> ResultConstrain:
-        return self._result_constrain
+        return self._result_constrain()
 
     def __call__(self, constrained: Required[Constrained] = None, **kwargs) -> Self:
         obj = super().__call__(**kwargs)

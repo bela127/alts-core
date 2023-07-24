@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from alts.core.configuration import Required, init
 
 from alts.core.experiment_module import ExperimentModule
+from alts.core.data.constrains import QueryConstrained
 
 if TYPE_CHECKING:
     from typing_extensions import Self #type: ignore
@@ -17,7 +18,7 @@ if TYPE_CHECKING:
     from nptyping import NDArray, Number, Shape
     
 @dataclass
-class QueryOptimizer(ExperimentModule):
+class QueryOptimizer(ExperimentModule, QueryConstrained):
     selection_criteria: SelectionCriteria = init()
 
     def __post_init__(self):

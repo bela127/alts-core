@@ -22,12 +22,10 @@ class DataSource(Queryable):
     def query(self, queries: NDArray[ Shape["query_nr, ... query_dim"], Number]) -> Tuple[NDArray[Shape["query_nr, ... query_dim"], Number], NDArray[Shape["query_nr, ... result_dim"], Number]]:
         raise NotImplementedError
  
-    @property
     def query_constrain(self) -> QueryConstrain:
         query_ranges = np.asarray(tuple((np.NINF, np.Inf) for i in range(self.query_shape[0])))
         return QueryConstrain(count=None, shape=self.query_shape, ranges=query_ranges)
     
-    @property
     def result_constrain(self) -> ResultConstrain:
         return ResultConstrain(shape = self.result_shape)
     
@@ -43,7 +41,6 @@ class TimeDataSource(DataSource):
     def query(self, times: NDArray[Shape["time_step_nr, [time]"], Number]) -> Tuple[NDArray[Shape["time_step_nr, [time]"], Number], NDArray[Shape["time_step_nr, ... var_shape"], Number]]:
         raise NotImplementedError()
     
-    @property
     def query_constrain(self) -> QueryConstrain:
         query_ranges = np.asarray(((0.0, np.Inf),))
         return QueryConstrain(count=None, shape=self.query_shape, ranges=query_ranges)

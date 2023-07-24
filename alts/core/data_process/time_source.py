@@ -22,7 +22,6 @@ class TimeSource(ResultConstrained, Subscribable):
     def time(self)-> float:
         raise NotImplementedError()
 
-    @property
     def result_constrain(self) -> ResultConstrain:
         return ResultConstrain(shape=(1,))
     

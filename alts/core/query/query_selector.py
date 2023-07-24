@@ -8,6 +8,8 @@ from alts.core.query.query_optimizer import QueryOptimizer
 from alts.core.query.query_decider import QueryDecider
 from alts.core.configuration import Required, init
 from alts.core.experiment_module import ExperimentModule
+from alts.core.data.constrains import QueryConstrained
+
 
 
 if TYPE_CHECKING:
@@ -16,7 +18,7 @@ if TYPE_CHECKING:
     from alts.core.subscribable import Subscribable
 
 @dataclass
-class QuerySelector(ExperimentModule):
+class QuerySelector(ExperimentModule, QueryConstrained):
     query_optimizer: QueryOptimizer = init()
     query_decider: QueryDecider = init()
 

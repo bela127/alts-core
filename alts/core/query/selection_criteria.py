@@ -21,6 +21,5 @@ class SelectionCriteria(ExperimentModule, Queryable):
     def query(self, queries: NDArray[Shape["query_nr, ... query_shape"], Number]) -> Tuple[NDArray[Shape["query_nr, ... query_shape"], Number], NDArray[Shape["query_nr, [score]"], Number]]:
         raise NotImplementedError
     
-    @property
     def result_constrain(self) -> ResultConstrain:
-        return ResultConstrain((self.query_constrain.shape[0], 1))
+        return ResultConstrain((self.query_constrain().shape[0], 1))

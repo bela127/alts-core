@@ -44,13 +44,11 @@ class Augmentation(DataSource):
     def query(self, queries: NDArray[ Shape["query_nr, ... query_dim"], Number]) -> Tuple[NDArray[Shape["query_nr, ... query_dim"], Number], NDArray[Shape["query_nr, ... result_dim"], Number]]:
         return self.data_source.query(queries)
 
-    @property
     def query_constrain(self) -> QueryConstrain:
-        return self.data_source.query_constrain
+        return self.data_source.query_constrain()
 
-    @property
     def result_constrain(self) -> ResultConstrain:
-        return self.data_source.result_constrain
+        return self.data_source.result_constrain()
     
     @property
     def exhausted(self):

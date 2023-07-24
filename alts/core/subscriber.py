@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from typing import Tuple, Callable
     from typing_extensions import Self #type: ignore
     from nptyping import NDArray, Number, Shape
-    from alts.core.data.data_pools import SPRDataPools
+    from alts.core.data.data_pools import DataPools, StreamDataPools, ProcessDataPools, ResultDataPools
     from alts.core.data_process.time_source import TimeSource
     from alts.core.subscribable import Subscribable
     from alts.core.oracle.oracles import Oracles, POracles
@@ -34,9 +34,10 @@ class Subscriber():
 
 
 class DataPoolsSubscriber(Subscriber):
-    data_pools: SPRDataPools
+    data_pools: DataPools
 
 class StreamDataSubscriber(DataPoolsSubscriber):
+    data_pools: StreamDataPools
 
     def stream_update(self, subscription: Subscribable):
         self.update(subscription)
@@ -47,6 +48,7 @@ class StreamDataSubscriber(DataPoolsSubscriber):
         
 
 class ProcessDataSubscriber(DataPoolsSubscriber):
+    data_pools: ProcessDataPools
 
     def process_update(self, subscription: Subscribable):
         self.update(subscription)
@@ -57,6 +59,7 @@ class ProcessDataSubscriber(DataPoolsSubscriber):
         
 
 class ResultDataSubscriber(DataPoolsSubscriber):
+    data_pools: ResultDataPools
 
     def result_update(self, subscription: Subscribable):
         self.update(subscription)

@@ -17,9 +17,8 @@ class InterpolationStrategy(Configurable, QueryConstrained):
     def interpolate(self, data_points: Tuple[NDArray[Shape["query_nr, sample_nr, ... query_dim"], Number], NDArray[Shape["query_nr, sample_nr, ... result_dim"], Number]]) -> Tuple[NDArray[Shape["query_nr, ... query_dim"], Number], NDArray[Shape["query_nr, ... result_dim"], Number]]:
         return data_points
 
-    @property
     def query_constrain(self) -> QueryConstrain:
-        return self.data_sampler.query_constrain
+        return self.data_sampler.query_constrain()
     
     def __call__(self, data_sampler: Required[DataSampler] = None, **kwargs) -> Self:
         obj = super().__call__(**kwargs)

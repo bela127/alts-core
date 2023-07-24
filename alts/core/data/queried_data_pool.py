@@ -15,13 +15,13 @@ if TYPE_CHECKING:
 
     from nptyping import  NDArray, Number, Shape
 
-    from alts.core.data.constrains import ResultConstrain, QueryConstrain, Constrained
+    from alts.core.data.constrains import ResultConstrainGetter, QueryConstrainedGetter, Constrained
 
 
 @dataclass
 class QueriedDataPool(Queryable, DelayedSubscribable):
-    _query_constrain: QueryConstrain = post_init()
-    _result_constrain: ResultConstrain = post_init()
+    _query_constrain: QueryConstrainedGetter = post_init()
+    _result_constrain: ResultConstrainGetter = post_init()
 
     def __init__(self):
         super().__init__()
@@ -32,11 +32,11 @@ class QueriedDataPool(Queryable, DelayedSubscribable):
         self.last_queries: NDArray[Shape["query_nr, ... query_dim"], Number]
         self.last_results: NDArray[Shape["query_nr, ... result_dim"], Number]
 
-        self.queries = np.empty((0,*self._query_constrain.shape))
-        self.results = np.empty((0,*self._result_constrain.shape))
+        self.queries = np.empty((0,*self._query_constrain().shape))
+        self.results = np.empty((0,*self._result_constrain().shape))
 
-        self.last_queries = np.empty((0,*self._query_constrain.shape))
-        self.last_results = np.empty((0,*self._result_constrain.shape))
+        self.last_queries = np.empty((0,*self._query_constrain().shape))
+        self.last_results = np.empty((0,*self._result_constrain().shape))
 
 
     def add(self, data_points: Tuple[NDArray[Shape["query_nr, ... query_dim"], Number], NDArray[Shape["query_nr, ... result_dim"], Number]]):
@@ -50,7 +50,7 @@ class QueriedDataPool(Queryable, DelayedSubscribable):
 
         self.request_update()
         
-    def __call__(self, query_constrain: Required[QueryConstrain] = None, result_constrain: Required[ResultConstrain] = None, **kwargs) -> Self:
+    def __call__(self, query_constrain: Required[QueryConstrainedGetter] = None, result_constrain: Required[ResultConstrainGetter] = None, **kwargs) -> Self:
         obj = super().__call__( **kwargs)
         obj._query_constrain = is_set(query_constrain)
         obj._result_constrain = is_set(result_constrain)

@@ -6,7 +6,7 @@ from abc import abstractmethod, abstractproperty
 
 
 from alts.core.configuration import Configurable, Required, is_set
-from alts.core.data.constrains import Constrained, QueryConstrain, ResultConstrain
+from alts.core.data.constrains import Constrained, QueryConstrain, ResultConstrain, QueryConstrainedGetter, ResultConstrainGetter
 
 
 if TYPE_CHECKING:
@@ -31,19 +31,17 @@ class QueryHandler(Protocol):
 
 class QueryableWrapper(Queryable):
     _query_handler: QueryHandler
-    _query_constrain: QueryConstrain
-    _result_constrain: ResultConstrain
+    _query_constrain: QueryConstrainedGetter
+    _result_constrain: ResultConstrainGetter
 
     def query(self, queries: NDArray[Shape["query_nr, ... query_shape"], Number]) -> Tuple[NDArray[Shape["query_nr, ... query_shape"], Number], NDArray[Shape["query_nr, ... result_shape"], Number]]:
         return self._query_handler(queries)
 
-    @property
     def query_constrain(self) -> QueryConstrain:
-        return self._query_constrain
+        return self._query_constrain()
 
-    @property
     def result_constrain(self) -> ResultConstrain:
-        return self._result_constrain
+        return self._result_constrain()
 
     def __call__(self, queryable: Required[Queryable] = None, **kwargs) -> Self:
         obj = super().__call__(**kwargs)
