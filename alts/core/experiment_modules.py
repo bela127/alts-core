@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 from dataclasses import dataclass, field
 from alts.core.configuration import Configurable, Required, is_set, post_init, pre_init, init
 from alts.core.oracle.oracles import Oracles, POracles
-from alts.core.subscribable import Subscribable
+from alts.core.subscribable import Publisher
 
 
 if TYPE_CHECKING:
@@ -16,18 +16,18 @@ if TYPE_CHECKING:
     from typing_extensions import Self #type: ignore
 
 @dataclass
-class ExperimentModules(Subscribable):
+class ExperimentModules(Publisher):
     query_selector: QuerySelector = init()
 
     time_source: TimeSource = post_init()
     data_pools: DataPools = post_init()
     oracles: Oracles = post_init()
 
-    def __post_init__(self):
-        super().__post_init__()
+    def post_init(self):
+        super().post_init()
         self.query_selector = self.query_selector(exp_modules = self)
     
-    def init(self):
+    def initialize(self):
         pass
 
     def step(self, iteration):
@@ -47,18 +47,18 @@ class InitQueryExperimentModules(ExperimentModules):
 
     oracles: POracles = post_init()
 
-    def __post_init__(self):
-        super().__post_init__()
+    def post_init(self):
+        super().post_init()
         self.initial_query_sampler = self.initial_query_sampler(exp_modules = self)
 
         if not isinstance(self.oracles, POracles):
             raise TypeError(f"InitQueryExperimentModules requires POracles")
     
-    def init(self):
-        super().init()
+    def initialize(self):
+        super().initialize()
         self.init_queries()
         
     def init_queries(self):
         queries = self.initial_query_sampler.sample()
-        self.oracles.process.add(queries)
+        self.oracles.add(queries)
         return queries

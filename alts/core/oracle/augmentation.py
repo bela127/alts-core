@@ -17,8 +17,8 @@ class Augmentation(DataSource):
 
     data_source: DataSource = init()
 
-    def __post_init__(self):
-        super().__post_init__()
+    def post_init(self):
+        super().post_init()
         self.data_source = self.data_source()
         
 

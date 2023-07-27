@@ -21,8 +21,8 @@ if TYPE_CHECKING:
 class QueryOptimizer(ExperimentModule, QueryConstrained):
     selection_criteria: SelectionCriteria = init()
 
-    def __post_init__(self):
-        super().__post_init__()
+    def post_init(self):
+        super().post_init()
         self.selection_criteria = self.selection_criteria(exp_modules = self.exp_modules)
 
     def select(self, num_queries = None) -> Tuple[NDArray[Shape["query_nr, ... query_dims"], Number], NDArray[Shape["query_nr, [query_score]"], Number]]:

@@ -6,7 +6,7 @@ import numpy as np
 
 from alts.core.configuration import Configurable, Required, is_set, pre_init, post_init, init
 from alts.core.data.constrains import QueryConstrained
-from alts.core.subscribable import DelayedSubscribable
+from alts.core.subscribable import DelayedPublisher
 
 if TYPE_CHECKING:
     from typing_extensions import Self
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from alts.core.data.constrains import QueryConstrainedGetter, QueryConstrain
 
 @dataclass
-class QueryQueue(QueryConstrained, DelayedSubscribable):
+class QueryQueue(DelayedPublisher, QueryConstrained):
     queries: NDArray[Shape["query_nr, ... query_shape"], Number] = post_init()
     _query_constrain: QueryConstrainedGetter = post_init()
 
@@ -23,8 +23,8 @@ class QueryQueue(QueryConstrained, DelayedSubscribable):
     _latest_pop: NDArray[Shape[" ... query_shape"], Number] = post_init()
 
 
-    def __post_init__(self):
-        super().__post_init__()
+    def post_init(self):
+        super().post_init()
         self.queries = np.empty((0, *self.query_constrain().shape))
 
     def add(self, queries: NDArray[Shape["query_nr, ... query_shape"], Number]):
@@ -57,6 +57,10 @@ class QueryQueue(QueryConstrained, DelayedSubscribable):
     @property
     def empty(self):
         return self.queries.shape[0] == 0
+    
+    @property
+    def count(self):
+        return self.queries.shape[0]
 
     def query_constrain(self) -> QueryConstrain:
         return self._query_constrain()

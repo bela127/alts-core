@@ -10,7 +10,6 @@ if TYPE_CHECKING:
     from alts.core.data.data_pools import DataPools
     from alts.core.oracle.oracles import Oracles
 
-@dataclass
 class ExperimentModule(Configurable):
     exp_modules: ExperimentModules = post_init()
 

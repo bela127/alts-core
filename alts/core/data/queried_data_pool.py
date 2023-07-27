@@ -6,8 +6,8 @@ from dataclasses import dataclass
 import numpy as np
 from alts.core.configuration import Required, is_set, pre_init, post_init
 
-from alts.core.queryable import Queryable
-from alts.core.subscribable import DelayedSubscribable
+from alts.core.query.queryable import Queryable
+from alts.core.subscribable import DelayedPublisher
 
 if TYPE_CHECKING:
     from typing_extensions import Self #type: ignore
@@ -18,13 +18,12 @@ if TYPE_CHECKING:
     from alts.core.data.constrains import ResultConstrainGetter, QueryConstrainedGetter, Constrained
 
 
-@dataclass
-class QueriedDataPool(Queryable, DelayedSubscribable):
+class QueriedDataPool(DelayedPublisher, Queryable):
     _query_constrain: QueryConstrainedGetter = post_init()
     _result_constrain: ResultConstrainGetter = post_init()
 
     def __init__(self):
-        super().__init__()
+        super().init(QueriedDataPool)
 
         self.queries: NDArray[Shape["query_nr, ... query_dim"], Number]
         self.results: NDArray[Shape["query_nr, ... result_dim"], Number]

@@ -2,11 +2,12 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from dataclasses import dataclass
-from abc import abstractproperty
+from abc import abstractmethod
 
 import numpy as np
 
 from typing import Callable
+from alts.core.configuration import ROOT
 
 if TYPE_CHECKING:
     from typing import Tuple, Optional, Union
@@ -19,6 +20,17 @@ class QueryConstrain():
     shape: Tuple[int, ...]
     ranges: Union[NDArray[Shape["... query_dims,[xi_min, xi_max]"], Number], NDArray[Shape["... query_dims,[xi]"], Number]]
 
+    def matches_shape(self, shape):
+        if len(self.shape) == len(shape):
+            for dim_own, dim_ext in zip(self.shape, shape):
+                if dim_own != dim_ext:
+                    return False
+            return True
+        return False
+    
+    def constrains_met(self, queries):
+        for query in queries:
+            if not self.matches_shape(query.shape): return False
 
     def add_queries(self, queries: NDArray[Shape["query_count, ... query_shape"], Number]):
         if self.ranges is None:
@@ -60,16 +72,19 @@ class ResultConstrain():
 
 class QueryConstrained():
     
+    @abstractmethod
     def query_constrain(self) -> QueryConstrain:
         raise NotImplementedError()
 
 class ResultConstrained():
     
+    @abstractmethod
     def result_constrain(self) -> ResultConstrain:
         raise NotImplementedError()
 
 class DelayedConstrained():
     
+    @abstractmethod
     def delayed_constrain(self) -> ResultConstrain:
         raise NotImplementedError()
 

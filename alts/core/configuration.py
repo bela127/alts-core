@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING, TypeVar, Generic, Union
-from dataclasses import field
+from dataclasses import field, is_dataclass
 from functools import wraps
 
 import types
@@ -84,20 +84,38 @@ class ConfigurableMeta(type):
         obj: Configurable = cls.__new__(cls, *args, **kwargs)       
         return obj
 
-class Configurable(metaclass = ConfigurableMeta):
+class ROOT():
+    __post_init_called = False
+
+    def __init__(self) -> None:
+        pass
+
+    def __post_init__(self):
+        if not self.__post_init_called:
+            self.__post_init_called = True
+            mro = self.__class__.mro()
+            for parent in mro[1:]:
+                if not is_dataclass(parent):
+                    parent.__init__(self)
+                    break
+            if hasattr(self, 'post_init'):
+                self.post_init()
+
+    def post_init(self):
+        pass
+
+    def init(self, cls):
+        mro = self.__class__.mro()
+        index = mro.index(cls)
+        for parent in mro[index+1:]:
+            if not is_dataclass(parent):
+                parent.__init__(self)
+                break
+class Configurable(ROOT, metaclass = ConfigurableMeta):
     __initialized: bool = False
     __cls: Type
     __args: Tuple
     __kwargs: Dict
-
-    # def __getattribute__(self, __name: str) -> Any:
-    #     initialized = super().__getattribute__("_Configurable__initialized")
-    #     exept = ['__reduce_ex__','__reduce__','__getstate__','__class__','__setstate__','__dict__']
-    #     if not initialized and not __name in exept:
-    #         raise InitError()
-    #     else:
-    #         attr_result = super().__getattribute__(__name)
-    #     return attr_result
 
     def __getnewargs_ex__(self):
         return (self.__args, self.__kwargs)
@@ -105,14 +123,7 @@ class Configurable(metaclass = ConfigurableMeta):
     def __init__(self, *args, **kwargs) -> None:
         if len(args) != 0 or len(kwargs) != 0:
             raise TypeError(f"__init__ was called with {args}, {kwargs}, no arguments should be left over!")
-        super().__init__()
-        # just intercept the __init__ calls so they
-        # aren't relayed to `object`
-
-    def __post_init__(self):
-        super().__init__()
-        # just intercept the __post_init__ calls so they
-        # aren't relayed to `object`
+        super().init(Configurable)
 
     def __new__(cls: Type[Self], *args, **kwargs) -> Self:
         obj: Self = super(Configurable, cls).__new__(cls)
@@ -127,7 +138,10 @@ class Configurable(metaclass = ConfigurableMeta):
             @wraps(old_call)
             def __call__(self, **kwargs):
                 new_obj = old_call(self, **kwargs)
-                new_obj.__init__(*new_obj.__args, **new_obj.__kwargs)
+                try:
+                    new_obj.__init__(*new_obj.__args, **new_obj.__kwargs)
+                except TypeError as e:
+                    raise TypeError(f"{new_obj.__cls.__name__}.{str(e)}") from e
                 new_obj.__initialized = True
                 return new_obj
 

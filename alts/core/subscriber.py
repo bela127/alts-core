@@ -18,10 +18,10 @@ if TYPE_CHECKING:
 
 
 
-class Subscriber():
+class Subscriber(Configurable):
 
-    def __init__(self):
-        super().__init__()
+    def post_init(self):
+        super().post_init()
         self.subscribe()        
 
     @abstractmethod
@@ -30,6 +30,7 @@ class Subscriber():
 
     @abstractmethod
     def subscribe(self) -> None:
+        print(f"{self.__class__} subscribed")
         pass
 
 

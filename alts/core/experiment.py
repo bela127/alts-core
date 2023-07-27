@@ -30,8 +30,8 @@ class Experiment():
 
     def run(self) -> int:
         self.time_source.step(self.iteration)
-        self.process.init()
-        self.experiment_modules.init()
+        self.process.initialize()
+        self.experiment_modules.initialize()
 
         while True:
             self.oracles.trigger_subscriber()

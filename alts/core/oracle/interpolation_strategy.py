@@ -1,9 +1,8 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
-from alts.core.data_sampler import DataSampler
+from alts.core.data.data_sampler import DataSampler
 
 from alts.core.configuration import Configurable, post_init, Required, is_set
-from alts.core.query.query_pool import QueryPool
 
 from alts.core.data.constrains import QueryConstrain, QueryConstrained
 

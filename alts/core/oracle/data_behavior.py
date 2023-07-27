@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from nptyping import  NDArray, Number, Shape
 
 @dataclass
-class Behavior(Configurable):
+class DataBehavior(Configurable):
     change_interval: float = 5
     lower_value: float=-1
     upper_value: float=1

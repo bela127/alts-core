@@ -3,9 +3,9 @@ from typing import TYPE_CHECKING
 
 from dataclasses import dataclass, field
 
-from alts.core.queryable import Queryable
+from alts.core.query.queryable import Queryable
 from alts.core.data.constrains import QueryConstrain, ResultConstrain
-from alts.core.configuration import init
+from alts.core.configuration import init, Configurable
 
 import numpy as np
 
@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from nptyping import NDArray, Shape, Number
 
 @dataclass
-class DataSource(Queryable):
+class DataSource(Configurable, Queryable):
 
     query_shape: Tuple[int,...] = init()
     result_shape: Tuple[int,...] = init()

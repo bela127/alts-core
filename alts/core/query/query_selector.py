@@ -22,8 +22,8 @@ class QuerySelector(ExperimentModule, QueryConstrained):
     query_optimizer: QueryOptimizer = init()
     query_decider: QueryDecider = init()
 
-    def __post_init__(self):
-        super().__post_init__()
+    def post_init(self):
+        super().post_init()
         self.query_optimizer = self.query_optimizer(exp_modules = self.exp_modules)
         self.query_decider = self.query_decider(exp_modules = self.exp_modules)
 
@@ -32,7 +32,7 @@ class QuerySelector(ExperimentModule, QueryConstrained):
         query_candidates, scores = self.query_optimizer.select()
         query_flag, queries = self.query_decider.decide(query_candidates, scores)
         if query_flag:
-            self.exp_modules.oracles.process.add(queries)
+            self.oracles.add(queries)
 
 class ResultQuerySelector(QuerySelector, ResultDataSubscriber):
     

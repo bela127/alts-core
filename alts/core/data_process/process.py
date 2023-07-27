@@ -14,14 +14,13 @@ if TYPE_CHECKING:
 
 
 
-from alts.core.configuration import is_set, init, post_init, pre_init, NOTSET
+from alts.core.configuration import is_set, init, post_init, pre_init, NOTSET, Configurable
 
 from alts.core.data_process.time_source import TimeSource
-from alts.core.queryable import Queryable
+from alts.core.query.queryable import Queryable
 
 
-@dataclass
-class Process(Queryable):
+class Process(Configurable, Queryable):
 
     time_source: TimeSource = post_init()
     data_pools: DataPools = post_init()
@@ -31,7 +30,7 @@ class Process(Queryable):
     last_results: NDArray[Shape["data_nr, ... result_shape"], Number] = post_init()
 
 
-    def init(self):
+    def initialize(self):
         pass
     
     def step(self, iteration):

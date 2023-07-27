@@ -4,8 +4,8 @@ from typing import TYPE_CHECKING
 from dataclasses import dataclass, field
 
 
-from alts.core.subscriber import ResultDataSubscriber
-from alts.core.queryable import Queryable
+from alts.core.subscriber import ResultDataSubscriber, StreamDataSubscriber, ProcessDataSubscriber
+from alts.core.query.queryable import Queryable
 from alts.core.experiment_module import ExperimentModule
 
 
@@ -22,3 +22,12 @@ class DataSampler(Queryable, ExperimentModule):
 
 @dataclass
 class ResultDataSampler(ResultDataSubscriber, DataSampler):
+    pass
+
+@dataclass
+class StreamDataSampler(StreamDataSubscriber, DataSampler):
+    pass
+
+@dataclass
+class ProcessDataSampler(ProcessDataSubscriber, DataSampler):
+    pass

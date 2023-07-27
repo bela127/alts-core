@@ -24,13 +24,16 @@ class LogingEvaluator(Evaluator):
     root_path: str = "./eval"
     path = "./eval"
 
+    @property
+    def iteration(self):
+        return self.experiment.iteration
 
     def register(self, experiment: Experiment):
         super().register(experiment)
         self.path = self.root_path
-        if not self.experiment.exp_path is None:
+        if self.experiment.exp_path is not None:
             self.path = os.path.join(self.experiment.exp_path, self.path)
-        if not self.experiment.exp_name is None:
+        if self.experiment.exp_name is not None:
             self.path = os.path.join(self.path, self.experiment.exp_name)
         self.path = os.path.join(self.path, self.folder)
         self.path = os.path.join(self.path, f'exp_{self.experiment.exp_nr}')
@@ -40,7 +43,7 @@ class LogingEvaluator(Evaluator):
 
 import functools
 
-class Evaluate:
+class Evaluate():
 
     def __init__(self, func):
         functools.update_wrapper(self, func)
