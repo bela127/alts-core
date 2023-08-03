@@ -141,7 +141,7 @@ class Configurable(ROOT, metaclass = ConfigurableMeta):
                 try:
                     new_obj.__init__(*new_obj.__args, **new_obj.__kwargs)
                 except TypeError as e:
-                    raise TypeError(f"{new_obj.__cls.__name__}.{str(e)}") from e
+                    raise TypeError(f"In {new_obj.__cls.__name__}.__init__ following accrued: {str(e)}") from e
                 new_obj.__initialized = True
                 return new_obj
 
