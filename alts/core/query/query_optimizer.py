@@ -27,7 +27,3 @@ class QueryOptimizer(ExperimentModule, QueryConstrained):
 
     def select(self, num_queries = None) -> Tuple[NDArray[Shape["query_nr, ... query_dims"], Number], NDArray[Shape["query_nr, [query_score]"], Number]]:
         raise NotImplementedError
-
-    def __call__(self, exp_modules: Required[ExperimentModules] = None, **kwargs) -> Self:
-        obj = super().__call__(exp_modules, **kwargs)
-        return obj
