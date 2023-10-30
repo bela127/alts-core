@@ -30,7 +30,7 @@ class Subscriber(Configurable):
 
     @abstractmethod
     def subscribe(self) -> None:
-        print(f"{self.__class__} subscribed")
+        print(f"{self.__class__} subscribed...")
         pass
 
 
@@ -46,6 +46,7 @@ class StreamDataSubscriber(DataPoolsSubscriber):
     def subscribe(self) -> None:
         super().subscribe()
         self.data_pools.stream.subscribe(self, self.stream_update)
+        print(f"to {self.data_pools.stream.__class__}")
         
 
 class ProcessDataSubscriber(DataPoolsSubscriber):
@@ -57,6 +58,7 @@ class ProcessDataSubscriber(DataPoolsSubscriber):
     def subscribe(self) -> None:
         super().subscribe()
         self.data_pools.process.subscribe(self, self.process_update)
+        print(f"to {self.data_pools.process.__class__}")
         
 
 class ResultDataSubscriber(DataPoolsSubscriber):
@@ -68,6 +70,7 @@ class ResultDataSubscriber(DataPoolsSubscriber):
     def subscribe(self) -> None:
         super().subscribe()
         self.data_pools.result.subscribe(self, self.result_update)
+        print(f"to {self.data_pools.result.__class__}")
 
 class ExpModSubscriber(Subscriber):
     exp_modules: ExperimentModules = post_init()
@@ -78,6 +81,7 @@ class ExpModSubscriber(Subscriber):
     def subscribe(self) -> None:
         super().subscribe()
         self.exp_modules.subscribe(self, self.experiment_update)
+        print(f"to {self.exp_modules.__class__}")
 
 class TimeSubscriber(Subscriber):
     time_source: TimeSource = post_init()
@@ -88,6 +92,7 @@ class TimeSubscriber(Subscriber):
     def subscribe(self) -> None:
         super().subscribe()
         self.time_source.subscribe(self, self.time_update)
+        print(f"to {self.time_source.__class__}")
 
 class OraclesSubscriber(Subscriber):
     oracles: Oracles
@@ -101,3 +106,4 @@ class ProcessOracleSubscriber(OraclesSubscriber):
     def subscribe(self) -> None:
         super().subscribe()
         self.oracles.process.subscribe(self, self.process_query)
+        print(f"to {self.oracles.process.__class__}")

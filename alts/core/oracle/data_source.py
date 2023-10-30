@@ -44,3 +44,17 @@ class TimeDataSource(DataSource):
     def query_constrain(self) -> QueryConstrain:
         query_ranges = np.asarray(((0.0, np.Inf),))
         return QueryConstrain(count=None, shape=self.query_shape, ranges=query_ranges)
+
+@dataclass
+class TimeDataSourceWraper(TimeDataSource):
+
+    query_shape: Tuple[int,...] = (1,)
+    data_source: DataSource = init()
+
+    def query(self, times: NDArray[Shape["time_step_nr, [time]"], Number]) -> Tuple[NDArray[Shape["time_step_nr, [time]"], Number], NDArray[Shape["time_step_nr, ... var_shape"], Number]]:
+        return self.data_source.query(times)
+    
+    def query_constrain(self) -> QueryConstrain:
+        qc = self.data_source.query_constrain()
+        query_ranges = np.asarray(((0.0, qc.ranges[0,1]),))
+        return QueryConstrain(count=None, shape=self.query_shape, ranges=query_ranges)

@@ -111,6 +111,7 @@ class ROOT():
             if not is_dataclass(parent):
                 parent.__init__(self)
                 break
+
 class Configurable(ROOT, metaclass = ConfigurableMeta):
     __initialized: bool = False
     __cls: Type
