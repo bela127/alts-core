@@ -5,6 +5,7 @@ from dataclasses import dataclass, field
 from alts.core.configuration import Configurable, Required, is_set, post_init, pre_init, init
 from alts.core.oracle.oracles import Oracles, POracles
 from alts.core.subscribable import Publisher
+from alts.core.estimator import Estimator
 
 
 if TYPE_CHECKING:
@@ -62,3 +63,14 @@ class InitQueryExperimentModules(ExperimentModules):
         queries = self.initial_query_sampler.sample()
         self.oracles.add(queries)
         return queries
+
+@dataclass
+class EstimatorExperiment(ExperimentModules):
+    estimator: Estimator = init()
+
+    def post_init(self):
+        super().post_init()
+        self.estimator = self.estimator(exp_modules = self)
+
+@dataclass
+class InitQueryEstimatorExperiment(InitQueryExperimentModules, EstimatorExperiment):
