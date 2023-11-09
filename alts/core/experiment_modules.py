@@ -74,3 +74,4 @@ class EstimatorExperiment(ExperimentModules):
 
 @dataclass
 class InitQueryEstimatorExperiment(InitQueryExperimentModules, EstimatorExperiment):
+    pass
