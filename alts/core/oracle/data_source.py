@@ -28,9 +28,6 @@ class DataSource(Configurable, Queryable):
     :type query_shape: tuple of ints
     :param result_shape: The expected shape of the results
     :type result_shape: tuple of ints
-
-    | **Example**
-    |   TODO [Real-life examples or code examples?]
     """
     query_shape: Tuple[int,...] = init()
     result_shape: Tuple[int,...] = init()
@@ -64,7 +61,7 @@ class DataSource(Configurable, Queryable):
         |   Constraints can affect the ``count``, ``shape`` and the ``ranges`` of a query.
         |   For more information, see :doc:`Constraints </core/data/constraints>`
 
-        | **Added Constraints**
+        | **Current Constraints**
         |   *Shape:* ``query_shape``
         |   *Value Range:* (-inf, inf) for all values
 
@@ -79,7 +76,7 @@ class DataSource(Configurable, Queryable):
         | **Description**
         |    ``result_constrain()`` is the equivalent of :func:`query_constrain()` for results from the ``DataSource``.
 
-        | **Added Constraints**
+        | **Current Constraints**
         |    *Shape:* ``result_shape`` 
 
         :return: Constraints to results
@@ -134,9 +131,10 @@ class TimeDataSource(DataSource):
         | **Description**
         |   See :func:`DataSource.query_constrain()`
         
-        | **Added Constraints**
-        |   *Shape:* (1,)
+        | **Current Constraints**
+        |   *Shape:* ``query_shape``, (1,)
         |   *Range of first value:* [0, inf)
+        |   *Range of other values:* (-inf, inf)
 
         :return: Constraints around queries
         :rtype: QueryConstrain
@@ -176,9 +174,10 @@ class TimeDataSourceWraper(TimeDataSource):
         | **Description**
         |   See :func:`DataSource.query_constrain()`
         
-        | **Added Constraints**
-        |   *Shape:* (1,)
+        | **Current Constraints**
+        |   *Shape:* ``query_shape``, (1,)
         |   *Range of first value:* [0, t) where t is the upper bound of that value in ``data_source``
+        |   *Range of other values:* (-inf, inf)
 
         :return: Constraints around queries
         :rtype: QueryConstrain
