@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 from dataclasses import dataclass, field
 
 from alts.core.query.queryable import Queryable
-from alts.core.data.constraints import QueryConstrain, ResultConstrain
+from alts.core.data.constrains import QueryConstrain, ResultConstrain
 from alts.core.configuration import init, Configurable
 
 import numpy as np
