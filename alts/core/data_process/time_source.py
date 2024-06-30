@@ -1,3 +1,4 @@
+#TODO D
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
@@ -15,7 +16,7 @@ if TYPE_CHECKING:
 class TimeSource(Publisher, ResultConstrained):
     time_step: float = 1
 
-    def step(self, iteration: int) -> NDArray[Shape["time_step_nr, [time]"], Number]:
+    def step(self, iteration: int) -> NDArray[Shape["time_step_nr, [time]"], Number]: # type: ignore
         self.update()
     
     @property

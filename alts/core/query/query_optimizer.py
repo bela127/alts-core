@@ -1,3 +1,4 @@
+#TODO D
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
@@ -25,5 +26,5 @@ class QueryOptimizer(ExperimentModule, QueryConstrained):
         super().post_init()
         self.selection_criteria = self.selection_criteria(exp_modules = self.exp_modules)
 
-    def select(self, num_queries = None) -> Tuple[NDArray[Shape["query_nr, ... query_dims"], Number], NDArray[Shape["query_nr, [query_score]"], Number]]:
+    def select(self, num_queries = None) -> Tuple[NDArray[Shape["query_nr, ... query_dims"], Number], NDArray[Shape["query_nr, [query_score]"], Number]]: # type: ignore
         raise NotImplementedError

@@ -1,3 +1,4 @@
+#TODO D
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
@@ -13,7 +14,7 @@ if TYPE_CHECKING:
 class Estimator(ExperimentModule, ExpModSubscriber, ResultDataSubscriber):
 
     @abstractmethod
-    def estimate(self, exp_mods) -> NDArray[Shape["query_nr, ... result_dim"], Number]:
+    def estimate(self, exp_mods) -> NDArray[Shape["query_nr, ... result_dim"], Number]: # type: ignore
         raise NotImplementedError()
 
     @abstractmethod

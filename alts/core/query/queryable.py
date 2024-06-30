@@ -1,3 +1,4 @@
+#TODO NID
 from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Protocol
@@ -17,5 +18,5 @@ if TYPE_CHECKING:
 class Queryable(Constrained):
 
     @abstractmethod
-    def query(self, queries: NDArray[Shape["query_nr, ... query_shape"], Number]) -> Tuple[NDArray[Shape["query_nr, ... query_shape"], Number], NDArray[Shape["query_nr, ... result_shape"], Number]]:
+    def query(self, queries: NDArray[Shape["query_nr, ... query_shape"], Number]) -> Tuple[NDArray[Shape["query_nr, ... query_shape"], Number], NDArray[Shape["query_nr, ... result_shape"], Number]]: # type: ignore
         raise NotImplementedError()

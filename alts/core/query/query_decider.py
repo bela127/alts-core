@@ -1,3 +1,4 @@
+#TODO NID
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
@@ -15,5 +16,5 @@ if TYPE_CHECKING:
 class QueryDecider(ExperimentModule, QueryConstrained):
 
     @abstractmethod
-    def decide(self, query_candidates: NDArray[Shape["query_nr, ... query_dims"], Number], scores: NDArray[Shape["query_nr, [query_score]"], Number]) -> Tuple[bool, NDArray[Shape["query_nr, ... query_dims"], Number]]:
+    def decide(self, query_candidates: NDArray[Shape["query_nr, ... query_dims"], Number], scores: NDArray[Shape["query_nr, [query_score]"], Number]) -> Tuple[bool, NDArray[Shape["query_nr, ... query_dims"], Number]]: # type: ignore
         raise NotImplementedError()

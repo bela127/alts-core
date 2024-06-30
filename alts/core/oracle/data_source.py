@@ -1,6 +1,7 @@
 """
 :doc:`Built-In Implementations </modules/oracle/data_source>`
 """
+#Fully documented as of 30.06.2024
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
@@ -32,7 +33,7 @@ class DataSource(Configurable, Queryable):
     query_shape: Tuple[int,...] = init()
     result_shape: Tuple[int,...] = init()
 
-    def query(self, queries: NDArray[ Shape["query_nr, ... query_dim"], Number]) -> Tuple[NDArray[Shape["query_nr, ... query_dim"], Number], NDArray[Shape["query_nr, ... result_dim"], Number]]:
+    def query(self, queries: NDArray[ Shape["query_nr, ... query_dim"], Number]) -> Tuple[NDArray[Shape["query_nr, ... query_dim"], Number], NDArray[Shape["query_nr, ... result_dim"], Number]]: # type: ignore
         """
         | **Description**
         |   ``query()`` is the access point to the data of the ``DataSource``.
@@ -109,7 +110,7 @@ class TimeDataSource(DataSource):
     """
     query_shape: Tuple[int,...] = (1,)
     
-    def query(self, times: NDArray[Shape["time_step_nr, [time]"], Number]) -> Tuple[NDArray[Shape["time_step_nr, [time]"], Number], NDArray[Shape["time_step_nr, ... var_shape"], Number]]:
+    def query(self, times: NDArray[Shape["time_step_nr, [time]"], Number]) -> Tuple[NDArray[Shape["time_step_nr, [time]"], Number], NDArray[Shape["time_step_nr, ... var_shape"], Number]]: # type: ignore
         """
         | **Description**
         |   See :func:`DataSource.query()` 
@@ -157,7 +158,7 @@ class TimeDataSourceWraper(TimeDataSource):
     query_shape: Tuple[int,...] = (1,)
     data_source: DataSource = init()
 
-    def query(self, times: NDArray[Shape["time_step_nr, [time]"], Number]) -> Tuple[NDArray[Shape["time_step_nr, [time]"], Number], NDArray[Shape["time_step_nr, ... var_shape"], Number]]:
+    def query(self, times: NDArray[Shape["time_step_nr, [time]"], Number]) -> Tuple[NDArray[Shape["time_step_nr, [time]"], Number], NDArray[Shape["time_step_nr, ... var_shape"], Number]]: # type: ignore
         """
         | **Description**
         |   ``query()`` queries from the initialized :class:`DataSource` ``data_source`` of the ``TimeDataSourceWrapper``. See :func:`DataSource.query()`.

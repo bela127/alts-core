@@ -1,3 +1,4 @@
+#TODO NID
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
@@ -21,5 +22,5 @@ class DataBehavior(Configurable):
     start_time: float = 0.
     stop_time: float = 600.
 
-    def behavior(self) -> Tuple[NDArray[Shape["change_times"], Number], NDArray[Shape["change_values"], Number]]:
+    def behavior(self) -> Tuple[NDArray[Shape["change_times"], Number], NDArray[Shape["change_values"], Number]]: # type: ignore
         raise NotImplementedError()

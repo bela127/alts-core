@@ -1,3 +1,4 @@
+#TODO D
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
@@ -26,8 +27,8 @@ class Process(Configurable, Queryable):
     data_pools: DataPools = post_init()
     oracles: Oracles = post_init()
 
-    last_queries: NDArray[Shape["data_nr, ... query_shape"], Number] = post_init()
-    last_results: NDArray[Shape["data_nr, ... result_shape"], Number] = post_init()
+    last_queries: NDArray[Shape["data_nr, ... query_shape"], Number] = post_init() # type: ignore
+    last_results: NDArray[Shape["data_nr, ... result_shape"], Number] = post_init() # type: ignore
 
 
     def initialize(self):

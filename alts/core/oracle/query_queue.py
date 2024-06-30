@@ -1,3 +1,4 @@
+#TODO D
 from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
@@ -16,42 +17,42 @@ if TYPE_CHECKING:
 
 @dataclass
 class QueryQueue(DelayedPublisher, QueryConstrained):
-    queries: NDArray[Shape["query_nr, ... query_shape"], Number] = post_init()
+    queries: NDArray[Shape["query_nr, ... query_shape"], Number] = post_init() # type: ignore
     _query_constrain: QueryConstrainedGetter = post_init()
 
-    _latest_add: NDArray[Shape[" ... query_shape"], Number] = post_init()
-    _latest_pop: NDArray[Shape[" ... query_shape"], Number] = post_init()
+    _latest_add: NDArray[Shape[" ... query_shape"], Number] = post_init() # type: ignore
+    _latest_pop: NDArray[Shape[" ... query_shape"], Number] = post_init() # type: ignore
 
 
     def post_init(self):
         super().post_init()
         self.queries = np.empty((0, *self.query_constrain().shape))
 
-    def add(self, queries: NDArray[Shape["query_nr, ... query_shape"], Number]):
+    def add(self, queries: NDArray[Shape["query_nr, ... query_shape"], Number]): # type: ignore
         self.queries = np.concatenate((self.queries, queries))
         self._latest_add = queries[-1:]
         self.request_update()
     
-    def pop(self, query_nr = 1) -> NDArray[Shape["query_nr, ... query_shape"], Number]:
+    def pop(self, query_nr = 1) -> NDArray[Shape["query_nr, ... query_shape"], Number]: # type: ignore
         poped = self.queries[:query_nr,...]
         self.queries = self.queries[query_nr:,...]
         self._latest_pop = poped
         return poped
 
     @property
-    def last(self)-> NDArray[Shape["1, ... query_shape"], Number]:
+    def last(self)-> NDArray[Shape["1, ... query_shape"], Number]: # type: ignore
         return self.queries[-1:,...]
     
     @property
-    def first(self)-> NDArray[Shape["1, ... query_shape"], Number]:
+    def first(self)-> NDArray[Shape["1, ... query_shape"], Number]: # type: ignore
         return self.queries[:1,...]
 
     @property
-    def latest_add(self)-> NDArray[Shape["1, ... query_shape"], Number]:
+    def latest_add(self)-> NDArray[Shape["1, ... query_shape"], Number]: # type: ignore
         return self._latest_add
     
     @property
-    def latest_pop(self)-> NDArray[Shape["1, ... query_shape"], Number]:
+    def latest_pop(self)-> NDArray[Shape["1, ... query_shape"], Number]: # type: ignore
         return self._latest_pop
 
     @property

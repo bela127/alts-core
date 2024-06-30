@@ -1,3 +1,4 @@
+#TODO D
 from __future__ import annotations
 from abc import abstractmethod
 from typing import TYPE_CHECKING
@@ -19,5 +20,5 @@ class QuerySampler(ExperimentModule):
     num_queries: int = init(default=1)
 
     @abstractmethod
-    def sample(self, num_queries: Optional[int] = None) -> NDArray[Shape["query_nr, ... query_dims"], Number]:
+    def sample(self, num_queries: Optional[int] = None) -> NDArray[Shape["query_nr, ... query_dims"], Number]: # type: ignore
         raise NotImplementedError("Please use a non abstract ...QuerySampler.")

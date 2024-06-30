@@ -1,3 +1,4 @@
+#TODO NID
 from __future__ import annotations
 from abc import abstractmethod, abstractproperty
 from typing import TYPE_CHECKING
@@ -16,7 +17,7 @@ if TYPE_CHECKING:
 class SelectionCriteria(ExperimentModule, Queryable):
 
     @abstractmethod
-    def query(self, queries: NDArray[Shape["query_nr, ... query_shape"], Number]) -> Tuple[NDArray[Shape["query_nr, ... query_shape"], Number], NDArray[Shape["query_nr, [score]"], Number]]:
+    def query(self, queries: NDArray[Shape["query_nr, ... query_shape"], Number]) -> Tuple[NDArray[Shape["query_nr, ... query_shape"], Number], NDArray[Shape["query_nr, [score]"], Number]]: # type: ignore
         raise NotImplementedError
     
     def result_constrain(self) -> ResultConstrain:

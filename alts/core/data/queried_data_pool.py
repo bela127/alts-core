@@ -1,3 +1,4 @@
+#TODO D
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
@@ -25,11 +26,11 @@ class QueriedDataPool(DelayedPublisher, Queryable):
     def __init__(self):
         super().init(QueriedDataPool)
 
-        self.queries: NDArray[Shape["query_nr, ... query_dim"], Number]
-        self.results: NDArray[Shape["query_nr, ... result_dim"], Number]
+        self.queries: NDArray[Shape["query_nr, ... query_dim"], Number] # type: ignore
+        self.results: NDArray[Shape["query_nr, ... result_dim"], Number] # type: ignore
 
-        self.last_queries: NDArray[Shape["query_nr, ... query_dim"], Number]
-        self.last_results: NDArray[Shape["query_nr, ... result_dim"], Number]
+        self.last_queries: NDArray[Shape["query_nr, ... query_dim"], Number] # type: ignore
+        self.last_results: NDArray[Shape["query_nr, ... result_dim"], Number] # type: ignore
 
         self.queries = np.empty((0,*self._query_constrain().shape))
         self.results = np.empty((0,*self._result_constrain().shape))
@@ -38,7 +39,7 @@ class QueriedDataPool(DelayedPublisher, Queryable):
         self.last_results = np.empty((0,*self._result_constrain().shape))
 
 
-    def add(self, data_points: Tuple[NDArray[Shape["query_nr, ... query_dim"], Number], NDArray[Shape["query_nr, ... result_dim"], Number]]):
+    def add(self, data_points: Tuple[NDArray[Shape["query_nr, ... query_dim"], Number], NDArray[Shape["query_nr, ... result_dim"], Number]]): # type: ignore
         queries, results = data_points
 
         self.queries = np.concatenate((self.queries, queries))

@@ -1,3 +1,4 @@
+#TODO D
 from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
@@ -41,7 +42,7 @@ class Augmentation(DataSource):
             raise AttributeError("Augmentation always uses the result_shape of the data_source")
 
 
-    def query(self, queries: NDArray[ Shape["query_nr, ... query_dim"], Number]) -> Tuple[NDArray[Shape["query_nr, ... query_dim"], Number], NDArray[Shape["query_nr, ... result_dim"], Number]]:
+    def query(self, queries: NDArray[ Shape["query_nr, ... query_dim"], Number]) -> Tuple[NDArray[Shape["query_nr, ... query_dim"], Number], NDArray[Shape["query_nr, ... result_dim"], Number]]: # type: ignore
         return self.data_source.query(queries)
 
     def query_constrain(self) -> QueryConstrain:
