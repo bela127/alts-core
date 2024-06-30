@@ -16,9 +16,8 @@ if TYPE_CHECKING:
 
 @dataclass 
 class Constraint():
-    count: Optional[int]
     shape: Tuple[int, ...]
-    ranges: Union[NDArray[Shape["... element_dims,[xi_min, xi_max]"], Number], NDArray[Shape["... element_dims,[xi]"], Number]]
+    ranges: NDArray[Shape["... element_dims,[xi_min, xi_max]"], Number]
 
     def matches_shape(self, shape):
         """
@@ -37,6 +36,60 @@ class Constraint():
             return True
         return False
     
+    def matches_ranges(self, element):
+        """
+        | **Description**
+        |   Checks whether the entries of the given element fall within their respective allowed range.
+        |   Checks for shape conformity first.
+
+        :param elements: The element to check for range conformity
+        :type elements: `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
+        :return: Check result
+        :rtype: Boolean
+        """
+        if not self.matches_shape(element.shape()): return False
+        for index, value in np.ndenumerate(element):
+            if self.ranges[index][0] > value or self.ranges[index][1] < value: return False
+        return True
+    
+    def constraints_met(self, elements):
+        """
+        | **Description**
+        |   Checks whether the given list of elements fulfills count, shape and range constraints.
+
+        :param elements: The list of elements to check for count conformity
+        :type elements: iterable
+        :return: Check result
+        :rtype: Boolean
+        """
+        for element in elements:
+            if not self.matches_shape(element.shape): return False
+            if not self.matches_ranges(element): return False
+        return True
+
+    def add_constraint(self, element: NDArray[Shape["... element_dims,[xi_min, xi_max]"], Number]):
+        if self.ranges is None:
+            self.ranges = element
+        else: 
+            lower = True
+            for index, value in np.ndenumerate(element):
+                if lower and value > self.ranges[index]:
+                    self.ranges[index] = value
+                elif not lower and value < self.ranges[index]:
+                    self.ranges[index] = value
+                lower = not lower
+                
+        self._last_added_constraint = element
+
+    def last_added_constraint(self):
+        if self._last_added_constraint is None:
+            raise LookupError("there are infinite elements in a continuous pool")
+        return self._last_added_constraint
+
+@dataclass
+class QueryConstraint(Constraint):
+    count: Optional[int]
+    
     def matches_count(self, elements):
         """
         | **Description**
@@ -50,9 +103,6 @@ class Constraint():
         if len(elements) <= self.count:
             return True
         return False
-    
-    def matches_ranges(self, element):
-        pass
     
     def constraints_met(self, elements):
         """
@@ -70,115 +120,31 @@ class Constraint():
             if not self.matches_ranges(element): return False
         return True
 
-    def add_constraint(self, elements: NDArray[Shape["element_count, ... element_shape"], Number]):
-        if self.ranges is None:
-            self.ranges = elements[..., None]
-        else: 
-            self.ranges = np.concatenate((self.ranges, elements[..., None]))
-        self._last_added_constraint = elements
-        self.element_count = self.ranges.shape[0]
-
-    def last_added_constraint(self):
-        if self._last_added_constraint is None:
-            raise LookupError("there are infinite elements in a continuous pool")
-        return self._last_added_constraint
-
-    def elements_from_norm_pos(self, norm_pos: NDArray[Shape["element_nr, ... element_dims"], Number]) -> NDArray[Shape["element_nr, ... element_dims"], Number]:
-        if self.ranges is None:
-            raise LookupError("can not look up a position in a discrete pool")
-        if np.any(np.isinf(self.ranges)):
-            self.ranges = np.nan_to_num(self.ranges, nan=0, posinf=float(np.finfo(np.float64).max), neginf=float(np.finfo(np.float64).min))
-            raise RuntimeWarning("ElementConstrain ranges are infinity, they will be converted to max float64, but most probably you forgot to provide constrains!")
-        elements = self.ranges[..., 0] + (self.ranges[..., 1] - self.ranges[..., 0]) * norm_pos
-        return elements
-    
-    def elements_from_index(self, indexes):
-        if self.ranges is None:
-            raise LookupError("can not look up a index in a continues pool")
-        return self.ranges[indexes]
-    
-    def all_elements(self):
-        if self.ranges is None:
-            raise LookupError("there are infinite elements in a continuous pool")
-        return self.ranges
-    
 @dataclass
-class QueryConstrain():
-    count: Optional[int]
-    shape: Tuple[int, ...]
-    ranges: Union[NDArray[Shape["... query_dims,[xi_min, xi_max]"], Number], NDArray[Shape["... query_dims,[xi]"], Number]]
-
-    def matches_shape(self, shape):
-        if len(self.shape) == len(shape):
-            for dim_own, dim_ext in zip(self.shape, shape):
-                if dim_own != dim_ext:
-                    return False
-            return True
-        return False
-    
-    def constrains_met(self, queries):
-        for query in queries:
-            if not self.matches_shape(query.shape): return False
-
-    def add_queries(self, queries: NDArray[Shape["query_count, ... query_shape"], Number]):
-        if self.ranges is None:
-            self.ranges = queries[..., None]
-        else: 
-            self.ranges = np.concatenate((self.ranges, queries[..., None]))
-        self._last_queries = queries
-        self.query_count = self.ranges.shape[0]
-
-    def last_queries(self):
-        if self._last_queries is None:
-            raise LookupError("there are infinit queries continues pool")
-        return self._last_queries
-
-    def queries_from_norm_pos(self, norm_pos: NDArray[Shape["query_nr, ... query_dims"], Number]) -> NDArray[Shape["query_nr, ... query_dims"], Number]:
-        if self.ranges is None:
-            raise LookupError("can not look up a position in a discrete pool")
-        if np.any(np.isinf(self.ranges)):
-            self.ranges = np.nan_to_num(self.ranges, nan=0, posinf=float(np.finfo(np.float64).max), neginf=float(np.finfo(np.float64).min))
-            raise RuntimeWarning("QueryConstrain ranges are infinity, they will be converted to max float64, but most probably you forgot to provide constrains!")
-        elements = self.ranges[..., 0] + (self.ranges[..., 1] - self.ranges[..., 0]) * norm_pos
-        return elements
-    
-    def queries_from_index(self, indexes):
-        if self.ranges is None:
-            raise LookupError("can not look up a index in a continues pool")
-        return self.ranges[indexes]
-    
-    def all_queries(self):
-        if self.ranges is None:
-            raise LookupError("there are infinit queries continues pool")
-        return self.ranges
-
-
-@dataclass
-class ResultConstrain():
-    shape: Tuple[int,...]
-    ranges: Optional[NDArray[Shape["... query_dims,[xi_min, xi_max]"], Number]] = None
+class ResultConstraint(Constraint):
+    ...
 
 class QueryConstrained():
     
     @abstractmethod
-    def query_constrain(self) -> QueryConstrain:
+    def query_constrain(self) -> QueryConstraint:
         raise NotImplementedError()
 
 class ResultConstrained():
     
     @abstractmethod
-    def result_constrain(self) -> ResultConstrain:
+    def result_constrain(self) -> ResultConstraint:
         raise NotImplementedError()
 
 class DelayedConstrained():
     
     @abstractmethod
-    def delayed_constrain(self) -> ResultConstrain:
+    def delayed_constrain(self) -> ResultConstraint:
         raise NotImplementedError()
 
 class Constrained(QueryConstrained, ResultConstrained):
     pass
 
-ResultConstrainGetter = Callable[[],ResultConstrain]
+ResultConstrainGetter = Callable[[],ResultConstraint]
 
-QueryConstrainedGetter = Callable[[],QueryConstrain]
+QueryConstrainedGetter = Callable[[],QueryConstraint]
