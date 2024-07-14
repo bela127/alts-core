@@ -26,8 +26,8 @@ class QueryConstrain():
     :type count: ``int``
     :param shape: What shape the queries must have
     :type shape: `Array Shape <https://www.w3schools.com/python/numpy/numpy_array_shape.asp>`_
-    :param ranges: TODO QUESTION
-    :type ranges: TODO QUESTION
+    :param ranges: A set of all permitted query values
+    :type ranges: Union of `NDArrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
     """
     count: Optional[int]
     shape: Tuple[int, ...]
@@ -92,7 +92,15 @@ class QueryConstrain():
         return self._last_queries
 
     def queries_from_norm_pos(self, norm_pos: NDArray[Shape["query_nr, ... query_dims"], Number]) -> NDArray[Shape["query_nr, ... query_dims"], Number]: # type: ignore
-        #QUESTION what it does
+        """
+        | **Description**
+        #QUESTION what does it do?
+
+        :param :
+        :type :
+        :return:
+        :rtype:
+        """
         if self.ranges is None:
             raise LookupError("can not look up a position in a discrete pool")
         if np.any(np.isinf(self.ranges)):
@@ -137,8 +145,8 @@ class ResultConstrain():
 
     :param shape: What shape the queries must have
     :type shape: `Array Shape <https://www.w3schools.com/python/numpy/numpy_array_shape.asp>`_
-    :param ranges: TODO QUESTION
-    :type ranges: TODO QUESTION
+    :param ranges: A set of all permitted query values
+    :type ranges: Union of `NDArrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
     """
     shape: Tuple[int,...]
     ranges: Optional[NDArray[Shape["... query_dims,[xi_min, xi_max]"], Number]] = None # type: ignore

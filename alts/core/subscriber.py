@@ -19,17 +19,25 @@ if TYPE_CHECKING:
 
 
 class Subscriber(Configurable):
-
+    """
+    Subscriber subscribes to subscriptions
+    """
     def post_init(self):
         super().post_init()
         self.subscribe()        
 
     @abstractmethod
     def update(self, subscription: Subscribable) -> None:
+        """
+        Updates the subscription
+        """
         pass
 
     @abstractmethod
     def subscribe(self) -> None:
+        """
+        Subscribes
+        """
         print(f"{self.__class__} subscribed...")
         pass
 

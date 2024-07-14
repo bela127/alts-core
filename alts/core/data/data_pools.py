@@ -8,15 +8,32 @@ from alts.core.data.queried_data_pool import QueriedDataPool
 from alts.core.configuration import Configurable, is_set, init, post_init, pre_init
 
 class DataPools(Configurable):
-
+    """
+    | **Description**
+    |   A ``DataPools`` stores all queries and results that have been supplied to or requested by the trained model.
+    """
     def trigger_subscriber(self):
+        """
+        | **Description**
+        |   Updates its own available data.
+        """
         pass
 
     def __call__(self, *args: Any, **kwds: Any) -> Self:
+        """
+        | **Description**
+        |   Returns a new instance of itself. 
+
+        :param any: Any parameters are being accepted but ignored
+        :type any: Any
+        :return: An instance of this object
+        :rtype: DataPools
+        """
         return self
 
 @dataclass
 class StreamDataPools(DataPools):
+    #QUESTION ASK DIFFERENCE
     stream: QueriedDataPool = init()
 
     def trigger_subscriber(self):
