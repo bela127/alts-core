@@ -50,10 +50,11 @@ class Augmentation(DataSource):
     def query_shape(self, value):
         """
         | **Description**
-        |   Sets the query shape if it has not been set before.
+        |   Does not allow the query shape to be set.
 
         :param value: The desired query shape
         :type value: `Array Shape <https://www.w3schools.com/python/numpy/numpy_array_shape.asp>`_
+        :raises: AttributeError if query shape is set
         """
         if value is not NOTSET:
             raise AttributeError("Augmentation always uses the query_shape of the data_source")
@@ -73,10 +74,11 @@ class Augmentation(DataSource):
     def result_shape(self, value):
         """
         | **Description**
-        |   Sets the result shape if it has not been set before.
+        |   Does not allow the result shape to be set.
 
         :param value: The desired result shape
         :type value: `Array Shape <https://www.w3schools.com/python/numpy/numpy_array_shape.asp>`_
+        :raises: AttributeError if result shape is set
         """
         if value is not NOTSET:
             raise AttributeError("Augmentation always uses the result_shape of the data_source")
