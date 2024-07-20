@@ -1,7 +1,7 @@
+#Fully documented as of 30.06.2024
 """
 :doc:`Built-In Implementations </modules/oracle/data_source>`
 """
-#Fully documented as of 30.06.2024
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
@@ -92,7 +92,7 @@ class DataSource(Configurable, Queryable):
         |    A ``DataSource`` is exhausted if all its available data has been querried.
 
         :return: Whether the ``DataSource`` has been exhausted
-        :rtype: *boolean*
+        :rtype: ``boolean``
 
         | **Default Implementation**
         |    "``return False``"
