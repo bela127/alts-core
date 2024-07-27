@@ -59,8 +59,10 @@ class ProcessDataPools(DataPools):
 
 @dataclass
 class PRDataPools(ResultDataPools, ProcessDataPools):
+    #ProcessResult
     pass
 
 @dataclass
 class SPRDataPools(StreamDataPools, PRDataPools):
+    #StreamProcessResult
     pass

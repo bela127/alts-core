@@ -148,7 +148,6 @@ class TimeDataSourceWraper(TimeDataSource):
     """
     | **Description**
     |   A ``TimeDataSourceWrapper`` is a :class:`TimeDataSource` that queries from another :class:`DataSource`. 
-    |   TODO [Explanation of what's the point of this]
 
     :param query_shape: The expected shape of queries
     :type query_shape: tuple of ints
