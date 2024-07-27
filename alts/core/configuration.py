@@ -151,6 +151,5 @@ class Configurable(ROOT, metaclass = ConfigurableMeta):
         return obj
     
     def __call__(self, **kwargs) -> Self:
-        new_obj = self.__new__(self.__cls, *self.__args, **self.__kwargs)
+        new_obj = self.__new__(self.__cls, *self.__args, **self.__kwargs) # type: ignore
         return new_obj
-
