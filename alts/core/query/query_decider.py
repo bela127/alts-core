@@ -2,6 +2,7 @@
 """
 :doc:`Built-In Implementations </core/query/query_decider>`
 """
+#TODO Handle empty Query Candidates
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
@@ -19,7 +20,8 @@ if TYPE_CHECKING:
 class QueryDecider(ExperimentModule, QueryConstrained):
     """
     | **Description**
-    |   This module decides which next query would bring the most valuable information to the table.
+    |   This module decides which best-scoring queries are worth the resources needed to obtain their results.
+    |   Outside the first learning iteration of the model you can expect the QueryDecider to receive a non-empty list of query candidates.
     """
 
     @abstractmethod
