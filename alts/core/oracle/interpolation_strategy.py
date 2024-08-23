@@ -1,6 +1,6 @@
 #Fully documented as of 30.06.2024
 from __future__ import annotations
-from typing import TYPE_CHECKING, Self
+from typing import TYPE_CHECKING
 from alts.core.data.data_sampler import DataSampler
 
 from alts.core.configuration import Configurable, post_init, Required, is_set
@@ -47,7 +47,7 @@ class InterpolationStrategy(Configurable, QueryConstrained):
         """
         return self.data_sampler.query_constrain()
 
-    def __call__(self, data_sampler: Required[DataSampler] = None, **kwargs) -> Self:
+    def __call__(self, data_sampler: Required[DataSampler] = None, **kwargs) -> Self: # type: ignore
         """
         | **Description**
         |   Returns an ``InterpolatingDataSource`` constrained to the given :doc:`DataSampler <core/data/data_sampler>`.

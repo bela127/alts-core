@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 class SelectionCriteria(ExperimentModule, Queryable):
     """
     | **Description**
-    |   A ``SelectionCriteria`` is a way by which to score query candidates on a scale from 0 to 1.
+    |   A ``SelectionCriteria`` is an algorithm which gives scores to query candidates.
     """
 
     @abstractmethod
@@ -44,7 +44,7 @@ class SelectionCriteria(ExperimentModule, Queryable):
         |   Returns the result constraints for scores.
 
         | **Current Constraints**
-        |   *Value Range:* [0, 1] for all values
+        |   *None*
 
         :return: Constraints around results
         :rtype: ResultConstrain

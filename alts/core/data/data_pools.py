@@ -16,6 +16,9 @@ class DataPools(Configurable):
         """
         | **Description**
         |   Updates its own available data.
+
+        :return: No return
+        :rtype: None
         """
         pass
 
