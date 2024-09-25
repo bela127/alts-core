@@ -20,10 +20,19 @@ if TYPE_CHECKING:
 
 
 class QueriedDataPool(DelayedPublisher, Queryable):
+    """
+    | **Description**
+    |   It's a queryable :doc:`DataPools </core/data/data_pools>`.
+    |   It contains queries, results and the last added queries and results.
+    """
     _query_constrain: QueryConstrainedGetter = post_init()
     _result_constrain: ResultConstrainGetter = post_init()
 
     def __init__(self):
+        """
+        | **Description**
+        |   Initializes all attributes at default value.
+        """
         super().init(QueriedDataPool)
 
         self.queries: NDArray[Shape["query_nr, ... query_dim"], Number] # type: ignore
@@ -40,6 +49,13 @@ class QueriedDataPool(DelayedPublisher, Queryable):
 
 
     def add(self, data_points: Tuple[NDArray[Shape["query_nr, ... query_dim"], Number], NDArray[Shape["query_nr, ... result_dim"], Number]]): # type: ignore
+        """
+        | **Description**
+        |   Adds all data points to its data pool and updates its last added data.
+
+        :param data_points: A tuple of queries and results
+        :type data_points: Tuple[`NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_,`NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_]
+        """
         queries, results = data_points
 
         self.queries = np.concatenate((self.queries, queries))
