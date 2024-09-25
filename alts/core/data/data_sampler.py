@@ -17,8 +17,22 @@ if TYPE_CHECKING:
 
 @dataclass
 class DataSampler(Queryable, ExperimentModule):
-
+    """
+    | **Description**
+    |   Samples data from a :doc:`QueriedDataPools </core/data/queried_data_pools>`, meaning for each query the `DataSampler` returns a number of query-result pairs in the same area.
+    """
     def query(self, queries: NDArray[Shape["query_nr, ... query_dim"], Number], size = None) -> Tuple[NDArray[Shape["query_nr, sample_size, ... query_dim"], Number], NDArray[Shape["query_nr, sample_size,... result_dim"], Number]]: # type: ignore
+        """
+        | **Description**
+        |   Returns a tuple of ``size`` queries and ``size`` results in the area of the requested queries.
+
+        :param queries: A list of queries
+        :type queries: `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
+        :param size: The preferred sample size
+        :type size: Number
+        :return: A tuple of queries and their associated results
+        :rtype: Tuple[`NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_,`NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_]
+        """
         raise NotImplementedError()
 
 @dataclass
