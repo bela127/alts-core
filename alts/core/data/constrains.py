@@ -1,4 +1,7 @@
-#TODO D
+#Fully documented as of 25.09.2024
+"""
+:doc:`Built-In Implementations </modules/data/constrains>`
+"""
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
@@ -147,24 +150,56 @@ class ResultConstrain():
     ranges: Optional[NDArray[Shape["... query_dims,[xi_min, xi_max]"], Number]] = None # type: ignore
 
 class QueryConstrained():
-    
+    """
+    | **Description**
+    |   If a class inherits from ``QueryConstrained``, it means that its objects have a :class:`QueryConstrain` for all queries.
+
+    """
     @abstractmethod
     def query_constrain(self) -> QueryConstrain:
+        """
+        | **Description**
+        |   Returns the :class:`QueryConstrain` of the object. 
+        |   Not implemented here.
+        """
         raise NotImplementedError()
 
 class ResultConstrained():
-    
+    """
+    | **Description**
+    |   If a class is ``ResultConstrained``, its objects have a :class:`ResultConstrain` for all immediate results.
+
+    """
     @abstractmethod
     def result_constrain(self) -> ResultConstrain:
+        """
+        | **Description**
+        |   Returns the :class:`ResultConstrain` of the object. 
+        |   Not implemented here.
+        """
         raise NotImplementedError()
 
 class DelayedConstrained():
-    
+    """
+    | **Description**
+    |   If a class is ``ResultConstrained``, its objects have a :class:`ResultConstrain` for all delayed results.
+
+    """
     @abstractmethod
     def delayed_constrain(self) -> ResultConstrain:
+        """
+        | **Description**
+        |   Returns the :class:`ResultConstrain` of the object. 
+        |   Not implemented here.
+        """
         raise NotImplementedError()
 
 class Constrained(QueryConstrained, ResultConstrained):
+    """
+    | **Description**
+    |   If a class is ``ResultConstrained``, its objects have a :class:`QueryConstrain` for all queries and a :class:`ResultConstrain` for all immediate results.
+
+    """
     pass
 
 ResultConstrainGetter = Callable[[],ResultConstrain]

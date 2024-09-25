@@ -12,10 +12,22 @@ if TYPE_CHECKING:
 
 @dataclass
 class StoppingCriteria(Configurable):
+    """
+    | **Description**
+    |   Determines when the experiment has reached its goal.
+    """
     exp: Experiment = post_init()
 
     @property
     def next(self) -> bool:
+        """
+        | **Description**
+        |   Determines whether the experiment should continue into another step.
+        |   Currently always returns True.
+
+        :return: Should the experiment continue? (True)
+        :rtype: bool
+        """
         return True
     
     def __call__(self, exp: Required[Experiment] = None, **kwargs) -> Self:

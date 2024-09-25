@@ -16,9 +16,6 @@ class DataPools(Configurable):
         """
         | **Description**
         |   Updates its own available data.
-
-        :return: No return
-        :rtype: None
         """
         pass
 
@@ -36,10 +33,17 @@ class DataPools(Configurable):
 
 @dataclass
 class StreamDataPools(DataPools):
-    #QUESTION ASK DIFFERENCE
+    """
+    | **Description**
+    |   A ``DataPools`` specifically for streams.
+    """
     stream: QueriedDataPool = init()
 
     def trigger_subscriber(self):
+        """
+        | **Description**
+        |   Updates its own available data stream.
+        """
         super().trigger_subscriber()
         self.stream.update()
 
