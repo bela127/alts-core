@@ -15,6 +15,11 @@ if TYPE_CHECKING:
 
 @dataclass
 class DataBehavior(Configurable):
+    """
+    | **Description**
+    |   Describes how the data is behaving over time.
+    |   Dimensions: Frequency of change, lowest value, highest value, lowest/highest time data is available for
+    """
     change_interval: float = 5
     lower_value: float=-1
     upper_value: float=1
