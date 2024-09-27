@@ -12,7 +12,6 @@ if TYPE_CHECKING:
     from alts.core.subscribable import Subscribable
 
 class Estimator(ExperimentModule, ExpModSubscriber, ResultDataSubscriber):
-
     @abstractmethod
     def estimate(self, exp_mods) -> NDArray[Shape["query_nr, ... result_dim"], Number]: # type: ignore
         raise NotImplementedError()
