@@ -1,4 +1,7 @@
-#TODO D
+#Fully documented as of 27.09.2024
+"""
+:doc:`Built-In Implementations </modules/oracle/query_queue>`
+"""
 from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
@@ -141,6 +144,15 @@ class QueryQueue(DelayedPublisher, QueryConstrained):
        
 
     def __call__(self, query_constrain: Required[QueryConstrainedGetter], **kwargs) -> Self:
+        """
+        | **Description**
+        |   Returns a QueryQueue with the given query constraint.
+
+        :param query_constrain: Constraints of the queries the queue holds.
+        :type query_constrains: :doc:`QueryConstrain </core/data/constrains>`
+        :return: Configured QueryQueue
+        :rtype: QueryQueue
+        """
         obj =  super().__call__(**kwargs)
         obj._query_constrain = is_set(query_constrain)
         return obj
