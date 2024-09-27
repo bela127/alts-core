@@ -1,3 +1,7 @@
+#Fully documented as of 27.09.2024
+"""
+:doc:`Built-In Implementations </modules/stopping_criteria>`
+"""
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
@@ -31,6 +35,15 @@ class StoppingCriteria(Configurable):
         return True
     
     def __call__(self, exp: Required[Experiment] = None, **kwargs) -> Self:
+        """
+        | **Description**
+        |   Returns a StoppingCriteria configured with the exp-argument.
+
+        :param exp: The experiment to be checked
+        :type exp: :doc:`Experiment </core/experiment>`
+        :return: Configured StoppingCriteria
+        :rtype: StoppingCriteria
+        """
         obj = super().__call__( **kwargs)
         obj.exp = is_set(exp)
         return obj
