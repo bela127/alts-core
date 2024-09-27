@@ -1,4 +1,4 @@
-#TODO NID
+#Fully documented as of 27.09.2024
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
@@ -37,12 +37,24 @@ class DataSampler(Queryable, ExperimentModule):
 
 @dataclass
 class ResultDataSampler(ResultDataSubscriber, DataSampler):
+    """
+    | **Description**
+    |   Samples data from a :doc:`ResultDataPools </core/data/data_pools>`.
+    """
     pass
 
 @dataclass
 class StreamDataSampler(StreamDataSubscriber, DataSampler):
+    """
+    | **Description**
+    |   Samples data from a :doc:`StreamDataPools </core/data/data_pools>`.
+    """
     pass
 
 @dataclass
 class ProcessDataSampler(ProcessDataSubscriber, DataSampler):
+    """
+    | **Description**
+    |   Samples data from a :doc:`ProcessDataPools </core/data/data_pools>`.
+    """
     pass
