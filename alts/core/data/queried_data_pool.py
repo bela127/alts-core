@@ -1,4 +1,4 @@
-#TODO D
+#Fully documented as of 27.09.2024
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
@@ -24,6 +24,11 @@ class QueriedDataPool(DelayedPublisher, Queryable):
     | **Description**
     |   It's a queryable :doc:`DataPools </core/data/data_pools>`.
     |   It contains queries, results and the last added queries and results.
+
+    :param _query_constrain: Query constraints
+    :type _query_constrain: :doc:`QueryConstrain </core/data/constrains>` 
+    :param _query_result: Result constraints
+    :type _query_result: :doc:`ResultConstrain </core/data/constrains>` 
     """
     _query_constrain: QueryConstrainedGetter = post_init()
     _result_constrain: ResultConstrainGetter = post_init()
@@ -67,6 +72,17 @@ class QueriedDataPool(DelayedPublisher, Queryable):
         self.request_update()
         
     def __call__(self, query_constrain: Required[QueryConstrainedGetter] = None, result_constrain: Required[ResultConstrainGetter] = None, **kwargs) -> Self:
+        """
+        | **Description**
+        |   Returns a configured QueriedDataPool object to the given query and result constraints.
+
+        :param query_constrain: Query constraints
+        :type query_constrain: :doc:`QueryConstrain </core/data/constrains>`
+        :param result_constrain: Result constraints
+        :type result_constrain: :doc:`ResultConstrain </core/data/constrains>`
+        :return: Configured QueriedDataPool
+        :rtype: QueriedDataPool
+        """
         obj = super().__call__( **kwargs)
         obj._query_constrain = is_set(query_constrain)
         obj._result_constrain = is_set(result_constrain)
