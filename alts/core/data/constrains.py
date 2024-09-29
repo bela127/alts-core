@@ -1,4 +1,4 @@
-#Fully documented as of 25.09.2024
+#TODO D queries_from_norm_pos
 """
 :doc:`Built-In Implementations </modules/data/constrains>`
 """
