@@ -114,6 +114,7 @@ class QueryConstrain():
     
     def queries_from_index(self, indexes):
         """
+        queries_from_index(indexes) -> query
         | **Description**
         |   Returns the ``indexes``-th added queries.
 
@@ -128,6 +129,7 @@ class QueryConstrain():
     
     def all_queries(self):
         """
+        all_queries() -> queries
         | **Description**
         |   Returns all added queries.
 
@@ -142,6 +144,7 @@ class QueryConstrain():
 @dataclass
 class ResultConstrain():
     """
+    ResultConstrain(shape, ranges)
     | **Description**
     |   A ``ResultConstrain`` describes what kind of results the given ``Queryable`` object gives.
     |   Results can be constrained in 2 ways: shape, and value ranges.
