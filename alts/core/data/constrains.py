@@ -20,6 +20,7 @@ if TYPE_CHECKING:
 @dataclass
 class QueryConstrain():
     """
+    (count, shape, ranges)
     | **Description**
     |   A ``QueryConstrain`` describes what kind of queries the given ``Queryable`` object accepts.
     |   Queries can be constrained in 3 ways: count, shape, and value ranges.
@@ -39,6 +40,7 @@ class QueryConstrain():
 
     def matches_shape(self, shape):
         """
+        (shape)
         | **Description**
         |   Checks whether the query matches the shape constraints of the ``Queryable`` object.
 
@@ -56,6 +58,7 @@ class QueryConstrain():
     
     def constrains_met(self, queries):
         """
+        (queries) -> bool
         | **Description**
         |   Checks whether the query matches the shape constraints of the ``Queryable`` object.
 
@@ -70,6 +73,7 @@ class QueryConstrain():
 
     def add_queries(self, queries: NDArray[Shape["query_count, ... query_shape"], Number]): # type: ignore
         """
+        (queries)
         | **Description**
         |   Adds the list of queries to ``ranges`` and updates the ``query_count``
 
@@ -87,8 +91,9 @@ class QueryConstrain():
 
     def last_queries(self):
         """
+        () -> queries
         | **Description**
-        |   Returns the last added query.
+        |   Returns the last added queries.
 
         :return: Last added query
         :rtype: `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
