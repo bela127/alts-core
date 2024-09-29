@@ -40,7 +40,7 @@ class QueryConstrain():
 
     def matches_shape(self, shape):
         """
-        (shape)
+        matches_shape(shape) -> bool
         | **Description**
         |   Checks whether the query matches the shape constraints of the ``Queryable`` object.
 
@@ -58,7 +58,7 @@ class QueryConstrain():
     
     def constrains_met(self, queries):
         """
-        (queries) -> bool
+        constrains_met(queries) -> bool
         | **Description**
         |   Checks whether the query matches the shape constraints of the ``Queryable`` object.
 
@@ -73,7 +73,7 @@ class QueryConstrain():
 
     def add_queries(self, queries: NDArray[Shape["query_count, ... query_shape"], Number]): # type: ignore
         """
-        (queries)
+        add_queries(queries) -> None
         | **Description**
         |   Adds the list of queries to ``ranges`` and updates the ``query_count``
 
@@ -91,7 +91,7 @@ class QueryConstrain():
 
     def last_queries(self):
         """
-        () -> queries
+        last_queries() -> queries
         | **Description**
         |   Returns the last added queries.
 
