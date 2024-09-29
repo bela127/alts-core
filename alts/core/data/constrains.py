@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 @dataclass
 class QueryConstrain():
     """
-    (count, shape, rangeshi)
+    QueryConstrain(count, shape, ranges)
     | **Description**
     |   A ``QueryConstrain`` describes what kind of queries the given ``Queryable`` object accepts.
     |   Queries can be constrained in 3 ways: count, shape, and value ranges.
