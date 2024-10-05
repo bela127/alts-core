@@ -1,4 +1,4 @@
-#Fully documented as of 27.09.2024
+#Version 1.1 conform as of 05.10.2024
 """
 :doc:`Built-In Implementations </modules/oracle/query_queue>`
 """
@@ -21,6 +21,7 @@ if TYPE_CHECKING:
 @dataclass
 class QueryQueue(DelayedPublisher, QueryConstrained):
     """
+    QueryQueue()
     | **Description**
     |   A buffer for queries in shape of a query. 
     """
@@ -33,6 +34,7 @@ class QueryQueue(DelayedPublisher, QueryConstrained):
 
     def post_init(self):
         """
+        post_init(self) -> None
         | **Description**
         |   Initialites an empty query queue.
         """
@@ -41,6 +43,7 @@ class QueryQueue(DelayedPublisher, QueryConstrained):
 
     def add(self, queries: NDArray[Shape["query_nr, ... query_shape"], Number]): # type: ignore
         """
+        add(self, queries) -> None
         | **Description**
         |   Adds the queries to the queue.
 
@@ -53,10 +56,11 @@ class QueryQueue(DelayedPublisher, QueryConstrained):
     
     def pop(self, query_nr = 1) -> NDArray[Shape["query_nr, ... query_shape"], Number]: # type: ignore
         """
+        pop(self, query_nr) -> queries
         | **Description**
-        |   Pops all queries up to the given query_nr (default is 1).
+        |   Pops all queries up to the given query_nr.
 
-        :param query_nr: How many queries to pop.
+        :param query_nr: How many queries to pop (default = 1).
         :type query_nr: int
         :return: Array of popped queries
         :rtype: `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
@@ -69,6 +73,7 @@ class QueryQueue(DelayedPublisher, QueryConstrained):
     @property
     def last(self)-> NDArray[Shape["1, ... query_shape"], Number]: # type: ignore
         """
+        last(self) -> query
         | **Description**
         |   Returns the last query of the queue.
 
@@ -80,6 +85,7 @@ class QueryQueue(DelayedPublisher, QueryConstrained):
     @property
     def first(self)-> NDArray[Shape["1, ... query_shape"], Number]: # type: ignore
         """
+        first(self) -> query
         | **Description**
         |   Returns the first query of the queue.
 
@@ -91,6 +97,7 @@ class QueryQueue(DelayedPublisher, QueryConstrained):
     @property
     def latest_add(self)-> NDArray[Shape["1, ... query_shape"], Number]: # type: ignore
         """
+        latest_add(self) -> query
         | **Description**
         |   Returns the last added query.
 
@@ -102,6 +109,7 @@ class QueryQueue(DelayedPublisher, QueryConstrained):
     @property
     def latest_pop(self)-> NDArray[Shape["1, ... query_shape"], Number]: # type: ignore
         """
+        latest_pop(self) -> query
         | **Description**
         |   Returns the last popped query.
 
@@ -113,6 +121,7 @@ class QueryQueue(DelayedPublisher, QueryConstrained):
     @property
     def empty(self):
         """
+        empty(self) -> None
         | **Description**
         |   Returns ``True`` only if the queue is empty.
 
@@ -122,8 +131,9 @@ class QueryQueue(DelayedPublisher, QueryConstrained):
         return self.queries.shape[0] == 0
     
     @property
-    def count(self):
+    def count(self) -> int:
         """
+        count(self) -> int
         | **Description**
         |   Returns the size of the queue.
 
@@ -134,6 +144,7 @@ class QueryQueue(DelayedPublisher, QueryConstrained):
 
     def query_constrain(self) -> QueryConstrain:
         """
+        query_constrain(self) -> QueryConstrain
         | **Description**
         |   Returns its query constraints.
 
@@ -145,6 +156,7 @@ class QueryQueue(DelayedPublisher, QueryConstrained):
 
     def __call__(self, query_constrain: Required[QueryConstrainedGetter], **kwargs) -> Self:
         """
+        __call__(self, query_constrain, **kwargs) -> Self
         | **Description**
         |   Returns a QueryQueue with the given query constraint.
 

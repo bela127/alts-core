@@ -1,4 +1,4 @@
-#Fully documented as of 20.07.2024
+#Version 1.1 conform as of 05.10.2024
 """
 :doc:`Built-In Implementations </core/query/query_decider>`
 """
@@ -19,6 +19,7 @@ if TYPE_CHECKING:
 @dataclass
 class QueryDecider(ExperimentModule, QueryConstrained):
     """
+    QueryDecider()
     | **Description**
     |   This module decides which best-scoring queries are worth the resources needed to obtain their results.
     |   Outside the first learning iteration of the model you can expect the QueryDecider to receive a non-empty list of query candidates.
@@ -27,6 +28,7 @@ class QueryDecider(ExperimentModule, QueryConstrained):
     @abstractmethod
     def decide(self, query_candidates: NDArray[Shape["query_nr, ... query_dims"], Number], scores: NDArray[Shape["query_nr, [query_score]"], Number]) -> Tuple[bool, NDArray[Shape["query_nr, ... query_dims"], Number]]: # type: ignore
         """
+        decide(self, queries, scores) -> (bool, queries)
         | **Description**
         |   Returns its favorite query/queries out of a list of candidates with associated scores from 0 to 1.
         |   Is not implemented here.

@@ -1,4 +1,4 @@
-#Fully documented as of 27.09.2024
+#Version 1.1 conform as of 03.10.2024
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
@@ -18,11 +18,13 @@ if TYPE_CHECKING:
 @dataclass
 class DataSampler(Queryable, ExperimentModule):
     """
+    DataSampler()
     | **Description**
     |   Samples data from a :doc:`QueriedDataPools </core/data/queried_data_pools>`, meaning for each query the `DataSampler` returns a number of query-result pairs in the same area.
     """
     def query(self, queries: NDArray[Shape["query_nr, ... query_dim"], Number], size = None) -> Tuple[NDArray[Shape["query_nr, sample_size, ... query_dim"], Number], NDArray[Shape["query_nr, sample_size,... result_dim"], Number]]: # type: ignore
         """
+        query(self, queries, size) -> data_points
         | **Description**
         |   Returns a tuple of ``size`` queries and ``size`` results in the area of the requested queries.
 
@@ -38,6 +40,7 @@ class DataSampler(Queryable, ExperimentModule):
 @dataclass
 class ResultDataSampler(ResultDataSubscriber, DataSampler):
     """
+    ResultDataSampler()
     | **Description**
     |   Samples data from a :doc:`ResultDataPools </core/data/data_pools>`.
     """
@@ -46,6 +49,7 @@ class ResultDataSampler(ResultDataSubscriber, DataSampler):
 @dataclass
 class StreamDataSampler(StreamDataSubscriber, DataSampler):
     """
+    StreamDataSampler()
     | **Description**
     |   Samples data from a :doc:`StreamDataPools </core/data/data_pools>`.
     """
@@ -54,6 +58,7 @@ class StreamDataSampler(StreamDataSubscriber, DataSampler):
 @dataclass
 class ProcessDataSampler(ProcessDataSubscriber, DataSampler):
     """
+    ProcessDataSampler()
     | **Description**
     |   Samples data from a :doc:`ProcessDataPools </core/data/data_pools>`.
     """

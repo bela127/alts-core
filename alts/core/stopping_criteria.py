@@ -1,4 +1,4 @@
-#Fully documented as of 27.09.2024
+#Version 1.1 conform as of 05.10.2024
 """
 :doc:`Built-In Implementations </modules/stopping_criteria>`
 """
@@ -17,14 +17,19 @@ if TYPE_CHECKING:
 @dataclass
 class StoppingCriteria(Configurable):
     """
+    StoppingCriteria(exp)
     | **Description**
     |   Determines when the experiment has reached its goal.
+
+    :param exp: The experiment to monitor
+    :type exp: :doc:`Experiment </core/experiment>`
     """
     exp: Experiment = post_init()
 
     @property
     def next(self) -> bool:
         """
+        next(self) -> bool
         | **Description**
         |   Determines whether the experiment should continue into another step.
         |   Currently always returns True.
@@ -36,6 +41,7 @@ class StoppingCriteria(Configurable):
     
     def __call__(self, exp: Required[Experiment] = None, **kwargs) -> Self:
         """
+        __call__(self, exp, **kwargs) -> Self
         | **Description**
         |   Returns a StoppingCriteria configured with the exp-argument.
 

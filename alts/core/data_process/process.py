@@ -1,4 +1,4 @@
-#Fully documented as of 27.09.2024
+#Version 1.1 conform as of 05.10.2024
 """
 :doc:`Built-In Implementations </modules/data_process/process>`
 """
@@ -26,6 +26,7 @@ from alts.core.query.queryable import Queryable
 
 class Process(Configurable, Queryable):
     """
+    Process(time_source, data_pools, oracles)
     | **Description**
     |   The Process is the module responsible for processing the :doc:`Estimator's </core/estimator>` queries and providing their results as well as saving all the queried data. 
 
@@ -46,13 +47,15 @@ class Process(Configurable, Queryable):
 
     def initialize(self):
         """
+        initialize(self) -> None
         | **Description**
         |   Does everything that needs to be done for the Process to be ready.
         """
         pass
     
-    def step(self, iteration):
+    def step(self, iteration) -> Tuple[NDArray[Shape["query_nr, ... query_dim"], Number], NDArray[Shape["query_nr, ... result_dim"], Number], NDArray[Shape["query_nr, ... query_dim"], Number], NDArray[Shape["query_nr, ... result_dim"], Number]]: # type: ignore
         """
+        step(self, iteration) -> (pre_step_data_points, post_step_data_points)
         | **Description**
         |   Advances the time (of its time source) by ``iteration`` step and returns the new data.
 
@@ -61,10 +64,11 @@ class Process(Configurable, Queryable):
         :return: Processed Queries before step, Results before step, Processed Queries after step, Results after step
         :rtype: `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_, `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_, `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_, `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_ 
         """
-        return None, None, None, None
+        return None, None, None, None # type: ignore
     
     def __call__(self, time_source: Required[TimeSource] = None, oracles: Required[Oracles] = None, data_pools: Required[DataPools] = None, **kwargs) -> Self:
         """
+        __call__(self, time_source, oracles, data_pools) -> Self
         | **Description**
         |   Returns an object of itself configured with all the parsed arguments.
 

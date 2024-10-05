@@ -1,4 +1,4 @@
-#Fully documented as of 25.09.2024
+#Version 1.1 conform as of 05.10.2024
 from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Protocol
@@ -17,12 +17,14 @@ if TYPE_CHECKING:
 
 class Queryable(Constrained):
     """
+    Queryable()
     | **Description**
     |   A Queryable module can be queried for results.
     """
     @abstractmethod
     def query(self, queries: NDArray[Shape["query_nr, ... query_shape"], Number]) -> Tuple[NDArray[Shape["query_nr, ... query_shape"], Number], NDArray[Shape["query_nr, ... result_shape"], Number]]: # type: ignore
         """
+        query(self, queries) -> data_points
         | **Description**
         |   For a list of queries it returns a list of queries with associated results.
 

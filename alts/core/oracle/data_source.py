@@ -1,4 +1,4 @@
-#Fully documented as of 30.06.2024
+#Version 1.1 conform as of 05.10.2024
 """
 :doc:`Built-In Implementations </modules/oracle/data_source>`
 """
@@ -20,6 +20,7 @@ if TYPE_CHECKING:
 @dataclass
 class DataSource(Configurable, Queryable):
     """
+    DataSource(query_shape, result_shape)
     | **Description**
     |   A ``DataSource`` is a source of learning data for the model in training.
     |   It returns *results* (y-values) to given *queries* (x-values) upon request.
@@ -35,28 +36,27 @@ class DataSource(Configurable, Queryable):
 
     def query(self, queries: NDArray[ Shape["query_nr, ... query_dim"], Number]) -> Tuple[NDArray[Shape["query_nr, ... query_dim"], Number], NDArray[Shape["query_nr, ... result_dim"], Number]]: # type: ignore
         """
+        query(self, queries) -> data_points
         | **Description**
         |   ``query()`` is the access point to the data of the ``DataSource``.
-        |   It returns the *result* to a given *query*.
+        |   It returns the *results* to given *queries*.
 
         :param queries: Requested Query
         :type queries: `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
         :return: Processed Query [#]_ , Result 
         :rtype: A tuple of two `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
 
-        | **Default Implementation**
-        |   *None*
-
         :raises: ``NotImplementedError``
 
         .. [#] The actually processed query may differ from the requested one.
             | This may happen if the ``DataSource`` does not contain the exact query that is being requested, as the real-life case often is.
-            | In this scenario, a "similar" query will be processed in its stead.
+            | In this scenario, a "similar" query will be processed or the query is dropped alltogether.
         """
         raise NotImplementedError
  
     def query_constrain(self) -> QueryConstrain:
         """
+        query_constrain(self) -> QueryConstrain
         | **Description**
         |   ``query_constrain()`` is a getter-function for the constraints around queries to the ``DataSource``. 
         |   Constraints can affect the ``count``, ``shape`` and the ``ranges`` of a query.
@@ -74,6 +74,7 @@ class DataSource(Configurable, Queryable):
     
     def result_constrain(self) -> ResultConstrain:
         """
+        result_constrain(self) -> ResultConstrain
         | **Description**
         |    ``result_constrain()`` is the equivalent of :func:`query_constrain()` for results from the ``DataSource``.
 
@@ -86,22 +87,22 @@ class DataSource(Configurable, Queryable):
         return ResultConstrain(shape = self.result_shape)
     
     @property
-    def exhausted(self):
+    def exhausted(self) -> bool:
         """
+        exhausted(self) -> bool
         | **Description**
-        |    A ``DataSource`` is exhausted if all its available data has been querried.
+        |   A ``DataSource`` is exhausted if all its available data has been querried.
+        |   Returns ``False`` by default
 
         :return: Whether the ``DataSource`` has been exhausted
         :rtype: ``boolean``
-
-        | **Default Implementation**
-        |    "``return False``"
         """
         return False
 
 @dataclass
 class TimeDataSource(DataSource):
     """
+    TimeDataSource(query_shape)
     | **Description**
     |   A ``TimeDataSource`` is a :class:`DataSource` in which the first entry of a query is a non-negative number (representing time).
 
@@ -112,6 +113,7 @@ class TimeDataSource(DataSource):
     
     def query(self, times: NDArray[Shape["time_step_nr, [time]"], Number]) -> Tuple[NDArray[Shape["time_step_nr, [time]"], Number], NDArray[Shape["time_step_nr, ... var_shape"], Number]]: # type: ignore
         """
+        query(self, queries) -> data_points
         | **Description**
         |   See :func:`DataSource.query()` 
 
@@ -120,15 +122,13 @@ class TimeDataSource(DataSource):
         :return: Processed Query, Result 
         :rtype: A tuple of two `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
 
-        | **Default Implementation**
-        |   *None*
-
         :raises: ``NotImplementedError``
         """
         raise NotImplementedError()
     
     def query_constrain(self) -> QueryConstrain:
         """
+        query_constrain(self) -> QueryConstrain
         | **Description**
         |   See :func:`DataSource.query_constrain()`
         
@@ -146,6 +146,7 @@ class TimeDataSource(DataSource):
 @dataclass
 class TimeDataSourceWraper(TimeDataSource):
     """
+    TimeDataSourceWraper(query_shape, data_source)
     | **Description**
     |   A ``TimeDataSourceWrapper`` is a :class:`TimeDataSource` that queries from another :class:`DataSource`. 
 
@@ -159,6 +160,7 @@ class TimeDataSourceWraper(TimeDataSource):
 
     def query(self, times: NDArray[Shape["time_step_nr, [time]"], Number]) -> Tuple[NDArray[Shape["time_step_nr, [time]"], Number], NDArray[Shape["time_step_nr, ... var_shape"], Number]]: # type: ignore
         """
+        query(self, queries) -> data_points
         | **Description**
         |   ``query()`` queries from the initialized :class:`DataSource` ``data_source`` of the ``TimeDataSourceWrapper``. See :func:`DataSource.query()`.
 
@@ -171,6 +173,7 @@ class TimeDataSourceWraper(TimeDataSource):
     
     def query_constrain(self) -> QueryConstrain:
         """
+        query_constrain(self) -> QueryConstrain
         | **Description**
         |   See :func:`DataSource.query_constrain()`
         

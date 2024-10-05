@@ -1,4 +1,4 @@
-#Fully documented as of 30.06.2024
+#Version 1.1 conform as of 05.10.2024
 from __future__ import annotations
 from typing import TYPE_CHECKING
 from alts.core.data.data_sampler import DataSampler
@@ -13,6 +13,7 @@ if TYPE_CHECKING:
 
 class InterpolationStrategy(Configurable, QueryConstrained):
     """
+    InterpolationStrategy(data_sampler)
     | **Description**
     |   An ``InterpolatingStrategy`` is an **ambivalent** source of data depending on the :doc:`DataSampler <core/data/data_sampler>` it interpolates within.
     |   This is a base class not intended for direct use.
@@ -24,6 +25,7 @@ class InterpolationStrategy(Configurable, QueryConstrained):
 
     def interpolate(self, data_points: Tuple[NDArray[Shape["query_nr, sample_nr, ... query_dim"], Number], NDArray[Shape["query_nr, sample_nr, ... result_dim"], Number]]) -> Tuple[NDArray[Shape["query_nr, ... query_dim"], Number], NDArray[Shape["query_nr, ... result_dim"], Number]]: # type: ignore
         """
+        interpolate(self, data_points) -> data_points
         | **Description**
         |   Interpolates a twople of data points and returns the interpolated twople.
         |   This implementation of ``interpolate`` returns the twople as is. If this is the result you wish to achieve, please use :class:`NoInterpolation` instead.
@@ -37,6 +39,7 @@ class InterpolationStrategy(Configurable, QueryConstrained):
 
     def query_constrain(self) -> QueryConstrain:
         """
+        query_constrain(self) -> QueryConstrain
         | **Description**
         |   See :func:`DataSource.query()`
 
@@ -49,6 +52,7 @@ class InterpolationStrategy(Configurable, QueryConstrained):
 
     def __call__(self, data_sampler: Required[DataSampler] = None, **kwargs) -> Self: # type: ignore
         """
+        __call__(self, data_sampler, **kwargs) -> Self
         | **Description**
         |   Returns an ``InterpolatingDataSource`` constrained to the given :doc:`DataSampler <core/data/data_sampler>`.
 
@@ -63,6 +67,7 @@ class InterpolationStrategy(Configurable, QueryConstrained):
 
 class NoInterpolation(InterpolationStrategy):
     """
+    NoInterpolation()
     | **Description**
     |   A ``NoInterpolation`` is an interpolator that does nothing to the given data. 
 

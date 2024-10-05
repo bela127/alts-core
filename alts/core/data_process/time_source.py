@@ -1,4 +1,4 @@
-#Fully documented as of 27.09.2024
+#Version 1.1 conform as of 05.10.2024
 """
 :doc:`Built-In Implementations </modules/oracle/query_queue>`
 """
@@ -18,13 +18,15 @@ if TYPE_CHECKING:
 
 class TimeSource(Publisher, ResultConstrained):
     """
+    TimeSource()
     | **Description**
     |   A TimeSource provides a custom time module for the :doc:`Process </core/data_process/process>` to use.
     """
     time_step: float = 1
 
-    def step(self, iteration: int) -> NDArray[Shape["time_step_nr, [time]"], Number]: # type: ignore
+    def step(self, iteration: int): # type: ignore
         """
+        step(self, iteration) -> None
         | **Description**
         |   Advances time by ``iteration`` steps.
 
@@ -36,6 +38,7 @@ class TimeSource(Publisher, ResultConstrained):
     @property
     def time(self)-> float:
         """
+        time(self) -> float
         | **Description**
         |   Returns its current time.
         |   Not implemented in abstract class.
@@ -44,6 +47,7 @@ class TimeSource(Publisher, ResultConstrained):
 
     def result_constrain(self) -> ResultConstrain:
         """
+        result_constrain(self) -> ResultConstrain
         | **Description**
         |   Returns its time constraints.
 
@@ -55,6 +59,7 @@ class TimeSource(Publisher, ResultConstrained):
     @time.setter
     def time(self, time):
         """
+        time(self, time) -> None
         | **Description**
         |   Modifies its current time with the given value.
         |   Not implemented in abstract class.

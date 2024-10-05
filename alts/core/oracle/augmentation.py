@@ -1,4 +1,4 @@
-#Fully documented as of 20.07.2024
+#Version 1.1 conform as of 05.10.2024
 """
 :doc:`Built-In Implementations </module/oracle/augmentation>`
 """
@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 from alts.core.oracle.data_source import DataSource
 from alts.core.data.constrains import QueryConstrain, ResultConstrain
 from alts.core.configuration import init, post_init, NOTSET
+from numpy import shape
 
 
 if TYPE_CHECKING:
@@ -19,6 +20,7 @@ if TYPE_CHECKING:
 @dataclass
 class Augmentation(DataSource):
     """
+    Augmentation(data_source) 
     | **Description**
     |   An Augmentation is a wrapper around a :doc:`Data Source </core/oracle/data_source>` which modifies its in- or outputs depending on the implementation.
     |   One of its uses is to add distortion to a :doc:`Data Source </core/oracle/data_source>`.
@@ -31,6 +33,11 @@ class Augmentation(DataSource):
     data_source: DataSource = init()
 
     def post_init(self):
+        """
+        post_init(self) -> None
+        | **Description**
+        |   Initializes the DataSource.
+        """
         super().post_init()
         self.data_source = self.data_source()
         
@@ -38,6 +45,7 @@ class Augmentation(DataSource):
     @property
     def query_shape(self):
         """
+        query_shape(self) -> shape
         | **Description**
         |   Returns the accepted query shape of the :doc:`Data Source </core/oracle/data_source>`.
 
@@ -49,6 +57,7 @@ class Augmentation(DataSource):
     @query_shape.setter
     def query_shape(self, value):
         """
+        query_shape(self, value) -> None
         | **Description**
         |   Does not allow the query shape to be set.
 
@@ -60,8 +69,9 @@ class Augmentation(DataSource):
             raise AttributeError("Augmentation always uses the query_shape of the data_source")
 
     @property
-    def result_shape(self):
+    def result_shape(self) -> Tuple[int, ...]:
         """
+        result_shape(self) -> shape
         | **Description**
         |   Returns the accepted result shape of the :doc:`Data Source </core/oracle/data_source>`.
 
@@ -73,6 +83,7 @@ class Augmentation(DataSource):
     @result_shape.setter
     def result_shape(self, value):
         """
+        result_shape(self, value) -> None
         | **Description**
         |   Does not allow the result shape to be set.
 
@@ -86,6 +97,7 @@ class Augmentation(DataSource):
 
     def query(self, queries: NDArray[ Shape["query_nr, ... query_dim"], Number]) -> Tuple[NDArray[Shape["query_nr, ... query_dim"], Number], NDArray[Shape["query_nr, ... result_dim"], Number]]: # type: ignore
         """
+        query(self, queries) -> data_points
         | **Description**
         |   Modifies the query before passing it on to :func:`DataSource.query()`.
 
@@ -98,6 +110,7 @@ class Augmentation(DataSource):
 
     def query_constrain(self) -> QueryConstrain:
         """
+        query_constrain(self) -> QueryConstrain
         | **Description**
         |   Returns its own query constraints. 
 
@@ -108,6 +121,7 @@ class Augmentation(DataSource):
 
     def result_constrain(self) -> ResultConstrain:
         """
+        result_constrain(self) -> ResultConstrain
         | **Description**
         |   Returns its own result constraints. 
 
@@ -117,8 +131,9 @@ class Augmentation(DataSource):
         return self.data_source.result_constrain()
     
     @property
-    def exhausted(self):
+    def exhausted(self) -> bool:
         """
+        exhausted(self) -> bool
         | **Description**
         |   See :func:`DataSource.exhausted()`.
 

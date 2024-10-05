@@ -1,4 +1,4 @@
-#Fully documented as of 20.07.2024
+#Version 1.1 conform as of 05.10.2024
 """
 :doc:`Built-In Implementations </module/query/selection_criteria>`
 """
@@ -19,6 +19,7 @@ if TYPE_CHECKING:
 
 class SelectionCriteria(ExperimentModule, Queryable):
     """
+    SelectionCriteria()
     | **Description**
     |   A ``SelectionCriteria`` is an algorithm which gives scores to query candidates.
     """
@@ -26,6 +27,7 @@ class SelectionCriteria(ExperimentModule, Queryable):
     @abstractmethod
     def query(self, queries: NDArray[Shape["query_nr, ... query_shape"], Number]) -> Tuple[NDArray[Shape["query_nr, ... query_shape"], Number], NDArray[Shape["query_nr, [score]"], Number]]: # type: ignore
         """
+        query(self, queries) -> data_points
         | **Description**
         |   Gives each query from the list a score based on the implementation.
         |   Is not implemented here.
@@ -40,6 +42,7 @@ class SelectionCriteria(ExperimentModule, Queryable):
     
     def result_constrain(self) -> ResultConstrain:
         """
+        result_constrain(self) -> ResultConstrain
         | **Description**
         |   Returns the result constraints for scores.
 

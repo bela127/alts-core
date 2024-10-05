@@ -1,4 +1,4 @@
-#Fully documented as of 27.09.2024
+#Version 1.1 conform as of 05.10.2024
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
@@ -21,6 +21,7 @@ if TYPE_CHECKING:
 
 class QueriedDataPool(DelayedPublisher, Queryable):
     """
+    QueriedDataPool(_query_constrain, _result_constrain)
     | **Description**
     |   It's a queryable :doc:`DataPools </core/data/data_pools>`.
     |   It contains queries, results and the last added queries and results.
@@ -35,6 +36,7 @@ class QueriedDataPool(DelayedPublisher, Queryable):
 
     def __init__(self):
         """
+        __init__(self)
         | **Description**
         |   Initializes all attributes at default value.
         """
@@ -55,6 +57,7 @@ class QueriedDataPool(DelayedPublisher, Queryable):
 
     def add(self, data_points: Tuple[NDArray[Shape["query_nr, ... query_dim"], Number], NDArray[Shape["query_nr, ... result_dim"], Number]]): # type: ignore
         """
+        add(self, data_points) -> None
         | **Description**
         |   Adds all data points to its data pool and updates its last added data.
 
@@ -73,6 +76,7 @@ class QueriedDataPool(DelayedPublisher, Queryable):
         
     def __call__(self, query_constrain: Required[QueryConstrainedGetter] = None, result_constrain: Required[ResultConstrainGetter] = None, **kwargs) -> Self:
         """
+        __call__(self, query_constrain, result_constrain) -> Self
         | **Description**
         |   Returns a configured QueriedDataPool object to the given query and result constraints.
 

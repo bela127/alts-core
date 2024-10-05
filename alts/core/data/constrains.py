@@ -38,7 +38,7 @@ class QueryConstrain():
     shape: Tuple[int, ...]
     ranges: Union[NDArray[Shape["... query_dims,[xi_min, xi_max]"], Number], NDArray[Shape["... query_dims,[xi]"], Number]] # type: ignore
 
-    def matches_shape(self, shape):
+    def matches_shape(self, shape) -> bool:
         """
         matches_shape(shape) -> bool
         | **Description**
@@ -56,7 +56,7 @@ class QueryConstrain():
             return True
         return False
     
-    def constrains_met(self, queries):
+    def constrains_met(self, queries) -> bool:
         """
         constrains_met(queries) -> bool
         | **Description**
@@ -89,7 +89,7 @@ class QueryConstrain():
         self._last_queries = queries
         self.query_count = self.ranges.shape[0]
 
-    def last_queries(self):
+    def last_queries(self) -> NDArray[Shape["query_nr, ... query_shape"], Number]: # type: ignore
         """
         last_queries() -> queries
         | **Description**
@@ -112,9 +112,9 @@ class QueryConstrain():
         elements = self.ranges[..., 0] + (self.ranges[..., 1] - self.ranges[..., 0]) * norm_pos
         return elements
     
-    def queries_from_index(self, indexes):
+    def queries_from_index(self, indexes) -> NDArray[Shape["query_nr, ... query_shape"], Number]: # type: ignore
         """
-        queries_from_index(indexes) -> query
+        queries_from_index(indexes) -> queries
         | **Description**
         |   Returns the ``indexes``-th added queries.
 
@@ -127,7 +127,7 @@ class QueryConstrain():
             raise LookupError("can not look up a index in a continues pool")
         return self.ranges[indexes]
     
-    def all_queries(self):
+    def all_queries(self) -> NDArray[Shape["query_nr, ... query_shape"], Number]: # type: ignore
         """
         all_queries() -> queries
         | **Description**
@@ -159,6 +159,7 @@ class ResultConstrain():
 
 class QueryConstrained():
     """
+    QueryConstrained()
     | **Description**
     |   If a class inherits from ``QueryConstrained``, it means that its objects have a :class:`QueryConstrain` for all queries.
 
@@ -166,6 +167,7 @@ class QueryConstrained():
     @abstractmethod
     def query_constrain(self) -> QueryConstrain:
         """
+        query_constrain(self) -> QueryConstrain
         | **Description**
         |   Returns the :class:`QueryConstrain` of the object. 
         |   Not implemented here.
@@ -174,6 +176,7 @@ class QueryConstrained():
 
 class ResultConstrained():
     """
+    ResultConstrained()
     | **Description**
     |   If a class is ``ResultConstrained``, its objects have a :class:`ResultConstrain` for all immediate results.
 
@@ -181,6 +184,7 @@ class ResultConstrained():
     @abstractmethod
     def result_constrain(self) -> ResultConstrain:
         """
+        result_constrain(self) -> ResultConstrain
         | **Description**
         |   Returns the :class:`ResultConstrain` of the object. 
         |   Not implemented here.
@@ -189,6 +193,7 @@ class ResultConstrained():
 
 class DelayedConstrained():
     """
+    DelayedConstrained()
     | **Description**
     |   If a class is ``ResultConstrained``, its objects have a :class:`ResultConstrain` for all delayed results.
 
@@ -196,6 +201,7 @@ class DelayedConstrained():
     @abstractmethod
     def delayed_constrain(self) -> ResultConstrain:
         """
+        delayed_constrain(self) -> ResultConstrain
         | **Description**
         |   Returns the :class:`ResultConstrain` of the object. 
         |   Not implemented here.
@@ -204,9 +210,9 @@ class DelayedConstrained():
 
 class Constrained(QueryConstrained, ResultConstrained):
     """
+    Constrained()
     | **Description**
     |   If a class is ``ResultConstrained``, its objects have a :class:`QueryConstrain` for all queries and a :class:`ResultConstrain` for all immediate results.
-
     """
     pass
 
