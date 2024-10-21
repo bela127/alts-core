@@ -12,7 +12,7 @@ from alts.core.experiment_module import ExperimentModule
 
 if TYPE_CHECKING:
     from typing import Tuple
-    from typing_extensions import Self #type: ignore
+    from typing_extensions import Self 
     from nptyping import NDArray, Number, Shape
 
 @dataclass

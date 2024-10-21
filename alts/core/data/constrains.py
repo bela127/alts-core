@@ -15,7 +15,7 @@ from alts.core.configuration import ROOT
 
 if TYPE_CHECKING:
     from typing import Tuple, Optional, Union
-    from nptyping import NDArray, Number, Shape
+    from nptyping import NDArray, Shape
 
 @dataclass
 class QueryConstrain():
@@ -36,7 +36,7 @@ class QueryConstrain():
     """
     count: Optional[int]
     shape: Tuple[int, ...]
-    ranges: Union[NDArray[Shape["... query_dims,[xi_min, xi_max]"], Number], NDArray[Shape["... query_dims,[xi]"], Number]] # type: ignore
+    ranges: Union[NDArray[Shape["... query_dims,[xi_min, xi_max]"], np.dtype[np.number]], NDArray[Shape["... query_dims,[xi]"], np.dtype[np.number]]] 
 
     def matches_shape(self, shape) -> bool:
         """
@@ -71,7 +71,7 @@ class QueryConstrain():
             if not self.matches_shape(query.shape): return False
         return True
 
-    def add_queries(self, queries: NDArray[Shape["query_count, ... query_shape"], Number]): # type: ignore
+    def add_queries(self, queries: NDArray[Shape["query_count, ... query_shape"], np.dtype[np.number]]): 
         """
         add_queries(queries) -> None
         | **Description**
@@ -89,7 +89,7 @@ class QueryConstrain():
         self._last_queries = queries
         self.query_count = self.ranges.shape[0]
 
-    def last_queries(self) -> NDArray[Shape["query_nr, ... query_shape"], Number]: # type: ignore
+    def last_queries(self) -> NDArray[Shape["query_nr, ... query_shape"], np.dtype[np.number]]: 
         """
         last_queries() -> queries
         | **Description**
@@ -102,7 +102,7 @@ class QueryConstrain():
             raise LookupError("there are infinit queries continues pool")
         return self._last_queries
 
-    def queries_from_norm_pos(self, norm_pos: NDArray[Shape["query_nr, ... query_dims"], Number]) -> NDArray[Shape["query_nr, ... query_dims"], Number]: # type: ignore
+    def queries_from_norm_pos(self, norm_pos: NDArray[Shape["query_nr, ... query_dims"], np.dtype[np.number]]) -> NDArray[Shape["query_nr, ... query_dims"], np.dtype[np.number]]: 
 
         if self.ranges is None:
             raise LookupError("can not look up a position in a discrete pool")
@@ -112,7 +112,7 @@ class QueryConstrain():
         elements = self.ranges[..., 0] + (self.ranges[..., 1] - self.ranges[..., 0]) * norm_pos
         return elements
     
-    def queries_from_index(self, indexes) -> NDArray[Shape["query_nr, ... query_shape"], Number]: # type: ignore
+    def queries_from_index(self, indexes) -> NDArray[Shape["query_nr, ... query_shape"], np.dtype[np.number]]: 
         """
         queries_from_index(indexes) -> queries
         | **Description**
@@ -127,7 +127,7 @@ class QueryConstrain():
             raise LookupError("can not look up a index in a continues pool")
         return self.ranges[indexes]
     
-    def all_queries(self) -> NDArray[Shape["query_nr, ... query_shape"], Number]: # type: ignore
+    def all_queries(self) -> NDArray[Shape["query_nr, ... query_shape"], np.dtype[np.number]]: 
         """
         all_queries() -> queries
         | **Description**
@@ -155,7 +155,7 @@ class ResultConstrain():
     :type ranges: Union of `NDArrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
     """
     shape: Tuple[int,...]
-    ranges: Optional[NDArray[Shape["... query_dims,[xi_min, xi_max]"], Number]] = None # type: ignore
+    ranges: Optional[NDArray[Shape["... query_dims,[xi_min, xi_max]"], np.dtype[np.number]]] = None 
 
 class QueryConstrained():
     """

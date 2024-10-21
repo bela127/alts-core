@@ -11,7 +11,7 @@ from alts.core.query.queryable import Queryable
 from alts.core.subscribable import DelayedPublisher
 
 if TYPE_CHECKING:
-    from typing_extensions import Self #type: ignore
+    from typing_extensions import Self 
     from typing import Tuple
 
     from nptyping import  NDArray, Number, Shape
