@@ -28,9 +28,9 @@ class TimeSource(Publisher, ResultConstrained):
         """
         step(self, iteration) -> None
         | **Description**
-        |   Advances time by ``iteration`` steps.
+        |   Advances time to ``iteration`` steps.
 
-        :param iteration: Amount of steps to advance by
+        :param iteration: step number to go to
         :type iteration: int
         """
         self.update()
