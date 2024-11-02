@@ -12,7 +12,11 @@ if TYPE_CHECKING:
 
 
 class InitError(AttributeError):
-
+    """
+    InitError()
+    | **Description**
+    |   Is raised when an object hasn't been initialized.
+    """
     def __init__(self, *args: object) -> None:
         message = "Configurable has not been initialized"
         if args: super().__init__(*args)
@@ -81,7 +85,7 @@ def init(default: Any = NOTSET, default_factory: Any = NOTSET) -> Any:
 class ConfigurableMeta(type):
 
     def __call__(cls: Type, *args: Any, **kwargs: Any) -> Any:
-        obj: Configurable = cls.__new__(cls, *args, **kwargs)       
+        obj: Configurable = cls.__new__(cls, *args, **kwargs)        # type: ignore
         return obj
 
 class ROOT():

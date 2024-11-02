@@ -46,7 +46,7 @@ class DataSource(Configurable, Queryable):
         :return: Processed Query [#]_ , Result 
         :rtype: A tuple of two `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
 
-        :raises: ``NotImplementedError``
+        :raises: NotImplementedError
 
         .. [#] The actually processed query may differ from the requested one.
             | This may happen if the ``DataSource`` does not contain the exact query that is being requested, as the real-life case often is.
