@@ -29,7 +29,7 @@ class QueryConstrain():
     :type count: ``int``
     :param shape: What shape the queries must have
     :type shape: `Array Shape <https://www.w3schools.com/python/numpy/numpy_array_shape.asp>`_
-    :param ranges: A set of all permitted query values
+    :param ranges: A set of all permitted query values for discrete data sources OR of lower/upper bound per dimension for continuous data sources
     :type ranges: Union of `NDArrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
     :return: No return
     :rtype: None
