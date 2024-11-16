@@ -34,7 +34,7 @@ class Process(Configurable, Queryable):
     :type time_source: :doc:`TimeSource </core/data_process/process>`
     :param data_pools: A data structure which saves all processed queries and results
     :type data_pools: :doc:`DataPools </core/data/data_pools>`
-    :param oracles: The place that contains the results to all queries.
+    :param oracles: The interaction point between the Process and the data source.
     :type oracles: :doc:`Oracles </core/oracle/Oracles>`
     """
     time_source: TimeSource = post_init()
