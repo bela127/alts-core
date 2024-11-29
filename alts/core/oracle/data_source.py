@@ -161,7 +161,7 @@ class TimeDataSourceWraper(TimeDataSource):
     query_shape: Tuple[int,...] = (1,)
     data_source: DataSource = init()
 
-    def query(self, times: NDArray[Shape["time_step_nr, [time]"], Number]) -> 'Tuple[NDArray[Shape["time_step_nr, [time]"], Number], NDArray[Shape["time_step_nr, ... var_shape"], Number]]'':
+    def query(self, times: NDArray[Shape["time_step_nr, [time]"], Number]) -> 'Tuple[NDArray[Shape["time_step_nr, [time]"], Number], NDArray[Shape["time_step_nr, ... var_shape"], Number]]':
         """
         query(self, queries) -> data_points
         | **Description**
