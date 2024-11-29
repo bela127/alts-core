@@ -1,5 +1,6 @@
-#Version 1.1 conform as of 05.10.2024
+#Version 1.1.1 conform as of 29.11.2024
 """
+*alts.core.oracle.augmentation*
 :doc:`Built-In Implementations </module/oracle/augmentation>`
 """
 from __future__ import annotations

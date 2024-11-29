@@ -1,4 +1,7 @@
-#Version 1.1 conform as of 16.11.2024
+#Version 1.1.1 conform as of 29.11.2024
+"""
+*alts.core.oracle.oracles*
+"""
 
 from __future__ import annotations
 from typing import TYPE_CHECKING, Any

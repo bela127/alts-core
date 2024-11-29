@@ -1,4 +1,7 @@
-#Version 1.1 conform as of 05.10.2024
+#Version 1.1.1 conform as of 29.11.2024
+"""
+*alts.core.oracle.interpolation_strategy*
+"""
 from __future__ import annotations
 from typing import TYPE_CHECKING
 from alts.core.data.data_sampler import DataSampler
