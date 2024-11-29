@@ -43,7 +43,7 @@ class DataBehavior(Configurable):
     start_time: float = init(default=0)
     stop_time: float = init(default=600)
 
-    def behavior(self) -> Tuple[NDArray[Shape["change_times"], np.dtype[np.number]], NDArray[Shape["change_values"], np.dtype[np.number]]]: 
+    def behavior(self) -> 'Tuple[NDArray[Shape["change_times"], np.dtype[np.number]], NDArray[Shape["change_values"], np.dtype[np.number]]]': 
         """
         behaviour(self) -> change_times, change_values
         | **Description**

@@ -25,7 +25,7 @@ class DataSampler(Queryable, ExperimentModule):
     | **Description**
     |   Samples data from a :doc:`QueriedDataPools </core/data/queried_data_pools>`, meaning for each query the `DataSampler` returns a number of query-result pairs in the same area.
     """
-    def query(self, queries: NDArray[Shape["query_nr, ... query_dim"], Number], size = None) -> Tuple[NDArray[Shape["query_nr, sample_size, ... query_dim"], Number], NDArray[Shape["query_nr, sample_size,... result_dim"], Number]]: # type: ignore
+    def query(self, queries: NDArray[Shape["query_nr, ... query_dim"], Number], size = None) -> 'Tuple[NDArray[Shape["query_nr, sample_size, ... query_dim"], Number], NDArray[Shape["query_nr, sample_size,... result_dim"], Number]]':
         """
         query(self, queries, size) -> data_points
         | **Description**

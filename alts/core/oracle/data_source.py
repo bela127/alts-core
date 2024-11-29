@@ -32,10 +32,10 @@ class DataSource(Configurable, Queryable):
     :param result_shape: The expected shape of the results
     :type result_shape: tuple of ints
     """
-    query_shape: Tuple[int,...] = init()
-    result_shape: Tuple[int,...] = init()
+    query_shape: 'Tuple[int,...]' = init()
+    result_shape: 'Tuple[int,...]' = init()
 
-    def query(self, queries: NDArray[ Shape["query_nr, ... query_dim"], Number]) -> Tuple[NDArray[Shape["query_nr, ... query_dim"], Number], NDArray[Shape["query_nr, ... result_dim"], Number]]: # type: ignore
+    def query(self, queries: NDArray[ Shape["query_nr, ... query_dim"], Number]) -> 'Tuple[NDArray[Shape["query_nr, ... query_dim"], Number], NDArray[Shape["query_nr, ... result_dim"], Number]]':
         """
         query(self, queries) -> data_points
         | **Description**
@@ -114,7 +114,7 @@ class TimeDataSource(DataSource):
     """
     query_shape: Tuple[int,...] = (1,)
     
-    def query(self, times: NDArray[Shape["time_step_nr, [time]"], Number]) -> Tuple[NDArray[Shape["time_step_nr, [time]"], Number], NDArray[Shape["time_step_nr, ... var_shape"], Number]]: # type: ignore
+    def query(self, times: NDArray[Shape["time_step_nr, [time]"], Number]) -> 'Tuple[NDArray[Shape["time_step_nr, [time]"], Number], NDArray[Shape["time_step_nr, ... var_shape"], Number]]':
         """
         query(self, queries) -> data_points
         | **Description**
@@ -161,7 +161,7 @@ class TimeDataSourceWraper(TimeDataSource):
     query_shape: Tuple[int,...] = (1,)
     data_source: DataSource = init()
 
-    def query(self, times: NDArray[Shape["time_step_nr, [time]"], Number]) -> Tuple[NDArray[Shape["time_step_nr, [time]"], Number], NDArray[Shape["time_step_nr, ... var_shape"], Number]]: # type: ignore
+    def query(self, times: NDArray[Shape["time_step_nr, [time]"], Number]) -> 'Tuple[NDArray[Shape["time_step_nr, [time]"], Number], NDArray[Shape["time_step_nr, ... var_shape"], Number]]'':
         """
         query(self, queries) -> data_points
         | **Description**
