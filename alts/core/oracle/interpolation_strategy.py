@@ -18,7 +18,7 @@ class InterpolationStrategy(Configurable, QueryConstrained):
     """
     InterpolationStrategy(data_sampler)
     | **Description**
-    |   An ``InterpolatingStrategy`` is an **ambivalent** source of data depending on the :doc:`DataSampler <core/data/data_sampler>` it interpolates within.
+    |   An ``InterpolatingStrategy`` is an **ambivalent** source of data depending on the :doc:`DataSampler </core/data/data_sampler>` it interpolates within.
     |   This is a base class not intended for direct use.
 
     :param data_sampler: A sample of the data which contains the to be interpolated data points
@@ -57,7 +57,7 @@ class InterpolationStrategy(Configurable, QueryConstrained):
         """
         __call__(self, data_sampler, **kwargs) -> Self
         | **Description**
-        |   Returns an ``InterpolatingDataSource`` constrained to the given :doc:`DataSampler <core/data/data_sampler>`.
+        |   Returns an ``InterpolatingDataSource`` constrained to the given :doc:`DataSampler </core/data/data_sampler>`.
 
         :param data_sampler: A sample of the data which contains the to-be interpolated data points
         :type data_sampler: :doc:`DataSampler <core/data/data_sampler>`

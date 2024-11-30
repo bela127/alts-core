@@ -49,8 +49,6 @@ class DataSource(Configurable, Queryable):
 
         :raises: NotImplementedError
 
-        ```{margin} Test test```
-
         .. [#] The actually processed query may differ from the requested one.
             | This may happen if the ``DataSource`` does not contain the exact query that is being requested, as the real-life case often is.
             | In this scenario, a "similar" query will be processed or the query is dropped alltogether.
