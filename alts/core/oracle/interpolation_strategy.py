@@ -75,6 +75,6 @@ class NoInterpolation(InterpolationStrategy):
     |   ``NoInterpolation`` is an interpolator that does nothing to the given data. 
 
     :param data_sampler: A sample of the data which contains the to-be interpolated data points
-    :type data_sampler: :doc:`DataSampler <core/data/data_sampler>`
+    :type data_sampler: :doc:`DataSampler </core/data/data_sampler>`
     """
     ...
