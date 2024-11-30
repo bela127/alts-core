@@ -22,7 +22,7 @@ class InterpolationStrategy(Configurable, QueryConstrained):
     |   This is a base class not intended for direct use.
 
     :param data_sampler: A sample of the data which contains the to be interpolated data points
-    :type data_sampler: :doc:`DataSampler <core/data/data_sampler>`
+    :type data_sampler: :doc:`DataSampler </core/data/data_sampler>`
     """
     data_sampler: DataSampler = post_init()
 
@@ -30,12 +30,12 @@ class InterpolationStrategy(Configurable, QueryConstrained):
         """
         interpolate(self, data_points) -> data_points
         | **Description**
-        |   Interpolates a twople of data points and returns the interpolated twople.
+        |   Interpolates a tuple of two data points and returns the interpolated tuple of length 2.
         |   This implementation of ``interpolate`` returns the twople as is. If this is the result you wish to achieve, please use :class:`NoInterpolation` instead.
 
-        :param data_points: A twople of data_points to be interpolated
+        :param data_points: A tuple of two data_points to be interpolated
         :type data_points: Tuple(`NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_, `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_)
-        :return: The interpolated twople
+        :return: The interpolated tuple of length 2
         :rtype: Tuple(`NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_, `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_)
         """
         return data_points
@@ -72,7 +72,7 @@ class NoInterpolation(InterpolationStrategy):
     """
     NoInterpolation()
     | **Description**
-    |   A ``NoInterpolation`` is an interpolator that does nothing to the given data. 
+    |   ``NoInterpolation`` is an interpolator that does nothing to the given data. 
 
     :param data_sampler: A sample of the data which contains the to-be interpolated data points
     :type data_sampler: :doc:`DataSampler <core/data/data_sampler>`
