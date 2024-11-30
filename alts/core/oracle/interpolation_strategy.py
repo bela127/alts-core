@@ -60,7 +60,7 @@ class InterpolationStrategy(Configurable, QueryConstrained):
         |   Returns an ``InterpolatingDataSource`` constrained to the given :doc:`DataSampler </core/data/data_sampler>`.
 
         :param data_sampler: A sample of the data which contains the to-be interpolated data points
-        :type data_sampler: :doc:`DataSampler <core/data/data_sampler>`
+        :type data_sampler: :doc:`DataSampler </core/data/data_sampler>`
         :return: Instance of ``InterpolatingDataSource`` constrained to ``data_sampler``
         :rtype: ``InterpolatingDataSource``
         """
