@@ -1,7 +1,7 @@
 #Version 1.1.1 conform as of 29.11.2024
 """
-*alts.core.data_process.process*
-:doc:`Built-In Implementations </modules/data_process/process>`
+| *alts.core.data_process.process*
+| :doc:`Built-In Implementations </modules/data_process/process>`
 """
 from __future__ import annotations
 from typing import TYPE_CHECKING

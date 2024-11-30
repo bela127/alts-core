@@ -1,6 +1,6 @@
 #Version 1.1.1 conform as of 29.11.2024
 """
-*core.alts.data.data_pools*
+*alts.core.data.data_pools*
 """
 from __future__ import annotations
 from typing import TYPE_CHECKING, Any

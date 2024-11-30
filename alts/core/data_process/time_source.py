@@ -1,7 +1,7 @@
 #Version 1.1.1 conform as of 29.11.2024
 """
-*alts.core.data_process.time_source*
-:doc:`Built-In Implementations </modules/oracle/query_queue>`
+| *alts.core.data_process.time_source*
+| :doc:`Built-In Implementations </modules/oracle/query_queue>`
 """
 from __future__ import annotations
 from typing import TYPE_CHECKING

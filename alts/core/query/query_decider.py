@@ -1,7 +1,7 @@
 #Version 1.1.1 conform as of 29.11.2024
 """
-*alts.core.query.query_decider*
-:doc:`Built-In Implementations </core/query/query_decider>`
+| *alts.core.query.query_decider*
+| :doc:`Built-In Implementations </modules/query/query_decider>`
 """
 #TODO Handle empty Query Candidates
 from __future__ import annotations

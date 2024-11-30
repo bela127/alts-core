@@ -1,6 +1,6 @@
 #TODO D queries_from_norm_pos
 """
-:doc:`Built-In Implementations </modules/data/constrains>`
+*alts.core.data.constrains*
 """
 from __future__ import annotations
 from typing import TYPE_CHECKING

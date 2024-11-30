@@ -1,7 +1,7 @@
 #Version 1.1.1 conform as of 29.11.2024
 """
-*alts.core.stopping_criteria*
-:doc:`Built-In Implementations </modules/stopping_criteria>`
+| *alts.core.stopping_criteria*
+| :doc:`Built-In Implementations </modules/stopping_criteria>`
 """
 from __future__ import annotations
 from typing import TYPE_CHECKING

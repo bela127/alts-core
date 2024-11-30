@@ -1,7 +1,7 @@
 #Version 1.1.1 conform as of 29.11.2024
 """
-*alts.core.oracle.data_source*
-:doc:`Built-In Implementations </modules/oracle/data_source>`
+| *alts.core.oracle.data_source*
+| :doc:`Built-In Implementations </modules/oracle/data_source>`
 """
 from __future__ import annotations
 from typing import TYPE_CHECKING
