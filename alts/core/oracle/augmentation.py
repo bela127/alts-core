@@ -113,9 +113,9 @@ class Augmentation(DataSource):
         """
         query_constrain(self) -> QueryConstrain
         | **Description**
-        |   Returns its own query constraints. 
+        |   Returns its own query constrains. 
 
-        :return: Constraints around queries
+        :return: Constrains around queries
         :rtype: QueryConstrain
         """
         return self.data_source.query_constrain()
@@ -124,9 +124,9 @@ class Augmentation(DataSource):
         """
         result_constrain(self) -> ResultConstrain
         | **Description**
-        |   Returns its own result constraints. 
+        |   Returns its own result constrains. 
 
-        :return: Constraints around results
+        :return: Constrains around results
         :rtype: ResultConstrain
         """
         return self.data_source.result_constrain()

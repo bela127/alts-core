@@ -147,9 +147,9 @@ class QueryQueue(DelayedPublisher, QueryConstrained):
         """
         query_constrain(self) -> QueryConstrain
         | **Description**
-        |   Returns its query constraints.
+        |   Returns its query constrains.
 
-        :return: Own query constraints
+        :return: Own query constrains
         :rtype: :doc:`QueryConstrain </core/data/constrains>`
         """
         return self._query_constrain()
@@ -161,7 +161,7 @@ class QueryQueue(DelayedPublisher, QueryConstrained):
         | **Description**
         |   Returns a QueryQueue with the given query constraint.
 
-        :param query_constrain: Constraints of the queries the queue holds.
+        :param query_constrain: Constrains of the queries the queue holds.
         :type query_constrains: :doc:`QueryConstrain </core/data/constrains>`
         :return: Configured QueryQueue
         :rtype: QueryQueue

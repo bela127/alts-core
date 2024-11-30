@@ -50,9 +50,9 @@ class TimeSource(Publisher, ResultConstrained):
         """
         result_constrain(self) -> ResultConstrain
         | **Description**
-        |   Returns its time constraints.
+        |   Returns its time constrains.
 
-        :return: Time constraints
+        :return: Time constrains
         :rtype: :doc:`ResultConstrain </core/data/constrains>` 
         """
         return ResultConstrain(shape=(1,))

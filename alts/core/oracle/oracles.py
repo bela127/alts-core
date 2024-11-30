@@ -83,9 +83,9 @@ class POracles(Oracles):
         """
         query_constrain(self) -> QueryConstrain
         | **Description**
-        |   Returns the query constraints of the queue.
+        |   Returns the query constrains of the queue.
 
-        :return: Its query queue's query constraints
+        :return: Its query queue's query constrains
         :rtype: QueryConstrain
         """
         return self.process.query_constrain()

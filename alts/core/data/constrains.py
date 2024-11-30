@@ -42,7 +42,7 @@ class QueryConstrain():
         """
         matches_shape(shape) -> bool
         | **Description**
-        |   Checks whether the query matches the shape constraints of the ``Queryable`` object.
+        |   Checks whether the query matches the shape constrains of the ``Queryable`` object.
 
         :param shape: The shape of the query
         :type shape: `Array Shape <https://www.w3schools.com/python/numpy/numpy_array_shape.asp>`_
@@ -60,7 +60,7 @@ class QueryConstrain():
         """
         constrains_met(queries) -> bool
         | **Description**
-        |   Checks whether the query matches the shape constraints of the ``Queryable`` object.
+        |   Checks whether the query matches the shape constrains of the ``Queryable`` object.
 
         :param shape: An iterable of queries
         :type shape: Iterable over `NDArrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_

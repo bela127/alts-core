@@ -29,9 +29,9 @@ class QueriedDataPool(DelayedPublisher, Queryable):
     |   It's a queryable :doc:`DataPools </core/data/data_pools>`.
     |   It contains queries, results and the last added queries and results.
 
-    :param _query_constrain: Query constraints
+    :param _query_constrain: Query constrains
     :type _query_constrain: :doc:`QueryConstrain </core/data/constrains>` 
-    :param _query_result: Result constraints
+    :param _query_result: Result constrains
     :type _query_result: :doc:`ResultConstrain </core/data/constrains>` 
     """
     _query_constrain: QueryConstrainedGetter = post_init()
@@ -81,11 +81,11 @@ class QueriedDataPool(DelayedPublisher, Queryable):
         """
         __call__(self, query_constrain, result_constrain) -> Self
         | **Description**
-        |   Returns a configured QueriedDataPool object to the given query and result constraints.
+        |   Returns a configured QueriedDataPool object to the given query and result constrains.
 
-        :param query_constrain: Query constraints
+        :param query_constrain: Query constrains
         :type query_constrain: :doc:`QueryConstrain </core/data/constrains>`
-        :param result_constrain: Result constraints
+        :param result_constrain: Result constrains
         :type result_constrain: :doc:`ResultConstrain </core/data/constrains>`
         :return: Configured QueriedDataPool
         :rtype: QueriedDataPool

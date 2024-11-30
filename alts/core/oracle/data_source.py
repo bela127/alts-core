@@ -61,15 +61,15 @@ class DataSource(Configurable, Queryable):
         """
         query_constrain(self) -> QueryConstrain
         | **Description**
-        |   ``query_constrain()`` is a getter-function for the constraints around queries to the ``DataSource``. 
-        |   Constraints can affect the ``count``, ``shape`` and the ``ranges`` of a query.
-        |   For more information, see :doc:`Constraints </core/data/constraints>`
+        |   ``query_constrain()`` is a getter-function for the constrains around queries to the ``DataSource``. 
+        |   Constrains can affect the ``count``, ``shape`` and the ``ranges`` of a query.
+        |   For more information, see :doc:`Constrains </core/data/constrains>`
 
-        | **Current Constraints**
+        | **Current Constrains**
         |   *Shape:* ``query_shape``
         |   *Value Range:* (-inf, inf) for all values
 
-        :return: Constraints around queries
+        :return: Constrains around queries
         :rtype: QueryConstrain
         """
         query_ranges = np.asarray(tuple((np.NINF, np.Inf) for i in range(self.query_shape[0])))
@@ -81,10 +81,10 @@ class DataSource(Configurable, Queryable):
         | **Description**
         |    ``result_constrain()`` is the equivalent of :func:`query_constrain()` for results from the ``DataSource``.
 
-        | **Current Constraints**
+        | **Current Constrains**
         |    *Shape:* ``result_shape`` 
 
-        :return: Constraints to results
+        :return: Constrains to results
         :rtype: ResultConstrain
         """
         return ResultConstrain(shape = self.result_shape)
@@ -135,12 +135,12 @@ class TimeDataSource(DataSource):
         | **Description**
         |   See :func:`DataSource.query_constrain()`
         
-        | **Current Constraints**
+        | **Current Constrains**
         |   *Shape:* ``query_shape``, (1,)
         |   *Range of first value:* [0, inf)
         |   *Range of other values:* (-inf, inf)
 
-        :return: Constraints around queries
+        :return: Constrains around queries
         :rtype: QueryConstrain
         """
         query_ranges = np.asarray(((0.0, np.Inf),))
@@ -180,12 +180,12 @@ class TimeDataSourceWraper(TimeDataSource):
         | **Description**
         |   See :func:`DataSource.query_constrain()`
         
-        | **Current Constraints**
+        | **Current Constrains**
         |   *Shape:* ``query_shape``, (1,)
         |   *Range of first value:* [0, t) where t is the upper bound of that value in ``data_source``
         |   *Range of other values:* (-inf, inf)
 
-        :return: Constraints around queries
+        :return: Constrains around queries
         :rtype: QueryConstrain
         """
         qc = self.data_source.query_constrain()

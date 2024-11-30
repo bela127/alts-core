@@ -45,12 +45,12 @@ class SelectionCriteria(ExperimentModule, Queryable):
         """
         result_constrain(self) -> ResultConstrain
         | **Description**
-        |   Returns the result constraints for scores.
+        |   Returns the result constrains for scores.
 
-        | **Current Constraints**
+        | **Current Constrains**
         |   *None*
 
-        :return: Constraints around results
+        :return: Constrains around results
         :rtype: ResultConstrain
         """
         return ResultConstrain((self.query_constrain().shape[0], 1))
