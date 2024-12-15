@@ -121,7 +121,7 @@ class ExperimentRunner():
         """
         run_experiment_parallel(self, blueprint, nr_processes) -> None
         | **Description**
-        |   Runs a multiple experiments. Runs either each experiment on multiple cores
+        |   Runs a multiple experiments. Runs either each experiment on multiple cores 
             or one experiment per core.
 
         :param blueprint: The blueprints for the experiments (default= None)
