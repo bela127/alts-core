@@ -119,7 +119,7 @@ class ExperimentRunner():
 
     def run_experiments_parallel(self, blueprints: Union[Iterable[Blueprint], None] = None, nr_processes: int = int(os.cpu_count() / 2), parallel_sub_exp=True): # type: ignore
         """
-        run_experiment_parallel(self, blueprint, nr_processes) -> None
+        run_experiments_parallel(self, blueprint, nr_processes) -> None
         | **Description**
         |   Runs a multiple experiments. Runs either each experiment on multiple cores 
             or one experiment per core.
