@@ -1,3 +1,7 @@
+#Version 1.1.1 conform as of 15.12.2024
+"""
+| *alts.core.blueprint*
+"""
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
@@ -24,8 +28,18 @@ if TYPE_CHECKING:
 
 @dataclass
 class Blueprint():
+    """
+    Blueprint()
+    | **Description**
+    |   A blueprint configures all modules and parameters for an experiment.
+    """
 
     def __post_init__(self):
+        """
+        __post_init__(self) -> None
+        | **Description**
+        |   Sets output path for and name of the experiment if None.
+        """
         name = os.path.basename(sys.argv[0])[:-3]
         if self.exp_path is None:
             self.exp_path = f"./eval/{name}"
