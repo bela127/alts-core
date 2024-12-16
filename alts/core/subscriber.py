@@ -161,7 +161,7 @@ class ResultDataSubscriber(DataPoolsSubscriber):
 
 class ExpModSubscriber(Subscriber):
     """
-    ResultDataSubscriber()
+    ExpModSubscriber()
     | **Description**
     |   A Subscriber of ExperimentModules.
     """
