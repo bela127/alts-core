@@ -18,15 +18,44 @@ class InitError(AttributeError):
     |   Is raised when an object hasn't been initialized.
     """
     def __init__(self, *args: object) -> None:
+        """
+        __init__(self, *args) -> None:
+        | **Description**
+        |   Passes the argument or the default message to AttributeError.
+
+        :param *args: Gets passed onto the AttributeError constructor (default= "Configurable has not been initialized")
+        :type *args: Object
+        """
         message = "Configurable has not been initialized"
         if args: super().__init__(*args)
         else: super().__init__(message)
 
 class NotSet():
+    """
+    NotSet()
+    | **Description**
+    |   If an attribute is set to ``NotSet()`` or ``NOTSET``, then an AttributeError is raised if the attribute is being read. 
+    """
     def __repr__(self) -> str:
+        """
+        __repr__(self) -> str
+        | **Description**
+        |   The representation of this class is "NOTSET"
+        """
         return "NOTSET"
     
     def __getattribute__(self, __name: str) -> Any:
+        """
+        __getattribute__(self, __name: str) -> Any:
+        | **Description**
+        |   Tries to get and return the given attribute from the Object class, otherwise throws an AttributeError.
+
+        :param __name: The name of the accessed attribute
+        :type __name: str
+        :return: The ``__name``-attribute from the Object class
+        :rtype: Any
+        :raises AttributeError: If the searched attribute does not exist.
+        """
         try:
             attr_result = super().__getattribute__(__name)
         except AttributeError as e:
@@ -36,39 +65,110 @@ class NotSet():
 NOTSET = NotSet()
 
 class ConfAttr():
+    """
+    ConfAttr()
+    | **Description**
+    |   A configurable attribute may be only initialized at runtime.
+    |   Works with the NotSet() class.
+    """
     _value = None
     _initialized = True
 
     def __init__(self, default = NOTSET) -> None:
+        """
+        __init__(self, default) -> None
+        | **Description**
+        |   If a default value is given, initializes itself with it. Otherwise it sets itself to be NOTSET.
+
+        :param default: Default value of attribute (default= NOTSET)
+        :type default: Any
+        """
         if default is NOTSET:
             self._initialized = False
         self._value = default
 
     def __get__(self, instance, owner):
+        """
+        __get__(self) -> Any
+        | **Description**
+        |   Returns its value if it has been initalized, otherwise returns NOTSET
+
+        :return: Its own value (or NOTSET if not initialized)
+        :rtype: Any
+        """
         if self._initialized:
             return self._value
         return NOTSET
 
     def __set__(self, instance, value):
+        """
+        __set__(self, value) -> None
+        | **Description**
+        |   Initializes itself with the given value.
+
+        :param value: Value to initialize with
+        :type value: Any
+        """
         self._value = value
         self._initialized = True
     
-    def __set_name__(self, owner, name):
+    def __set_name__(self, owner, name: str):
+        """
+        __set_name__(self, name) -> None
+        | **Description**
+        |   Sets the attributes name to ``name``.
+
+        :param name: New attribute name
+        :type name: str
+        """
         self.name = name
 
 T = TypeVar('T')
 Required = Union[T, None]
 
 def is_set(param):
+    """
+    is_set(param) -> param
+    | **Description**
+    |   Returns ``param`` if it is not None, otherwise raises a ValueError as setting ``param`` is required.
+
+    :param param: The parameter to be tested, whether it is set
+    :type param: Any
+    :return: param
+    :rtype: Any
+    :raises valueError: If param is None
+    """
     if param is not None:
         return param
     else:
         raise ValueError("set a values for all 'Required' params")
 
 def post_init():
+    """
+    post_init() -> Any
+    | **Description**
+    |   An initialisor that is run during the experiment.
+
+    :return: A not set default
+    :rtype: Any
+    """
     return field(init=False, repr=False)
 
 def pre_init(default: Any = NOTSET, default_factory: Any = NOTSET) -> Any:
+    """
+    pre_init(default, default_factory) -> Any
+    | **Description**
+    |   An initialisor that is run before the experiment. Sets the defaults of attributes.
+    |   Prioritizes ``default_factory`` as default over ``default``.
+
+    :param default: A fixed default value (default= NOTSET)
+    :type default: Any
+    :param default_factory: A dynamic default factory (default= NOTSET)
+    :type default_factory: Any
+    :return: A field(init=False, repr=False)
+    :rtype: Any
+    :raises ValueError: If neither default nor default_factory are set
+    """
     if default is NOTSET and not isinstance(default_factory, NotSet):
         return field(init=False, repr=False, default_factory=default_factory)
     if default is not NOTSET and default_factory is NOTSET:
@@ -76,6 +176,19 @@ def pre_init(default: Any = NOTSET, default_factory: Any = NOTSET) -> Any:
     raise ValueError("one of the arguments 'default' or 'default_factory' needs to be set")
 
 def init(default: Any = NOTSET, default_factory: Any = NOTSET) -> Any:
+    """
+    init(default, default_factory) -> Any
+    | **Description**
+    |   An initialisor that is at the start of the experiment.
+    |   Prioritizes ``default_factory`` as default over ``default``.
+
+    :param default: A fixed default value (default= NOTSET)
+    :type default: Any
+    :param default_factory: A dynamic default factory (default= NOTSET)
+    :type default_factory: Any
+    :return: A static/dynamic default if one is given, otherwise becomes a configurable attribute ``ConfAttr()``
+    :rtype: Any
+    """
     if default is NOTSET and not isinstance(default_factory, NotSet):
         return field(default_factory=default_factory)
     if default is not NOTSET and default_factory is NOTSET:
@@ -83,8 +196,26 @@ def init(default: Any = NOTSET, default_factory: Any = NOTSET) -> Any:
     return ConfAttr()
 
 class ConfigurableMeta(type):
-
+    """
+    ConfigurableMeta()
+    | **Description**
+    |   A ConfigurableMeta returns a new Configurable of the given type when called.
+    """
     def __call__(cls: Type, *args: Any, **kwargs: Any) -> Any:
+        """
+        __call__(cls, *args, **kwargs) -> Any
+        | **Description**
+        |   Returns a new Configurable of the given type with the given arguments.
+
+        :param cls: Type of the Configurable
+        :type cls: Type
+        :param *args: Position arguments for the new Configurable
+        :type *args: Any
+        :param **kwargs: Keyword arguments for the new Configurable
+        :type **kwargs: Any
+        :return: The new Configurable
+        :rtype: Configurable (of type ``cls``)
+        """
         obj: Configurable = cls.__new__(cls, *args, **kwargs)        # type: ignore
         return obj
 
