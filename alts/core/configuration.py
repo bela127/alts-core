@@ -1,3 +1,7 @@
+#Version 1.1.1 conform as of 18.12.2024
+"""
+| *alts.core.configuration*
+"""
 from __future__ import annotations
 from typing import TYPE_CHECKING, TypeVar, Generic, Union
 from dataclasses import field, is_dataclass
@@ -220,12 +224,28 @@ class ConfigurableMeta(type):
         return obj
 
 class ROOT():
+    """
+    ROOT()
+    | **Description**
+    |   ROOT defines basic implementations of the __init__, __post_init__, init and post_init methods.
+    """
     __post_init_called = False
 
     def __init__(self) -> None:
+        """
+        __init__(self) -> None
+        | **Description**
+        |   Does nothing.
+        """
         pass
 
     def __post_init__(self):
+        """
+        __post_init__(self) -> None
+        | **Description**
+        |   Only does anything the first time it is called.
+        |   Initializes all non-dataclass objects in method resolution order, then runs post_init().
+        """
         if not self.__post_init_called:
             self.__post_init_called = True
             mro = self.__class__.mro()
@@ -237,9 +257,22 @@ class ROOT():
                 self.post_init()
 
     def post_init(self):
+        """
+        post_init(self) -> None
+        | **Description**
+        |   Runs after __post_init__, does nothing here.
+        """
         pass
 
     def init(self, cls):
+        """
+        init(self, cls) -> None
+        | **Description**
+        |   Initializes all non-dataclass objects after ``cls`` in method resolution order.
+
+        :param cls: Starting point of initialization.
+        :type cls: Type
+        """
         mro = self.__class__.mro()
         index = mro.index(cls)
         for parent in mro[index+1:]:
@@ -248,20 +281,64 @@ class ROOT():
                 break
 
 class Configurable(ROOT, metaclass = ConfigurableMeta):
+    """
+    Configurable(*args, **kwargs)
+    | **Description**
+    |   Remembers its parameters and is able to create new instances of itself with the same parameters.
+
+    :param *args: Positional arguments for configuration
+    :type *args: Any
+    :param **kwargs: Keyword arguments for configuration
+    :type **kwargs: Any
+    """
     __initialized: bool = False
     __cls: Type
     __args: Tuple
     __kwargs: Dict
 
     def __getnewargs_ex__(self):
+        """
+        __getnewargs_ex__(self) -> (Tuple, Dict)
+        | **Description**
+        |   Returns current parameters of the Configurable (args, kwargs). 
+
+        :return: Current parameters (args, kwargs)
+        :rtype: (Tuple, Dict)
+        """
         return (self.__args, self.__kwargs)
 
     def __init__(self, *args, **kwargs) -> None:
+        """
+        __init__(self, *args, **kwargs) -> None
+        | **Description**
+        |   Initializes itself over ROOT.init(Configurable).
+
+        :param *args: Positionary arguments
+        :type *args: Any
+        :param **kwargs: Keyword arguments
+        :type **kwargs: Any
+        :raises TypeError: If any arguments were passed (as they are superfluous here)
+        """
         if len(args) != 0 or len(kwargs) != 0:
             raise TypeError(f"__init__ was called with {args}, {kwargs}, no arguments should be left over!")
         super().init(Configurable)
 
     def __new__(cls: Type[Self], *args, **kwargs) -> Self:
+        """
+        __new__(cls, *args, **kwargs) -> Self
+        | **Description**
+        |   Creates a new instance of ``cls`` with the same configuration.
+        |   Patches the new instance's __call__ method to initialize itself with the given arguments, if not done so already.
+
+        :param cls: Configurable to be copied
+        :type cls: Configurable
+        :param *args: Positionary arguments
+        :type *args: Any
+        :param **kwargs: Keyword arguments
+        :type **kwargs: Any
+        :return: Copy of cls
+        :rtype: Configurable
+        """
         obj: Self = super(Configurable, cls).__new__(cls)
         obj.__cls = cls
         obj.__args = args
@@ -286,5 +363,15 @@ class Configurable(ROOT, metaclass = ConfigurableMeta):
         return obj
     
     def __call__(self, **kwargs) -> Self:
+        """
+        __call__(self, **kwargs) -> Self
+        | **Description**
+        |   Returns a new instance of itself with the same configuration.
+
+        :param **kwargs: Keyword arguments are ignored
+        :type **kwargs: Any
+        :return: New instance of itself with the same configuration.
+        :rtype: Configurable
+        """
         new_obj = self.__new__(self.__cls, *self.__args, **self.__kwargs) # type: ignore
         return new_obj
