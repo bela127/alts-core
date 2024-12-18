@@ -286,10 +286,10 @@ class Configurable(ROOT, metaclass = ConfigurableMeta):
     | **Description**
     |   Remembers its parameters and is able to create new instances of itself with the same parameters.
 
-    :param *args: Positional arguments for configuration
-    :type *args: Any
-    :param **kwargs: Keyword arguments for configuration
-    :type **kwargs: Any
+    :param args: Positional arguments for configuration
+    :type args: Any
+    :param kwargs: Keyword arguments for configuration
+    :type kwargs: Any
     """
     __initialized: bool = False
     __cls: Type
