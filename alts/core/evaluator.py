@@ -13,22 +13,62 @@ from alts.core.configuration import Configurable, post_init
 
 
 class Evaluator(Configurable):
+    """
+    Evaluator(Experiment)
+    | **Description**
+    |   The Evaluator evaluates the results of an experiment.
+
+    :param experiment: The experiment to be evaluated
+    :type experiment: Experiment
+    """
     experiment: Experiment = post_init()
 
     def register(self, experiment: Experiment):
+        """
+        register(self, experiment) -> None
+        | **Description**
+        |   Registers a new experiment as the one to be evaluated.
+
+        :param experiment: The experiment to be evaluated
+        :type experiment: Experiment
+        """
         self.experiment = experiment
 
 @dataclass
 class LogingEvaluator(Evaluator):
+    """
+    LoggingEvaluator(experiment)
+    | **Description**
+    |   Logs the evaluation of the experiment into a "./eval/log" folder
+
+    :param experiment: The experiment to be evaluated
+    :type experiment: Experiment
+    """
     folder: str = "log"
     root_path: str = "./eval"
     path = "./eval"
 
     @property
     def iteration(self):
+        """
+        iteration(self) -> int
+        | **Description**
+        |   Returns the current iteration of the experiment.
+
+        :return: Current iteration of the experiment
+        :rtype: int
+        """
         return self.experiment.iteration
 
     def register(self, experiment: Experiment):
+        """
+        register(self, experiment) -> None
+        | **Description**
+        |   Registers the experiment as the one to be evaluated and creates the logging folders.
+
+        :param experiment: The experiment to be evaluated
+        :type experiment: Experiment
+        """
         super().register(experiment)
         self.path = self.root_path
         if self.experiment.exp_path is not None:
