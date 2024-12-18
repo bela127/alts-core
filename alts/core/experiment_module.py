@@ -1,3 +1,7 @@
+#Version 1.1.1 conform as of 18.12.2024
+"""
+| *alts.core.experiment_module*
+"""
 from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
@@ -11,17 +15,53 @@ if TYPE_CHECKING:
     from alts.core.oracle.oracles import Oracles
 
 class ExperimentModule(Configurable):
+    """
+    ExperimentModule(exp_modules)
+    | **Description**
+    |   An ExperimentModule is a fully setup experiment, ready to be run.
+
+    :param exp_modules: A collection of already configured and setup experiment modules
+    :type exp_modules: ExperimentModules
+    """
     exp_modules: ExperimentModules = post_init()
 
     def __call__(self, exp_modules: Required[ExperimentModules] = None, **kwargs) -> Self:
+        """
+        __call__(self, exp_modules, **kwargs) -> ExperimentModule
+        | **Description**
+        |   Creates a new instance of itself with the given configuration.
+
+        :param exp_modules: A collection of already configured and setup experiment modules
+        :type exp_modules: ExperimentModules
+        :param **kwargs: Keyword arguments for configuration
+        :type **kwargs: Any
+        :return: Newly configured object
+        :rtype: ExperimentModule
+        """
         obj = super().__call__( **kwargs)
         obj.exp_modules = is_set(exp_modules)
         return obj
     
     @property
     def data_pools(self) -> DataPools:
+        """
+        data_pools(self) -> DataPools
+        | **Description**
+        |   Returns the experiment's data pools.
+
+        :return: The experiment's data pools
+        :rtype: DataPools
+        """
         return self.exp_modules.data_pools
     
     @property
     def oracles(self) -> Oracles:
+        """
+        oracles(self) -> Oracles
+        | **Description**
+        |   Returns the experiment's oracles.
+
+        :return: The experiment's oracles
+        :rtype: Oracles
+        """
         return self.exp_modules.oracles
