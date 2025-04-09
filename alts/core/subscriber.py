@@ -42,10 +42,10 @@ class Subscriber(Configurable):
         """
         update(self, subscription) -> None
         | **Description**
-        |   Tries to update the given ``subscription``.
+        |   Receives notification of the updated subscription.
         |   Abstract Method
 
-        :param subscription: The subscription to be updated
+        :param subscription: The subscription that is updated
         :type subscription: Subscribable
         """
         pass
@@ -82,9 +82,9 @@ class StreamDataSubscriber(DataPoolsSubscriber):
         """
         stream_update(self, subscription) -> None
         | **Description**
-        |   Tries to update the given ``subscription``.
+        |   Receives notification of the updated subscription.
 
-        :param subscription: The subscription to be updated
+        :param subscription: The updated subscription
         :type subscription: Subscribable
         """
         self.update(subscription)
@@ -112,9 +112,9 @@ class ProcessDataSubscriber(DataPoolsSubscriber):
         """
         process_update(self, subscription) -> None
         | **Description**
-        |   Tries to update the given ``subscription``.
+        |   Receives notification of the updated subscription.
 
-        :param subscription: The subscription to be updated
+        :param subscription: The updated subscription
         :type subscription: Subscribable
         """
         self.update(subscription)
@@ -142,9 +142,9 @@ class ResultDataSubscriber(DataPoolsSubscriber):
         """
         result_update(self, subscription) -> None
         | **Description**
-        |   Tries to update the given ``subscription``.
+        |   Receives notification of the updated subscription.
 
-        :param subscription: The subscription to be updated
+        :param subscription: The updated subscription
         :type subscription: Subscribable
         """
         self.update(subscription)
@@ -171,9 +171,9 @@ class ExpModSubscriber(Subscriber):
         """
         experiment_update(self, subscription) -> None
         | **Description**
-        |   Tries to update the given ``subscription``.
+        |   Receives notification of the updated subscription.
 
-        :param subscription: The subscription to be updated
+        :param subscription: The updated subscription
         :type subscription: Subscribable
         """
         self.update(subscription)
@@ -200,9 +200,9 @@ class TimeSubscriber(Subscriber):
         """
         time_update(self, subscription) -> None
         | **Description**
-        |   Tries to update the given ``subscription``.
+        |   Receives notification of the updated subscription.
 
-        :param subscription: The subscription to be updated
+        :param subscription: The updated subscription
         :type subscription: Subscribable
         """
         self.update(subscription)
@@ -237,9 +237,9 @@ class ProcessOracleSubscriber(OraclesSubscriber):
         """
         process_query(self, subscription) -> None
         | **Description**
-        |   Tries to update the given ``subscription``.
+        |   Receives notification of the updated subscription.
 
-        :param subscription: The subscription to be updated
+        :param subscription: The updated subscription
         :type subscription: Subscribable
         """
         self.update(subscription)

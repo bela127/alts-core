@@ -1,3 +1,8 @@
+#Version 1.1.1 conform as of 01.04.2025
+"""
+| *alts.core.evaluator*
+| :doc:`Built-In Implementations </modules/evaluator>`
+"""
 from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
@@ -16,7 +21,7 @@ class Evaluator(Configurable):
     """
     Evaluator(Experiment)
     | **Description**
-    |   The Evaluator evaluates the results of an experiment.
+    |   The Evaluator evaluates the results of an experiment. An evaluation can take any shape.
 
     :param experiment: The experiment to be evaluated
     :type experiment: Experiment
@@ -37,9 +42,9 @@ class Evaluator(Configurable):
 @dataclass
 class LogingEvaluator(Evaluator):
     """
-    LoggingEvaluator(experiment)
+    LogingEvaluator(experiment)
     | **Description**
-    |   Logs the evaluation of the experiment into a "./eval/log" folder
+    |   Logs the evaluation of the experiment into a ```./eval/log``` folder.
 
     :param experiment: The experiment to be evaluated
     :type experiment: Experiment
@@ -64,7 +69,7 @@ class LogingEvaluator(Evaluator):
         """
         register(self, experiment) -> None
         | **Description**
-        |   Registers the experiment as the one to be evaluated and creates the logging folders.
+        |   Registers the experiment to be evaluated and creates the appropiate logging folders.
 
         :param experiment: The experiment to be evaluated
         :type experiment: Experiment
@@ -84,31 +89,80 @@ class LogingEvaluator(Evaluator):
 import functools
 
 class Evaluate():
+    """
+    Evaluate(func)
+    | **Description**
+    |   Evaluate is a modifiable function decorator/wrapper . You may set a function that runs beforehand, afterwards, or receives the original function as an argument.
+    |   Call the currently wrapped function with Evaluate().
 
+    :param func: Function to be wrapped
+    :type func: function
+    """
     def __init__(self, func):
+        """
+        __init__(self, func) -> None
+        | **Description**
+        |   Sets ```func``` as its original function and initiates the ```pre```, ```wrap```, and ```post``` functions to do nothing (i.e. calling ```Evaluate(*args, **kwargs)``` now would yield ```original_func(*args, **kwargs)```).
+
+        :param func: Function to be wrapped
+        :type func: function
+        """
         functools.update_wrapper(self, func)
-        self._warped_func = func
+        self._original_func = func
         self._pre_func: Optional[Callable] = None
-        self._warp_func: Optional[Callable] = None
+        self._wrap_func: Optional[Callable] = None
         self._post_func: Optional[Callable] = None
 
     def __call__(self, *args, **kwargs):
+        """
+        __call__(self, *args, **kwargs)
+        | **Description**
+        |   Calls the wrapped function with the given arguments.
+        |   Running order: pre(*args, **kwargs), wrap(original_func, *args, **kwargs), post(*args, **kwargs)
+
+        :return: The result of wrap(original_func, *args, **kwargs)
+        :rtype: any
+        """
         if not self._pre_func is None:
             self._pre_func(*args, **kwargs)
-        if not self._warp_func is None:
-            result = self._warp_func(self._warped_func, *args, **kwargs)
+        if not self._wrap_func is None:
+            result = self._wrap_func(self._original_func, *args, **kwargs)
         else:
-            result = self._warped_func(*args, **kwargs)
+            result = self._original_func(*args, **kwargs)
         if not self._post_func is None:
             self._post_func(result)
         return result
 
     
-    def pre(self, methode):
-        self._pre_func = methode
+    def pre(self, func):
+        """
+        pre(self, func) -> None
+        | **Description**
+        |   Sets the function to run before the wrapped function. 
 
-    def warp(self, methode):
-        self._warp_func = methode
+        :param func: Function to run before the wrapped function
+        :type func: function
+        """
+        self._pre_func = func
 
-    def post(self, methode):
-        self._post_func = methode
+    def warp(self, func):
+        """
+        wrap(self, func) -> None
+        | **Description**
+        |   Sets the function to wrap the original function (takes the original function as an argument). 
+
+        :param func: Function to wrap the original function
+        :type func: function
+        """
+        self._warp_func = func
+
+    def post(self, func):
+        """
+        pre(self, func) -> None
+        | **Description**
+        |   Sets the function to run after the wrapped function.
+
+        :param func: Function to run after the wrapped function
+        :type func: function
+        """
+        self._post_func = func
