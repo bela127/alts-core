@@ -1,6 +1,6 @@
-#TODO D queries_from_norm_pos
+#Version 1.1.1 conform as of 18.04.2025
 """
-*alts.core.data.constrains*
+| *alts.core.data.constrains*
 """
 from __future__ import annotations
 from typing import TYPE_CHECKING
@@ -103,7 +103,21 @@ class QueryConstrain():
         return self._last_queries
 
     def queries_from_norm_pos(self, norm_pos: NDArray[Shape["query_nr, ... query_dims"], np.dtype[np.number]]) -> NDArray[Shape["query_nr, ... query_dims"], np.dtype[np.number]]: 
+        """
+        queries_from_norm_pos(self, norm_pos) -> queries
+        | **Description**
+        |   Transforms the given normed query into the permitted value range given by its query constraints.
+        |   Example: Let ranges be [[[0,12], [0,12]] , [[2,14], [1,3]]] and norm_pos = [[1,0.5] , [0.25,0.5]]
+        |   Then this function returns the query [[0 + 1 * 12,0 + 0.5 * 12] , [2 + 0.25 * 12, 1 + 0.5 * 2]] = [[12, 6] , [5, 2]]
 
+        :param norm_pos: A query with values in range of [0,1]
+        :type norm_pos: `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
+        :return:
+        :rtype: `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
+
+        :raises LookupError: If the set of permitted query values is discrete and empty
+        :raises RuntimeWarning: If infinite is a permitted value
+        """
         if self.ranges is None:
             raise LookupError("can not look up a position in a discrete pool")
         if np.any(np.isinf(self.ranges)):
