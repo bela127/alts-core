@@ -96,7 +96,7 @@ class Augmentation(DataSource):
             raise AttributeError("Augmentation always uses the result_shape of the data_source")
 
 
-    def query(self, queries: NDArray[ Shape["query_nr, ... query_dim"], Number]) -> 'Tuple[NDArray[Shape["query_nr, ... query_dim"], Number], NDArray[Shape["query_nr, ... result_dim"], Number]]':
+    def query(self, queries: NDArray[ Shape["query_nr, ... query_dim"], Number]) -> 'Tuple[NDArray[Shape["query_nr, ... query_dim"], Number], NDArray[Shape["query_nr, ... result_dim"], Number]]': # type: ignore
         """
         query(self, queries) -> data_points
         | **Description**
