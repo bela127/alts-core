@@ -151,7 +151,7 @@ def post_init():
     """
     post_init() -> Any
     | **Description**
-    |   An initialisor that is run during the experiment.
+    |   Used by the experiment for dependency injection into its modules, making sure they're compatible.
 
     :return: A not set default
     :rtype: Any
@@ -162,8 +162,7 @@ def pre_init(default: Any = NOTSET, default_factory: Any = NOTSET) -> Any:
     """
     pre_init(default, default_factory) -> Any
     | **Description**
-    |   An initialisor that is run before the experiment. Sets the defaults of attributes.
-    |   Prioritizes ``default_factory`` as default over ``default``.
+    |   An initialisor intented to replace the function of the normal ``__init__`` constructor in dataclasses. 
 
     :param default: A fixed default value (default= NOTSET)
     :type default: Any
@@ -183,7 +182,8 @@ def init(default: Any = NOTSET, default_factory: Any = NOTSET) -> Any:
     """
     init(default, default_factory) -> Any
     | **Description**
-    |   An initialisor that is at the start of the experiment.
+    |   Configures the attribute's value to be initialized later.
+    |   Its purpose is to set attribute values without calling the ``__init__`` constructor, as intialisation is handled by the Experiment (where it also checks for module compatability).
     |   Prioritizes ``default_factory`` as default over ``default``.
 
     :param default: A fixed default value (default= NOTSET)
