@@ -26,8 +26,8 @@ class QuerySelector(ExperimentModule, QueryConstrained):
     """
     QuerySelector(query_optimizer, query_decider)
     | **Description**
-    |   The QuerySelector chooses which queries are going to be asked results for next.
-    |   It does so with the help of the QueryOptimizer and the QueryDecider.
+    |   The QuerySelector chooses the next queries to be queried.
+    |   It utilizes the QueryOptimizer and the QueryDecider.
 
     :param query_optimizer: Chooses the most informative queries to be asked next
     :type query_optimizer: QueryOptimizer

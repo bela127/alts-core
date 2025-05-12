@@ -22,7 +22,7 @@ class SelectionCriteria(ExperimentModule, Queryable):
     """
     SelectionCriteria()
     | **Description**
-    |   A ``SelectionCriteria`` is an algorithm which gives scores to query candidates.
+    |   A ``SelectionCriteria`` is an algorithm which gives scores to query candidates. Higher scores correspond to more informative/valuable queries.    
     """
 
     @abstractmethod

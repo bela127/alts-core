@@ -22,6 +22,7 @@ class TimeSource(Publisher, ResultConstrained):
     TimeSource()
     | **Description**
     |   A TimeSource provides a custom time module for the :doc:`Process </core/data_process/process>` to use.
+    |   This enables simulated passing of time measured in "time steps" independent of real time.
     """
     time_step: float = 1
 

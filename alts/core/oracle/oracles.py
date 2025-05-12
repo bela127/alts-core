@@ -29,8 +29,7 @@ class Oracles(Configurable, QueryConstrained):
         """
         trigger_subscriber(self) -> None
         | **Description**
-        |   Updates its own state upon request.
-        |   Does nothing here.
+        |   Subscribee informs about new available data.
         """
         pass
 
@@ -62,7 +61,7 @@ class POracles(Oracles):
         """
         trigger_subscriber(self) -> None
         | **Description**
-        |   Updates its query queue upon request.
+        |   Informs about new available data in the process' QueryQueue.
         """
         super().trigger_subscriber()
         self.process.update()

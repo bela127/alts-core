@@ -20,7 +20,7 @@ class DataPools(Configurable):
         """
         trigger_subscriber() -> None
         | **Description**
-        |   Updates its own available data.
+        |   Subscribee informs about new available data.
         """
         pass
 
@@ -53,7 +53,7 @@ class StreamDataPools(DataPools):
         """
         trigger_subscriber(self) -> None
         | **Description**
-        |   Updates its own available data stream.
+        |   Informs about new available data in the stream.
         """
         super().trigger_subscriber()
         self.stream.update()
@@ -74,7 +74,7 @@ class ResultDataPools(DataPools):
         """
         trigger_subscriber(self) -> None
         | **Description**
-        |   Updates its own available data.
+        |   Informs about new available results.
         """
         super().trigger_subscriber()
         self.result.update()
@@ -85,7 +85,7 @@ class ProcessDataPools(DataPools):
     """
     ProcessDataPools(process)
     | **Description**
-    |   A ``DataPools`` specifically for results.
+    |   A ``DataPools`` specifically for immediate results.
 
     :param process: The process to be pooled
     :type process: :doc:`QueriedDataPool </core/data/queried_data_pool>`
@@ -96,7 +96,7 @@ class ProcessDataPools(DataPools):
         """
         trigger_subscriber(self) -> None
         | **Description**
-        |   Updates its own available data.
+        |   Informs about new available data in the process.
         """
         super().trigger_subscriber()
         self.process.update()
@@ -106,7 +106,7 @@ class PRDataPools(ResultDataPools, ProcessDataPools):
     """
     PRDataPools()
     | **Description**
-    |   A ``DataPools`` specifically for process results.
+    |   A ``DataPools`` specifically for immediate and delayed results.
     """
     pass
 
@@ -115,6 +115,6 @@ class SPRDataPools(StreamDataPools, PRDataPools):
     """
     SPRDataPools()
     | **Description**
-    |   A ``DataPools`` specifically for stream process results.
+    |   A ``DataPools`` specifically for streamed immediate and delayed results.
     """
     pass

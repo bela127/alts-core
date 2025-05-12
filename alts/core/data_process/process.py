@@ -29,7 +29,7 @@ class Process(Configurable, Queryable):
     """
     Process(time_source, data_pools, oracles)
     | **Description**
-    |   The Process is the module responsible for processing the :doc:`Estimator's </core/estimator>` queries and providing their results as well as saving all the queried data. 
+    |   The Process is the module responsible for processing the :doc:`Estimator's </core/estimator>` queries and providing their results as well as saving all the queried data in data pools. 
 
     :param time_source: Source of time
     :type time_source: :doc:`TimeSource </core/data_process/process>`
@@ -42,8 +42,8 @@ class Process(Configurable, Queryable):
     data_pools: DataPools = post_init()
     oracles: Oracles = post_init()
 
-    last_queries: 'NDArray[Shape["data_nr, ... query_shape"], Number] = post_init()'
-    last_results: 'NDArray[Shape["data_nr, ... result_shape"], Number] = post_init()'
+    last_queries: NDArray[Shape["data_nr, ... query_shape"], Number] = post_init() # type: ignore
+    last_results: NDArray[Shape["data_nr, ... result_shape"], Number] = post_init() # type: ignore
 
 
     def initialize(self):
@@ -54,7 +54,7 @@ class Process(Configurable, Queryable):
         """
         pass
     
-    def step(self, iteration) -> 'Tuple[NDArray[Shape["query_nr, ... query_dim"], Number], NDArray[Shape["query_nr, ... result_dim"], Number], NDArray[Shape["query_nr, ... query_dim"], Number], NDArray[Shape["query_nr, ... result_dim"], Number]]':
+    def step(self, iteration) -> Tuple[NDArray[Shape["query_nr, ... query_dim"], Number], NDArray[Shape["query_nr, ... result_dim"], Number], NDArray[Shape["query_nr, ... query_dim"], Number], NDArray[Shape["query_nr, ... result_dim"], Number]]: # type: ignore
         """
         step(self, iteration) -> (pre_step_data_points, post_step_data_points)
         | **Description**
@@ -65,7 +65,7 @@ class Process(Configurable, Queryable):
         :return: Processed Queries before step, Results before step, Processed Queries after step, Results after step
         :rtype: `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_, `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_, `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_, `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_ 
         """
-        return None, None, None, None
+        return None, None, None, None # type: ignore
     
     def __call__(self, time_source: Required[TimeSource] = None, oracles: Required[Oracles] = None, data_pools: Required[DataPools] = None, **kwargs) -> Self:
         """

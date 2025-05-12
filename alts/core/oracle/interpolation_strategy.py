@@ -18,7 +18,8 @@ class InterpolationStrategy(Configurable, QueryConstrained):
     """
     InterpolationStrategy(data_sampler)
     | **Description**
-    |   An ``InterpolatingStrategy`` is an **ambivalent** source of data depending on the :doc:`DataSampler </core/data/data_sampler>` it interpolates within.
+    |   An ``InterpolatingStrategy`` interpolates lists of data points into into single data points.
+    |   More specifically, for each sample all data points in the sample are interpolated into a single point for further use.
     |   This is a base class not intended for direct use.
 
     :param data_sampler: A sample of the data which contains the to be interpolated data points
@@ -30,12 +31,12 @@ class InterpolationStrategy(Configurable, QueryConstrained):
         """
         interpolate(self, data_points) -> data_points
         | **Description**
-        |   Interpolates a tuple of two data points and returns the interpolated tuple of length 2.
-        |   This implementation of ``interpolate`` returns the twople as is. If this is the result you wish to achieve, please use :class:`NoInterpolation` instead.
+        |   Interpolates a list of data samples containing multiple data points into a list of single data points. This usually means the output containing fewer queries than the input.
+        |   This implementation of ``interpolate`` returns the list of data samples as is. If this is the result you wish to achieve, please use :class:`NoInterpolation` instead.
 
-        :param data_points: A tuple of two data_points to be interpolated
+        :param data_points: A list of data samples, where each sample may contain multiple data points
         :type data_points: Tuple(`NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_, `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_)
-        :return: The interpolated tuple of length 2
+        :return: The interpolated data points 
         :rtype: Tuple(`NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_, `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_)
         """
         return data_points

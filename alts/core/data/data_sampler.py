@@ -25,11 +25,11 @@ class DataSampler(Queryable, ExperimentModule):
     | **Description**
     |   Samples data from a :doc:`QueriedDataPools </core/data/queried_data_pool>`, meaning for each query the `DataSampler` returns a number of query-result pairs in the same area.
     """
-    def query(self, queries: NDArray[Shape["query_nr, ... query_dim"], Number], size = None) -> 'Tuple[NDArray[Shape["query_nr, sample_size, ... query_dim"], Number], NDArray[Shape["query_nr, sample_size,... result_dim"], Number]]':
+    def query(self, queries: NDArray[Shape["query_nr, ... query_dim"], Number], size = None) -> Tuple[NDArray[Shape["query_nr, sample_size, ... query_dim"], Number], NDArray[Shape["query_nr, sample_size,... result_dim"], Number]]: # type: ignore
         """
         query(self, queries, size) -> data_points
         | **Description**
-        |   Returns a tuple of ``size`` queries and ``size`` results in the area of the requested queries.
+        |   Returns a tuple of ``size`` queries and ``size`` results in the area [#]_ of the requested queries.
 
         :param queries: A list of queries
         :type queries: `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
@@ -37,6 +37,10 @@ class DataSampler(Queryable, ExperimentModule):
         :type size: Number
         :return: A tuple of queries and their associated results
         :rtype: Tuple[`NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_,`NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_]
+        
+        .. [#] The actually processed query may differ from the requested one.
+            This may happen if the ``DataSource`` does not contain the exact query that is being requested, as the real-life case often is.
+            In this scenario, a "similar" query will be processed or the query is dropped altogether.
         """
         raise NotImplementedError()
 

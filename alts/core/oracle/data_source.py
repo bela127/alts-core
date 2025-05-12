@@ -26,6 +26,7 @@ class DataSource(Configurable, Queryable):
     |   A ``DataSource`` is a source of learning data for the model in training.
     |   It returns *results* (y-values) to given *queries* (x-values) upon request.
     |   The generation of its data depends on the individual implementation.
+    |   Generally, the same queries may return different result each time.
 
     :param query_shape: The expected shape of the queries
     :type query_shape: tuple of ints
@@ -35,7 +36,7 @@ class DataSource(Configurable, Queryable):
     query_shape: 'Tuple[int,...]' = init()
     result_shape: 'Tuple[int,...]' = init()
 
-    def query(self, queries: NDArray[ Shape["query_nr, ... query_dim"], Number]) -> 'Tuple[NDArray[Shape["query_nr, ... query_dim"], Number], NDArray[Shape["query_nr, ... result_dim"], Number]]':
+    def query(self, queries: NDArray[ Shape["query_nr, ... query_dim"], Number]) -> Tuple[NDArray[Shape["query_nr, ... query_dim"], Number], NDArray[Shape["query_nr, ... result_dim"], Number]]: # type: ignore
         """
         query(self, queries) -> data_points
         | **Description**
@@ -50,8 +51,8 @@ class DataSource(Configurable, Queryable):
         :raises: NotImplementedError
 
         .. [#] The actually processed query may differ from the requested one.
-            | This may happen if the ``DataSource`` does not contain the exact query that is being requested, as the real-life case often is.
-            | In this scenario, a "similar" query will be processed or the query is dropped alltogether.
+            This may happen if the ``DataSource`` does not contain the exact query that is being requested, as the real-life case often is.
+            In this scenario, a "similar" query will be processed or the query is dropped altogether.
         """
         raise NotImplementedError
  
@@ -159,7 +160,7 @@ class TimeDataSourceWraper(TimeDataSource):
     query_shape: Tuple[int,...] = (1,)
     data_source: DataSource = init()
 
-    def query(self, times: NDArray[Shape["time_step_nr, [time]"], Number]) -> 'Tuple[NDArray[Shape["time_step_nr, [time]"], Number], NDArray[Shape["time_step_nr, ... var_shape"], Number]]':
+    def query(self, times: NDArray[Shape["time_step_nr, [time]"], Number]) -> Tuple[NDArray[Shape["time_step_nr, [time]"], Number], NDArray[Shape["time_step_nr, ... var_shape"], Number]]: # type: ignore
         """
         query(self, queries) -> data_points
         | **Description**
