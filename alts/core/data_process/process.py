@@ -27,16 +27,9 @@ from alts.core.query.queryable import Queryable
 
 class Process(Configurable, Queryable):
     """
-    Process(time_source, data_pools, oracles)
+    Process()
     | **Description**
     |   The Process is the module responsible for processing the :doc:`Estimator's </core/estimator>` queries and providing their results as well as saving all the queried data in data pools. 
-
-    :param time_source: Source of time
-    :type time_source: :doc:`TimeSource </core/data_process/process>`
-    :param data_pools: A data structure which saves all processed queries and results
-    :type data_pools: :doc:`DataPools </core/data/data_pools>`
-    :param oracles: The interaction point between the Process and the data source.
-    :type oracles: :doc:`Oracles </core/oracle/oracles>`
     """
     time_source: TimeSource = post_init()
     data_pools: DataPools = post_init()

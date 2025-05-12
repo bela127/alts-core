@@ -24,15 +24,10 @@ if TYPE_CHECKING:
 
 class QueriedDataPool(DelayedPublisher, Queryable):
     """
-    QueriedDataPool(_query_constrain, _result_constrain)
+    QueriedDataPool()
     | **Description**
     |   It's a queryable :doc:`DataPools </core/data/data_pools>`.
     |   It contains queries, results and the last added queries and results.
-
-    :param _query_constrain: Query constrains
-    :type _query_constrain: :doc:`QueryConstrain </core/data/constrains>` 
-    :param _query_result: Result constrains
-    :type _query_result: :doc:`ResultConstrain </core/data/constrains>` 
     """
     _query_constrain: QueryConstrainedGetter = post_init()
     _result_constrain: ResultConstrainGetter = post_init()
@@ -45,11 +40,11 @@ class QueriedDataPool(DelayedPublisher, Queryable):
         """
         super().init(QueriedDataPool)
 
-        self.queries: 'NDArray[Shape["query_nr, ... query_dim"], Number]'
-        self.results: 'NDArray[Shape["query_nr, ... result_dim"], Number]'
+        self.queries: NDArray[Shape["query_nr, ... query_dim"], Number] # type: ignore
+        self.results: NDArray[Shape["query_nr, ... result_dim"], Number] # type: ignore
 
-        self.last_queries: 'NDArray[Shape["query_nr, ... query_dim"], Number]'
-        self.last_results: 'NDArray[Shape["query_nr, ... result_dim"], Number]'
+        self.last_queries: NDArray[Shape["query_nr, ... query_dim"], Number] # type: ignore
+        self.last_results: NDArray[Shape["query_nr, ... result_dim"], Number] # type: ignore
 
         self.queries = np.empty((0,*self._query_constrain().shape))
         self.results = np.empty((0,*self._result_constrain().shape))
@@ -58,7 +53,7 @@ class QueriedDataPool(DelayedPublisher, Queryable):
         self.last_results = np.empty((0,*self._result_constrain().shape))
 
 
-    def add(self, data_points: 'Tuple[NDArray[Shape["query_nr, ... query_dim"], Number], NDArray[Shape["query_nr, ... result_dim"], Number]]'):
+    def add(self, data_points: Tuple[NDArray[Shape["query_nr, ... query_dim"], Number], NDArray[Shape["query_nr, ... result_dim"], Number]]): # type: ignore
         """
         add(self, data_points) -> None
         | **Description**

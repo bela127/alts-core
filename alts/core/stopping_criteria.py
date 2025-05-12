@@ -18,12 +18,9 @@ if TYPE_CHECKING:
 @dataclass
 class StoppingCriteria(Configurable):
     """
-    StoppingCriteria(exp)
+    StoppingCriteria()
     | **Description**
     |   Determines when the experiment has reached its goal.
-
-    :param exp: The experiment to monitor
-    :type exp: :doc:`Experiment </core/experiment>`
     """
     exp: Experiment = post_init()
 

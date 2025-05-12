@@ -23,18 +23,12 @@ if TYPE_CHECKING:
 @dataclass
 class ExperimentModules(Publisher):
     """
-    ExperimentModules(query_selector, time_source, data_pools, oracles)
+    ExperimentModules(query_selector)
     | **Description**
     |   ExperimentModules is a collection of configured modules necessary for an experiment.
 
     :param query_selector: Decider over the most useful datapoints for continued learning
     :type query_selector: QuerySelector
-    :param time_source: A time source for the experiment
-    :type time_source: TimeSource
-    :param data_pools: Collector of already acquired data
-    :type data_pools: DataPools
-    :param oracles: The source of new data
-    :type oracles: Oracles
     """
     query_selector: QuerySelector = init()
 

@@ -16,14 +16,11 @@ if TYPE_CHECKING:
 
 class InterpolationStrategy(Configurable, QueryConstrained):
     """
-    InterpolationStrategy(data_sampler)
+    InterpolationStrategy()
     | **Description**
     |   An ``InterpolatingStrategy`` interpolates lists of data points into into single data points.
     |   More specifically, for each sample all data points in the sample are interpolated into a single point for further use.
     |   This is a base class not intended for direct use.
-
-    :param data_sampler: A sample of the data which contains the to be interpolated data points
-    :type data_sampler: :doc:`DataSampler </core/data/data_sampler>`
     """
     data_sampler: DataSampler = post_init()
 
