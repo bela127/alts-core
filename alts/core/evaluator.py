@@ -21,7 +21,7 @@ class Evaluator(Configurable):
     """
     Evaluator(Experiment)
     | **Description**
-    |   The Evaluator evaluates the results of an experiment. An evaluation can take any shape.
+    |   The Evaluator evaluates the results of an experiment. An evaluation can take any shape and may wrap any function of the experiment.
 
     :param experiment: The experiment to be evaluated
     :type experiment: Experiment

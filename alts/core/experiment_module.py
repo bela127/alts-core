@@ -16,12 +16,10 @@ if TYPE_CHECKING:
 
 class ExperimentModule(Configurable):
     """
-    ExperimentModule(exp_modules)
+    ExperimentModule()
     | **Description**
-    |   An ExperimentModule is a fully setup experiment, ready to be run.
-
-    :param exp_modules: A collection of already configured and setup experiment modules
-    :type exp_modules: ExperimentModules
+    |   An ExperimentModule is any module which is configurable/swappable in a blueprint.
+    |   Each ExperimentModule has access to the experiment's oracle, data pool and all other experiment modules.
     """
     exp_modules: ExperimentModules = post_init()
 

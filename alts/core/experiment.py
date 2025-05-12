@@ -14,7 +14,7 @@ class Experiment():
     """
     Experiment(blueprint, exp_nr)
     | **Description**
-    |   Runs an experiment with the configuration in the blueprint.
+    |   Initializes the configured modules and does dependency injection based on the blueprint, then runs the experiment.
 
     :param blueprint: Blueprint with configuration
     :type blueprint: Blueprint
