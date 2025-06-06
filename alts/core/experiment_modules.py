@@ -90,18 +90,12 @@ class ExperimentModules(Publisher):
 @dataclass
 class InitQueryExperimentModules(ExperimentModules):
     """
-    InitQueryExperimentModules(query_selector, time_source, data_pools, poracles, initial_query_sampler)
+    InitQueryExperimentModules(query_selector, initial_query_sampler)
     | **Description**
     |   InitQueryExperimentModules additionally has an initial QuerySampler and a Process Oracle.
 
     :param query_selector: Decider over the most useful datapoints for continued learning
     :type query_selector: QuerySelector
-    :param time_source: A time source for the experiment
-    :type time_source: TimeSource
-    :param data_pools: Collector of already acquired data
-    :type data_pools: DataPools
-    :param oracles: The source of new data
-    :type oracles: POracles
     :param initial_query_sampler: A sampler to get the very first datapoints
     :type initial_query_sampler: QuerySampler
     """
@@ -148,18 +142,12 @@ class InitQueryExperimentModules(ExperimentModules):
 @dataclass
 class EstimatorExperiment(ExperimentModules):
     """
-    EstimatorExperiment(query_selector, time_source, data_pools, poracles, estimator)
+    EstimatorExperiment(query_selector, estimator)
     | **Description**
     |   EstimatorExperiment additionally has an estimator to train on the data.
 
     :param query_selector: Decider over the most useful datapoints for continued learning
     :type query_selector: QuerySelector
-    :param time_source: A time source for the experiment
-    :type time_source: TimeSource
-    :param data_pools: Collector of already acquired data
-    :type data_pools: DataPools
-    :param oracles: The source of new data
-    :type oracles: Oracles
     :param estimator: An estimator that trains with the acquired data
     :type estimator: Estimator
     """
@@ -177,18 +165,12 @@ class EstimatorExperiment(ExperimentModules):
 @dataclass
 class InitQueryEstimatorExperiment(InitQueryExperimentModules, EstimatorExperiment):
     """
-    InitQueryEstimatorExperiment(query_selector, time_source, data_pools, poracles, initial_query_sampler, estimator)
+    InitQueryEstimatorExperiment(query_selector, initial_query_sampler, estimator)
     | **Description**
     |   InitQueryEstimatorExperiment is an experiment setup with an initial query sample and an estimator to train.
 
     :param query_selector: Decider over the most useful datapoints for continued learning
     :type query_selector: QuerySelector
-    :param time_source: A time source for the experiment
-    :type time_source: TimeSource
-    :param data_pools: Collector of already acquired data
-    :type data_pools: DataPools
-    :param oracles: The source of new data
-    :type oracles: POracles
     :param initial_query_sampler: A sampler to get the very first datapoints
     :type initial_query_sampler: QuerySampler
     :param estimator: An estimator that trains with the acquired data
