@@ -130,7 +130,7 @@ class ConfAttr():
 T = TypeVar('T')
 Required = Union[T, None]
 
-def is_set(param):
+def is_set(param, param_name=None):
     """
     is_set(param) -> param
     | **Description**
@@ -145,7 +145,10 @@ def is_set(param):
     if param is not None:
         return param
     else:
-        raise ValueError("set a values for all 'Required' params")
+        if param_name is None:
+            raise ValueError("set a values for all 'Required' params")
+        else:
+            raise ValueError(f"Missing 'Required' param: {param_name}")
 
 def post_init():
     """
