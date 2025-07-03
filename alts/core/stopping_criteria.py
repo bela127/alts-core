@@ -49,6 +49,6 @@ class StoppingCriteria(Configurable):
         :rtype: StoppingCriteria
         """
         obj = super().__call__( **kwargs)
-        obj.exp = is_set(exp)
+        obj.exp = is_set(exp, "StoppingCriteria.exp")
         return obj
     

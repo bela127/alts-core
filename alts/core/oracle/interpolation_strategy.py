@@ -63,7 +63,7 @@ class InterpolationStrategy(Configurable, QueryConstrained):
         :rtype: ``InterpolatingDataSource``
         """
         obj = super().__call__(**kwargs)
-        obj.data_sampler = is_set(data_sampler)
+        obj.data_sampler = is_set(data_sampler, "InterpolationStrategy.data_sampler")
         return obj
 
 class NoInterpolation(InterpolationStrategy):

@@ -86,7 +86,7 @@ class QueriedDataPool(DelayedPublisher, Queryable):
         :rtype: QueriedDataPool
         """
         obj = super().__call__( **kwargs)
-        obj._query_constrain = is_set(query_constrain)
-        obj._result_constrain = is_set(result_constrain)
+        obj._query_constrain = is_set(query_constrain, "QueriedDataPool.query_constrain")
+        obj._result_constrain = is_set(result_constrain, "QueriedDataPool.result_constrain")
         return obj
     

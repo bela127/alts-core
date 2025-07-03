@@ -82,9 +82,9 @@ class ExperimentModules(Publisher):
         :rtype: ExperimentModules
         """
         obj = super().__call__(**kwargs)
-        obj.time_source = is_set(time_source)
-        obj.data_pools = is_set(data_pools)
-        obj.oracles = is_set(oracles)
+        obj.time_source = is_set(time_source, "ExperimentModules.time_source")
+        obj.data_pools = is_set(data_pools, "ExperimentModules.data_pools")
+        obj.oracles = is_set(oracles, "ExperimentModules.oracles")
         return obj
     
 @dataclass

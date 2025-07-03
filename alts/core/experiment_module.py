@@ -37,7 +37,7 @@ class ExperimentModule(Configurable):
         :rtype: ExperimentModule
         """
         obj = super().__call__( **kwargs)
-        obj.exp_modules = is_set(exp_modules)
+        obj.exp_modules = is_set(exp_modules, "ExperimentModule.exp_modules")
         return obj
     
     @property

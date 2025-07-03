@@ -167,5 +167,5 @@ class QueryQueue(DelayedPublisher, QueryConstrained):
         :rtype: QueryQueue
         """
         obj =  super().__call__(**kwargs)
-        obj._query_constrain = is_set(query_constrain)
+        obj._query_constrain = is_set(query_constrain, "QueryQueue.query_constrain")
         return obj

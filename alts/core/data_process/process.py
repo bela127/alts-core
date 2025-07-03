@@ -76,8 +76,8 @@ class Process(Configurable, Queryable):
         :rtype: Process
         """
         obj = super().__call__(**kwargs)
-        obj.time_source = is_set(time_source)
-        obj.data_pools = is_set(data_pools)
-        obj.oracles = is_set(oracles)
+        obj.time_source = is_set(time_source, "Process.time_source")
+        obj.data_pools = is_set(data_pools, "Process.data_pools")
+        obj.oracles = is_set(oracles, "Process.oracles")
 
         return obj
