@@ -52,7 +52,7 @@ class QueryQueue(DelayedPublisher, QueryConstrained):
         :type queries: `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
         """
         self.queries = np.concatenate((self.queries, queries))
-        self._latest_add = queries[-1:]
+        self._latest_add = queries
         self.request_update()
     
     def pop(self, query_nr = 1) -> NDArray[Shape["query_nr, ... query_shape"], Number]: # type: ignore
@@ -105,7 +105,10 @@ class QueryQueue(DelayedPublisher, QueryConstrained):
         :return: Last added query
         :rtype: `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
         """
-        return self._latest_add
+        if hasattr(self, '_latest_add'):
+            return self._latest_add
+        else:
+            return np.array([])
     
     @property
     def latest_pop(self)-> NDArray[Shape["1, ... query_shape"], Number]: # type: ignore
@@ -117,7 +120,10 @@ class QueryQueue(DelayedPublisher, QueryConstrained):
         :return: Last popped query
         :rtype: `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
         """
-        return self._latest_pop
+        if hasattr(self, '_latest_pop'):
+            return self._latest_pop
+        else:
+            return np.array([])
 
     @property
     def empty(self):
