@@ -1,6 +1,8 @@
+[project]
+dynamic = ["version"]
+
 [tool.poetry]
 name = "alts-core"
-version = "1.0.2"
 description = "Core modules of the active learning testing suite"
 authors = ["bela127 <bhb127@outlook.de>"]
 license = "MIT"
