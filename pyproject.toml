@@ -1,19 +1,25 @@
 [project]
+name = "alts-modules"
 dynamic = ["version"]
-
-[tool.poetry]
-name = "alts-core"
-description = "Core modules of the active learning testing suite"
-authors = ["bela127 <bhb127@outlook.de>"]
-license = "MIT"
-packages = [
-    { include = "alts/core", from = "." }
+license = { text = "MIT" }
+description = "Some common modules for the ALTS"
+authors = [
+    {name = "bela127", email="bhb127@outlook.de"}
+]
+maintainers = [
+    {name = "Benjamin Gors", email="benjamin.gorskis@gmail.com"}
+]
+requires-python = ">=3.9,<3.10"
+dependencies = [
+    "nptyping >=2.0.0a1",
+    "matplotlib (>=3.6.3,<4.0.0)",
+    "scikit-learn (>=1.2.0,<2.0.0)",
+    "paramz @ git+https://github.com/bela127/paramz.git",
+    "GPy @ git+https://github.com/SheffieldML/GPy.git"
 ]
 
-[tool.poetry.dependencies]
-python = ">=3.9,<3.10"
-libclang = "<12.0"
-nptyping = ">=2.0.0a1"
+[tool.poetry]
+version = "1.0.0"
 
 [poetry.group.dev.dependencies]
 pytest = "^6.2.5"
@@ -27,3 +33,4 @@ build-backend = "poetry.core.masonry.api"
 
 [mypy]
 plugins = "numpy.typing.mypy_plugin"
+
