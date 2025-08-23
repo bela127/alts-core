@@ -1,5 +1,5 @@
 [project]
-name = "alts-modules"
+name = "alts-core"
 dynamic = ["version"]
 license = { text = "MIT" }
 description = "Some common modules for the ALTS"
