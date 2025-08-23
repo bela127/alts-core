@@ -20,6 +20,9 @@ dependencies = [
 
 [tool.poetry]
 version = "1.0.3"
+packages = [
+    { include = "alts/core", from = "." }
+]
 
 [poetry.group.dev.dependencies]
 pytest = "^6.2.5"
