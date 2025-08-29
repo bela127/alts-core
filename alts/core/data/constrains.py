@@ -171,6 +171,39 @@ class ResultConstrain():
     shape: Tuple[int,...]
     ranges: Optional[NDArray[Shape["... query_dims,[xi_min, xi_max]"], np.dtype[np.number]]] = None 
 
+    def matches_shape(self, shape) -> bool:
+        """
+        matches_shape(shape) -> bool
+        | **Description**
+        |   Checks whether the result matches the shape constrains of the ``Queryable`` object.
+
+        :param shape: The shape of the result
+        :type shape: `Array Shape <https://www.w3schools.com/python/numpy/numpy_array_shape.asp>`_
+        :return: Confirmation or Rejection
+        :rtype: ``Boolean``
+        """
+        if len(self.shape) == len(shape):
+            for dim_own, dim_ext in zip(self.shape, shape):
+                if dim_own != dim_ext:
+                    return False
+            return True
+        return False
+
+    def constrains_met(self, results) -> bool:
+        """
+        constrains_met(results) -> bool
+        | **Description**
+        |   Checks whether the result matches the shape constrains of the ``Queryable`` object.
+
+        :param shape: An iterable of results
+        :type shape: Iterable over `NDArrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
+        :return: Whether shape is in constraints
+        :rtype: ``Boolean``
+        """
+        for result in results:
+            if not self.matches_shape(result.shape): return False
+        return True
+
 class QueryConstrained():
     """
     QueryConstrained()
