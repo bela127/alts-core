@@ -142,7 +142,7 @@ class Evaluate():
         """
         self._pre_func = func
 
-    def warp(self, func):
+    def wrap(self, func):
         """
         wrap(self, func) -> None
         | **Description**
@@ -151,7 +151,7 @@ class Evaluate():
         :param func: Function to wrap the original function
         :type func: function
         """
-        self._warp_func = func
+        self._wrap_func = func
 
     def post(self, func):
         """
