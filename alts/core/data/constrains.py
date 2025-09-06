@@ -80,22 +80,25 @@ class QueryConstrain():
         | **Description**
         |   Checks whether the queries' values match the range constraint of the ``Queryable`` object, i.e. each value is in its allowed range.
         |   Returns True if count is not set.
-        |   Only works with continuous range constraints for now.
 
         :param queries: The list of queries
         :type queries: Iterable over `NDArrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
         :return: Whether ranges constraint is met
         :rtype: ``Boolean``
         """
-        #TODO Ranges?
-        return True
         if self.ranges is None:
             return True
-        for query in queries:
-            for idx, value in np.ndenumerate(query):
-                if value < self.ranges[idx][0] or value >= self.ranges[idx][1]:
+        try:
+            for query in queries:
+                for idx, value in np.ndenumerate(query):
+                    if value < self.ranges[idx][0] or value >= self.ranges[idx][1]:
+                        return False
+            return True
+        except(IndexError):
+            for query in queries:
+                if not query in self.ranges:
                     return False
-        return True
+            return True
     
     def constrains_met(self, queries) -> bool:
         """
