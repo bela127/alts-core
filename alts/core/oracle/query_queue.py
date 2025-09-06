@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING
 import numpy as np
 
 from alts.core.configuration import Configurable, Required, is_set, pre_init, post_init, init
-from alts.core.data.constrains import QueryConstrained
+from alts.core.data.constrains import QueryConstrained, ResultConstrain
 from alts.core.subscribable import DelayedPublisher
 
 if TYPE_CHECKING:
@@ -40,7 +40,7 @@ class QueryQueue(DelayedPublisher, QueryConstrained):
         |   Initialites an empty query queue.
         """
         super().post_init()
-        self.queries = np.empty((0, *self.query_constrain().shape))
+        self.queries = np.empty((0, *self.query_constrain().shape)) # type: ignore
 
     def add(self, queries: NDArray[Shape["query_nr, ... query_shape"], Number]): # type: ignore
         """
@@ -160,6 +160,16 @@ class QueryQueue(DelayedPublisher, QueryConstrained):
         """
         return self._query_constrain()
        
+    def result_constrain(self) -> ResultConstrain:
+        """
+        result_constrain(self) -> ResultConstrain
+        | **Description**
+        |   Returns its result constrains.
+
+        :return: Own result constrains
+        :rtype: :doc:`ResultConstrain </core/data/constrains>`
+        """
+        return ResultConstrain(count=None,shape=None,ranges=None)
 
     def __call__(self, query_constrain: Required[QueryConstrainedGetter], **kwargs) -> Self:
         """
