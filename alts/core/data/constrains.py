@@ -34,9 +34,9 @@ class QueryConstrain():
     :return: No return
     :rtype: None
     """
-    count: Optional[int]
-    shape: Optional[Tuple[int, ...]]
-    ranges: Optional[Union[NDArray[Shape["... query_dims,[xi_min, xi_max]"], np.dtype[np.number]], NDArray[Shape["... query_dims,[xi]"], np.dtype[np.number]]]]
+    count: Optional[int] = None
+    shape: Optional[Tuple[int, ...]] = None
+    ranges: Optional[Union[NDArray[Shape["... query_dims,[xi_min, xi_max]"], np.dtype[np.number]], NDArray[Shape["... query_dims,[xi]"], np.dtype[np.number]]]] = None
 
     def matches_shape(self, queries) -> bool:
         """
@@ -207,8 +207,8 @@ class ResultConstrain():
     :param ranges: A set of all permitted query values
     :type ranges: Union of `NDArrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
     """
-    count: Optional[int]
-    shape: Tuple[int,...]
+    count: Optional[int] = None
+    shape: Optional[Tuple[int,...]] = None
     ranges: Optional[NDArray[Shape["... query_dims,[xi_min, xi_max]"], np.dtype[np.number]]] = None 
     
 
