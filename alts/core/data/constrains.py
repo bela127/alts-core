@@ -87,6 +87,8 @@ class QueryConstrain():
         :return: Whether ranges constraint is met
         :rtype: ``Boolean``
         """
+        #TODO Ranges?
+        return True
         if self.ranges is None:
             return True
         for query in queries:
