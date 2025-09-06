@@ -11,7 +11,7 @@ from dataclasses import dataclass, field
 from abc import abstractmethod
 
 from alts.core.experiment_module import ExperimentModule
-from alts.core.data.constrains import QueryConstrained, QueryConstrain
+from alts.core.data.constrains import QueryConstrained, QueryConstrain, ResultConstrain
 
 if TYPE_CHECKING:
     from typing import Tuple, Optional
@@ -43,3 +43,9 @@ class QueryDecider(ExperimentModule, QueryConstrained):
         :raises: NotImplementedError
         """
         raise NotImplementedError()
+
+    def query_constrain(self) -> QueryConstrain:
+        return QueryConstrain(count=None,shape=None,ranges=None)
+    
+    def result_constrain(self) -> ResultConstrain:
+        return ResultConstrain(count=None,shape=None,ranges=None)
