@@ -200,46 +200,87 @@ class ResultConstrain():
     |   A ``ResultConstrain`` describes what kind of results the given ``Queryable`` object gives.
     |   Results can be constrained in 2 ways: shape, and value ranges.
 
+    :param count: How many queries can be made
+    :type count: ``int``
     :param shape: What shape the queries must have
     :type shape: `Array Shape <https://www.w3schools.com/python/numpy/numpy_array_shape.asp>`_
     :param ranges: A set of all permitted query values
     :type ranges: Union of `NDArrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
     """
+    count: Optional[int]
     shape: Tuple[int,...]
     ranges: Optional[NDArray[Shape["... query_dims,[xi_min, xi_max]"], np.dtype[np.number]]] = None 
+    
 
-    def matches_shape(self, shape) -> bool:
+    def matches_shape(self, results) -> bool:
         """
         matches_shape(shape) -> bool
         | **Description**
-        |   Checks whether the result matches the shape constrains of the ``Queryable`` object.
+        |   Checks whether the results matches the shape constrains of the ``Queryable`` object, i.e. if the given shape is identical to the constraint shape.
+        |   Returns True if shape is not set.
 
-        :param shape: The shape of the result
-        :type shape: `Array Shape <https://www.w3schools.com/python/numpy/numpy_array_shape.asp>`_
-        :return: Confirmation or Rejection
+        :param results: The list of results
+        :type results: `Array Shape <https://www.w3schools.com/python/numpy/numpy_array_shape.asp>`_
+        :return: Whether shape constraint is met
         :rtype: ``Boolean``
         """
-        if len(self.shape) == len(shape):
-            for dim_own, dim_ext in zip(self.shape, shape):
-                if dim_own != dim_ext:
-                    return False
+        if self.shape is None:
+            return True
+        if self.shape == results.shape[1:]:
             return True
         return False
+    
+    def matches_count(self, results) -> bool:
+        """
+        matches_count(results) -> bool
+        | **Description**
+        |   Checks whether the amount of results matches the count constraint of the ``Queryable`` object, i.e. len(results) <= count.
+        |   Returns True if count is not set.
 
+        :param results: The list of results
+        :type results: Iterable over `NDArrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
+        :return: Whether count constraint is met
+        :rtype: ``Boolean``
+        """
+        if self.count is None:
+            return True
+        if len(results) <= self.count:
+            return True
+        return False
+    
+    def matches_ranges(self, results):
+        """
+        matches_ranges(results) -> bool
+        | **Description**
+        |   Checks whether the results' values match the range constraint of the ``Queryable`` object, i.e. each value is in its allowed range.
+        |   Returns True if count is not set.
+        |   Only works with continuous range constraints for now.
+
+        :param results: The list of results
+        :type results: Iterable over `NDArrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
+        :return: Whether ranges constraint is met
+        :rtype: ``Boolean``
+        """
+        if self.ranges is None:
+            return True
+        for query in results:
+            for idx, value in np.ndenumerate(query):
+                if value < self.ranges[idx][0] or value >= self.ranges[idx][1]:
+                    return False
+        return True
+    
     def constrains_met(self, results) -> bool:
         """
         constrains_met(results) -> bool
         | **Description**
-        |   Checks whether the result matches the shape constrains of the ``Queryable`` object.
+        |   Checks whether the query matches the shape constrains of the ``Queryable`` object.
 
         :param shape: An iterable of results
         :type shape: Iterable over `NDArrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
-        :return: Whether shape is in constraints
+        :return: Confirmation or Rejection
         :rtype: ``Boolean``
         """
-        for result in results:
-            if not self.matches_shape(result.shape): return False
-        return True
+        return self.matches_count(results) and self.matches_shape(results) and self.matches_ranges(results)
 
 class QueryConstrained():
     """
