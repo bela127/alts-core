@@ -35,26 +35,65 @@ class QueryConstrain():
     :rtype: None
     """
     count: Optional[int]
-    shape: Tuple[int, ...]
-    ranges: Union[NDArray[Shape["... query_dims,[xi_min, xi_max]"], np.dtype[np.number]], NDArray[Shape["... query_dims,[xi]"], np.dtype[np.number]]] 
+    shape: Optional[Tuple[int, ...]]
+    ranges: Optional[Union[NDArray[Shape["... query_dims,[xi_min, xi_max]"], np.dtype[np.number]], NDArray[Shape["... query_dims,[xi]"], np.dtype[np.number]]]]
 
-    def matches_shape(self, shape) -> bool:
+    def matches_shape(self, queries) -> bool:
         """
         matches_shape(shape) -> bool
         | **Description**
-        |   Checks whether the query matches the shape constrains of the ``Queryable`` object.
+        |   Checks whether the queries matches the shape constrains of the ``Queryable`` object, i.e. if the given shape is identical to the constraint shape.
+        |   Returns True if shape is not set.
 
-        :param shape: The shape of the query
-        :type shape: `Array Shape <https://www.w3schools.com/python/numpy/numpy_array_shape.asp>`_
-        :return: Confirmation or Rejection
+        :param queries: The list of queries
+        :type queries: `Array Shape <https://www.w3schools.com/python/numpy/numpy_array_shape.asp>`_
+        :return: Whether shape constraint is met
         :rtype: ``Boolean``
         """
-        if len(self.shape) == len(shape):
-            for dim_own, dim_ext in zip(self.shape, shape):
-                if dim_own != dim_ext:
-                    return False
+        if self.shape is None:
+            return True
+        if self.shape == queries.shape[1:]:
             return True
         return False
+    
+    def matches_count(self, queries) -> bool:
+        """
+        matches_count(queries) -> bool
+        | **Description**
+        |   Checks whether the amount of queries matches the count constraint of the ``Queryable`` object, i.e. len(queries) <= count.
+        |   Returns True if count is not set.
+
+        :param queries: The list of queries
+        :type queries: Iterable over `NDArrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
+        :return: Whether count constraint is met
+        :rtype: ``Boolean``
+        """
+        if self.count is None:
+            return True
+        if len(queries) <= self.count:
+            return True
+        return False
+    
+    def matches_ranges(self, queries):
+        """
+        matches_ranges(queries) -> bool
+        | **Description**
+        |   Checks whether the queries' values match the range constraint of the ``Queryable`` object, i.e. each value is in its allowed range.
+        |   Returns True if count is not set.
+        |   Only works with continuous range constraints for now.
+
+        :param queries: The list of queries
+        :type queries: Iterable over `NDArrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
+        :return: Whether ranges constraint is met
+        :rtype: ``Boolean``
+        """
+        if self.ranges is None:
+            return True
+        for query in queries:
+            for idx, value in np.ndenumerate(query):
+                if value < self.ranges[idx][0] or value >= self.ranges[idx][1]:
+                    return False
+        return True
     
     def constrains_met(self, queries) -> bool:
         """
@@ -67,9 +106,7 @@ class QueryConstrain():
         :return: Confirmation or Rejection
         :rtype: ``Boolean``
         """
-        for query in queries:
-            if not self.matches_shape(query.shape): return False
-        return True
+        return self.matches_count(queries) and self.matches_shape(queries) and self.matches_ranges(queries)
 
     def add_queries(self, queries: NDArray[Shape["query_count, ... query_shape"], np.dtype[np.number]]): 
         """
