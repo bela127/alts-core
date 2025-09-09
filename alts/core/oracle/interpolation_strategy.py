@@ -65,14 +65,3 @@ class InterpolationStrategy(Configurable, QueryConstrained):
         obj = super().__call__(**kwargs)
         obj.data_sampler = is_set(data_sampler, "InterpolationStrategy.data_sampler")
         return obj
-
-class NoInterpolation(InterpolationStrategy):
-    """
-    NoInterpolation()
-    | **Description**
-    |   ``NoInterpolation`` is an interpolator that does nothing to the given data. 
-
-    :param data_sampler: A sample of the data which contains the to-be interpolated data points
-    :type data_sampler: :doc:`DataSampler </core/data/data_sampler>`
-    """
-    ...
