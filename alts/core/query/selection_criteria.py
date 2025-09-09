@@ -8,7 +8,7 @@ from abc import abstractmethod, abstractproperty
 from typing import TYPE_CHECKING
 
 from alts.core.experiment_module import ExperimentModule
-from alts.core.data.constrains import ResultConstrain
+from alts.core.data.constrains import QueryConstrain, ResultConstrain
 from alts.core.query.queryable import Queryable
 
 if TYPE_CHECKING:
@@ -41,6 +41,9 @@ class SelectionCriteria(ExperimentModule, Queryable):
         """
         raise NotImplementedError
     
+    def query_constrain(self) -> QueryConstrain:
+        return QueryConstrain()
+
     def result_constrain(self) -> ResultConstrain:
         """
         result_constrain(self) -> ResultConstrain
@@ -53,4 +56,4 @@ class SelectionCriteria(ExperimentModule, Queryable):
         :return: Constrains around results
         :rtype: ResultConstrain
         """
-        return ResultConstrain((self.query_constrain().shape[0], 1))
+        return ResultConstrain(shape=(self.query_constrain().shape[0], 1)) # type: ignore
