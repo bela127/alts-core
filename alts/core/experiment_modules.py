@@ -112,7 +112,7 @@ class InitQueryExperimentModules(ExperimentModules):
         :raises TypeError: If ``oracles`` is not a ``POracle``
         """
         super().post_init()
-        self.initial_query_sampler = self.initial_query_sampler(exp_modules = self) # type: ignore
+        self.initial_query_sampler = self.initial_query_sampler(exp_modules = self, query_constrain = self.oracles.query_constrain()) # type: ignore
 
         if not isinstance(self.oracles, POracles):
             raise TypeError(f"InitQueryExperimentModules requires POracles")
