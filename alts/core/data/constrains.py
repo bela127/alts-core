@@ -17,8 +17,185 @@ if TYPE_CHECKING:
     from typing import Tuple, Optional, Union
     from nptyping import NDArray, Shape
 
+@dataclass 
+class Constrain():
+    """
+    Constrain(count, shape, ranges)
+    | **Description**
+    |   A ``Constrain`` describes constraints around data.
+    |   Data can be constrained in 3 ways: count, shape, and value ranges.
+
+    :param count: How many data elements are expected
+    :type count: ``int``
+    :param shape: What shape the elements must have
+    :type shape: `Array Shape <https://www.w3schools.com/python/numpy/numpy_array_shape.asp>`_
+    :param ranges: A set of all permitted element values for discrete data sources OR of lower/upper bound per dimension for continuous data sources
+    :type ranges: Union of `NDArrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
+    """
+    count: Optional[int] = None
+    shape: Tuple[int, ...] = (1,)
+    ranges: Optional[Union[NDArray[Shape["... element_dims,[xi_min, xi_max]"], np.dtype[np.number]], NDArray[Shape["... element_dims,[xi]"], np.dtype[np.number]]]] = None
+
+    def matches_shape(self, elements) -> bool:
+        """
+        matches_shape(self, elements) -> bool
+        | **Description**
+        |   Checks whether the elements matches the shape constrains of the ``Constrained`` object, i.e. if the given shape is identical to the constraint shape.
+        |   Returns True if shape is not set.
+
+        :param elements: The list of elements
+        :type elements: `Array Shape <https://www.w3schools.com/python/numpy/numpy_array_shape.asp>`_
+        :return: Whether shape constraint is met
+        :rtype: ``Boolean``
+        """
+        if self.shape is None:
+            return True
+        if self.shape == elements.shape[1:]:
+            return True
+        return False
+    
+    def matches_count(self, elements) -> bool:
+        """
+        matches_count(elements) -> bool
+        | **Description**
+        |   Checks whether the amount of elements matches the count constraint of the ``Queryable`` object, i.e. len(elements) <= count.
+        |   Returns True if count is not set.
+
+        :param elements: The list of elements
+        :type elements: Iterable over `NDArrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
+        :return: Whether count constraint is met
+        :rtype: ``Boolean``
+        """
+        if self.count is None:
+            return True
+        if len(elements) <= self.count:
+            return True
+        return False
+    
+    def matches_ranges(self, elements):
+        """
+        matches_ranges(elements) -> bool
+        | **Description**
+        |   Checks whether the elements' values match the range constraint of the ``Queryable`` object, i.e. each value is in its allowed range.
+        |   Returns True if count is not set.
+
+        :param elements: The list of elements
+        :type elements: Iterable over `NDArrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
+        :return: Whether ranges constraint is met
+        :rtype: ``Boolean``
+        """
+        if self.ranges is None:
+            return True
+        try:
+            for element in elements:
+                for idx, value in np.ndenumerate(element):
+                    if value < self.ranges[idx][0] or value >= self.ranges[idx][1]:
+                        return False
+            return True
+        except(IndexError):
+            for element in elements:
+                if not element in self.ranges:
+                    return False
+            return True
+    
+    def constrains_met(self, elements) -> bool:
+        """
+        constrains_met(elements) -> bool
+        | **Description**
+        |   Checks whether the element matches the shape constrains of the ``Queryable`` object.
+
+        :param shape: An iterable of elements
+        :type shape: Iterable over `NDArrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
+        :return: Confirmation or Rejection
+        :rtype: ``Boolean``
+        """
+        return self.matches_count(elements) and self.matches_shape(elements) and self.matches_ranges(elements)
+
+    def add_elements(self, elements: NDArray[Shape["element_count, ... element_shape"], np.dtype[np.number]]): 
+        """
+        add_elements(elements) -> None
+        | **Description**
+        |   Adds the list of elements to ``ranges`` and updates the ``element_count``
+
+        :param shape: An iterable of elements
+        :type shape: Iterable over `NDArrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
+        :return: No return
+        :rtype: None
+        """
+        if self.ranges is None:
+            self.ranges = elements[..., None]
+        else: 
+            self.ranges = np.concatenate((self.ranges, elements[..., None]))
+        self._last_elements = elements
+        self.element_count = self.ranges.shape[0]
+
+    def last_elements(self) -> NDArray[Shape["element_nr, ... element_shape"], np.dtype[np.number]]: 
+        """
+        last_elements() -> elements
+        | **Description**
+        |   Returns the last added elements.
+
+        :return: Last added element
+        :rtype: `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
+        """
+        if self._last_elements is None:
+            raise LookupError("there are infinit elements continues pool")
+        return self._last_elements
+
+    def elements_from_norm_pos(self, norm_pos: NDArray[Shape["element_nr, ... element_dims"], np.dtype[np.number]]) -> NDArray[Shape["element_nr, ... element_dims"], np.dtype[np.number]]: 
+        """
+        elements_from_norm_pos(self, norm_pos) -> elements
+        | **Description**
+        |   Transforms the given normed element into the permitted value range given by its element constraints.
+        |   Example: Let ranges be [[[0,12], [0,12]] , [[2,14], [1,3]]] and norm_pos = [[1,0.5] , [0.25,0.5]]
+        |   Then this function returns the element [[0 + 1 * 12,0 + 0.5 * 12] , [2 + 0.25 * 12, 1 + 0.5 * 2]] = [[12, 6] , [5, 2]]
+
+        :param norm_pos: A element with values in range of [0,1]
+        :type norm_pos: `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
+        :return:
+        :rtype: `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
+
+        :raises LookupError: If the set of permitted element values is discrete and empty
+        :raises RuntimeWarning: If infinite is a permitted value
+        """
+        if self.ranges is None:
+            raise LookupError("can not look up a position in a discrete pool")
+        if np.any(np.isinf(self.ranges)):
+            self.ranges = np.nan_to_num(self.ranges, nan=0, posinf=float(np.finfo(np.float64).max), neginf=float(np.finfo(np.float64).min))
+            raise RuntimeWarning("QueryConstrain ranges are infinity, they will be converted to max float64, but most probably you forgot to provide constrains!")
+        elements = self.ranges[..., 0] + (self.ranges[..., 1] - self.ranges[..., 0]) * norm_pos
+        return elements
+    
+    def elements_from_index(self, indexes) -> NDArray[Shape["element_nr, ... element_shape"], np.dtype[np.number]]: 
+        """
+        elements_from_index(indexes) -> elements
+        | **Description**
+        |   Returns the ``indexes``-th added elements.
+
+        :param indexes: The indexes to look up
+        :type indexes: An ``iterable`` of ``int``
+        :return: The elements at the indexes
+        :rtype: ``iterable`` of `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
+        """
+        if self.ranges is None:
+            raise LookupError("can not look up a index in a continues pool")
+        return self.ranges[indexes]
+    
+    def all_elements(self) -> NDArray[Shape["element_nr, ... element_shape"], np.dtype[np.number]]: 
+        """
+        all_elements() -> elements
+        | **Description**
+        |   Returns all added elements.
+
+        :return: All added elements
+        :rtype: ``iterable`` of `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
+        """
+        if self.ranges is None:
+            raise LookupError("there are infinit elements continues pool")
+        return self.ranges
+
 @dataclass
-class QueryConstrain():
+class QueryConstrain(Constrain):
     """
     QueryConstrain(count, shape, ranges)
     | **Description**
@@ -34,171 +211,11 @@ class QueryConstrain():
     :return: No return
     :rtype: None
     """
-    count: Optional[int] = None
-    shape: Optional[Tuple[int, ...]] = None
-    ranges: Optional[Union[NDArray[Shape["... query_dims,[xi_min, xi_max]"], np.dtype[np.number]], NDArray[Shape["... query_dims,[xi]"], np.dtype[np.number]]]] = None
-
-    def matches_shape(self, queries) -> bool:
-        """
-        matches_shape(shape) -> bool
-        | **Description**
-        |   Checks whether the queries matches the shape constrains of the ``Queryable`` object, i.e. if the given shape is identical to the constraint shape.
-        |   Returns True if shape is not set.
-
-        :param queries: The list of queries
-        :type queries: `Array Shape <https://www.w3schools.com/python/numpy/numpy_array_shape.asp>`_
-        :return: Whether shape constraint is met
-        :rtype: ``Boolean``
-        """
-        if self.shape is None:
-            return True
-        if self.shape == queries.shape[1:]:
-            return True
-        return False
-    
-    def matches_count(self, queries) -> bool:
-        """
-        matches_count(queries) -> bool
-        | **Description**
-        |   Checks whether the amount of queries matches the count constraint of the ``Queryable`` object, i.e. len(queries) <= count.
-        |   Returns True if count is not set.
-
-        :param queries: The list of queries
-        :type queries: Iterable over `NDArrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
-        :return: Whether count constraint is met
-        :rtype: ``Boolean``
-        """
-        if self.count is None:
-            return True
-        if len(queries) <= self.count:
-            return True
-        return False
-    
-    def matches_ranges(self, queries):
-        """
-        matches_ranges(queries) -> bool
-        | **Description**
-        |   Checks whether the queries' values match the range constraint of the ``Queryable`` object, i.e. each value is in its allowed range.
-        |   Returns True if count is not set.
-
-        :param queries: The list of queries
-        :type queries: Iterable over `NDArrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
-        :return: Whether ranges constraint is met
-        :rtype: ``Boolean``
-        """
-        if self.ranges is None:
-            return True
-        try:
-            for query in queries:
-                for idx, value in np.ndenumerate(query):
-                    if value < self.ranges[idx][0] or value >= self.ranges[idx][1]:
-                        return False
-            return True
-        except(IndexError):
-            for query in queries:
-                if not query in self.ranges:
-                    return False
-            return True
-    
-    def constrains_met(self, queries) -> bool:
-        """
-        constrains_met(queries) -> bool
-        | **Description**
-        |   Checks whether the query matches the shape constrains of the ``Queryable`` object.
-
-        :param shape: An iterable of queries
-        :type shape: Iterable over `NDArrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
-        :return: Confirmation or Rejection
-        :rtype: ``Boolean``
-        """
-        return self.matches_count(queries) and self.matches_shape(queries) and self.matches_ranges(queries)
-
-    def add_queries(self, queries: NDArray[Shape["query_count, ... query_shape"], np.dtype[np.number]]): 
-        """
-        add_queries(queries) -> None
-        | **Description**
-        |   Adds the list of queries to ``ranges`` and updates the ``query_count``
-
-        :param shape: An iterable of queries
-        :type shape: Iterable over `NDArrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
-        :return: No return
-        :rtype: None
-        """
-        if self.ranges is None:
-            self.ranges = queries[..., None]
-        else: 
-            self.ranges = np.concatenate((self.ranges, queries[..., None]))
-        self._last_queries = queries
-        self.query_count = self.ranges.shape[0]
-
-    def last_queries(self) -> NDArray[Shape["query_nr, ... query_shape"], np.dtype[np.number]]: 
-        """
-        last_queries() -> queries
-        | **Description**
-        |   Returns the last added queries.
-
-        :return: Last added query
-        :rtype: `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
-        """
-        if self._last_queries is None:
-            raise LookupError("there are infinit queries continues pool")
-        return self._last_queries
-
-    def queries_from_norm_pos(self, norm_pos: NDArray[Shape["query_nr, ... query_dims"], np.dtype[np.number]]) -> NDArray[Shape["query_nr, ... query_dims"], np.dtype[np.number]]: 
-        """
-        queries_from_norm_pos(self, norm_pos) -> queries
-        | **Description**
-        |   Transforms the given normed query into the permitted value range given by its query constraints.
-        |   Example: Let ranges be [[[0,12], [0,12]] , [[2,14], [1,3]]] and norm_pos = [[1,0.5] , [0.25,0.5]]
-        |   Then this function returns the query [[0 + 1 * 12,0 + 0.5 * 12] , [2 + 0.25 * 12, 1 + 0.5 * 2]] = [[12, 6] , [5, 2]]
-
-        :param norm_pos: A query with values in range of [0,1]
-        :type norm_pos: `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
-        :return:
-        :rtype: `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
-
-        :raises LookupError: If the set of permitted query values is discrete and empty
-        :raises RuntimeWarning: If infinite is a permitted value
-        """
-        if self.ranges is None:
-            raise LookupError("can not look up a position in a discrete pool")
-        if np.any(np.isinf(self.ranges)):
-            self.ranges = np.nan_to_num(self.ranges, nan=0, posinf=float(np.finfo(np.float64).max), neginf=float(np.finfo(np.float64).min))
-            raise RuntimeWarning("QueryConstrain ranges are infinity, they will be converted to max float64, but most probably you forgot to provide constrains!")
-        elements = self.ranges[..., 0] + (self.ranges[..., 1] - self.ranges[..., 0]) * norm_pos
-        return elements
-    
-    def queries_from_index(self, indexes) -> NDArray[Shape["query_nr, ... query_shape"], np.dtype[np.number]]: 
-        """
-        queries_from_index(indexes) -> queries
-        | **Description**
-        |   Returns the ``indexes``-th added queries.
-
-        :param indexes: The indexes to look up
-        :type indexes: An ``iterable`` of ``int``
-        :return: The queries at the indexes
-        :rtype: ``iterable`` of `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
-        """
-        if self.ranges is None:
-            raise LookupError("can not look up a index in a continues pool")
-        return self.ranges[indexes]
-    
-    def all_queries(self) -> NDArray[Shape["query_nr, ... query_shape"], np.dtype[np.number]]: 
-        """
-        all_queries() -> queries
-        | **Description**
-        |   Returns all added queries.
-
-        :return: All added queries
-        :rtype: ``iterable`` of `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
-        """
-        if self.ranges is None:
-            raise LookupError("there are infinit queries continues pool")
-        return self.ranges
+    ...
 
 
 @dataclass
-class ResultConstrain():
+class ResultConstrain(Constrain):
     """
     ResultConstrain(shape, ranges)
     | **Description**
@@ -212,81 +229,9 @@ class ResultConstrain():
     :param ranges: A set of all permitted query values
     :type ranges: Union of `NDArrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
     """
-    count: Optional[int] = None
-    shape: Optional[Tuple[int,...]] = None
-    ranges: Optional[NDArray[Shape["... query_dims,[xi_min, xi_max]"], np.dtype[np.number]]] = None 
+    ...
+
     
-
-    def matches_shape(self, results) -> bool:
-        """
-        matches_shape(shape) -> bool
-        | **Description**
-        |   Checks whether the results matches the shape constrains of the ``Queryable`` object, i.e. if the given shape is identical to the constraint shape.
-        |   Returns True if shape is not set.
-
-        :param results: The list of results
-        :type results: `Array Shape <https://www.w3schools.com/python/numpy/numpy_array_shape.asp>`_
-        :return: Whether shape constraint is met
-        :rtype: ``Boolean``
-        """
-        if self.shape is None:
-            return True
-        if self.shape == results.shape[1:]:
-            return True
-        return False
-    
-    def matches_count(self, results) -> bool:
-        """
-        matches_count(results) -> bool
-        | **Description**
-        |   Checks whether the amount of results matches the count constraint of the ``Queryable`` object, i.e. len(results) <= count.
-        |   Returns True if count is not set.
-
-        :param results: The list of results
-        :type results: Iterable over `NDArrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
-        :return: Whether count constraint is met
-        :rtype: ``Boolean``
-        """
-        if self.count is None:
-            return True
-        if len(results) <= self.count:
-            return True
-        return False
-    
-    def matches_ranges(self, results):
-        """
-        matches_ranges(results) -> bool
-        | **Description**
-        |   Checks whether the results' values match the range constraint of the ``Queryable`` object, i.e. each value is in its allowed range.
-        |   Returns True if count is not set.
-        |   Only works with continuous range constraints for now.
-
-        :param results: The list of results
-        :type results: Iterable over `NDArrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
-        :return: Whether ranges constraint is met
-        :rtype: ``Boolean``
-        """
-        if self.ranges is None:
-            return True
-        for query in results:
-            for idx, value in np.ndenumerate(query):
-                if value < self.ranges[idx][0] or value >= self.ranges[idx][1]:
-                    return False
-        return True
-    
-    def constrains_met(self, results) -> bool:
-        """
-        constrains_met(results) -> bool
-        | **Description**
-        |   Checks whether the query matches the shape constrains of the ``Queryable`` object.
-
-        :param shape: An iterable of results
-        :type shape: Iterable over `NDArrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
-        :return: Confirmation or Rejection
-        :rtype: ``Boolean``
-        """
-        return self.matches_count(results) and self.matches_shape(results) and self.matches_ranges(results)
-
 class QueryConstrained():
     """
     QueryConstrained()
