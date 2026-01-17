@@ -169,7 +169,7 @@ class QueryQueue(DelayedPublisher, QueryConstrained):
         :return: Own result constrains
         :rtype: :doc:`ResultConstrain </core/data/constrains>`
         """
-        return ResultConstrain(count=None,shape=None,ranges=None)
+        return ResultConstrain(count=None,shape=self._query_constrain().shape,ranges=None)
 
     def __call__(self, query_constrain: Required[QueryConstrainedGetter], **kwargs) -> Self:
         """
