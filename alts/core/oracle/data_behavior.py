@@ -10,15 +10,17 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
-from alts.core.configuration import init, Configurable
+from alts.core.configuration import init, post_init, Configurable, Required, is_set
+from alts.core.data.constrains import QueryConstrain, QueryConstrained, ResultConstrain
 
 if TYPE_CHECKING:
     from typing_extensions import Self
     from typing import Tuple
     from nptyping import  NDArray, Shape
+    from alts.core.data.constrains import QueryConstrainedGetter, QueryConstrain
 
 @dataclass
-class DataBehavior(Configurable):
+class DataBehavior(Configurable, QueryConstrained):
     """
     DataBehavior(change_interval, lower_value, upper_value, start_time, stop_time)
     | **Description**
@@ -43,6 +45,8 @@ class DataBehavior(Configurable):
     start_time: float = init(default=0)
     stop_time: float = init(default=600)
 
+    _query_constrain: QueryConstrainedGetter = post_init()
+
     def behavior(self) -> 'Tuple[NDArray[Shape["change_times"], np.dtype[np.number]], NDArray[Shape["change_values"], np.dtype[np.number]]]': 
         """
         behaviour(self) -> change_times, change_values
@@ -54,3 +58,24 @@ class DataBehavior(Configurable):
         :raises: NotImplementedError
         """
         raise NotImplementedError()
+    
+    def query_constrain(self) -> QueryConstrain:
+        return self._query_constrain()
+    
+    def result_constrain(self) -> ResultConstrain:
+        return ResultConstrain(shape=self.query_constrain().shape)
+
+    def __call__(self, query_constrain: Required[QueryConstrainedGetter], **kwargs) -> Self:
+        """
+        __call__(self, query_constrain, **kwargs) -> Self
+        | **Description**
+        |   Returns a DataBehavior with the given query constraint.
+
+        :param query_constrain: Constrains of the DataBehvaior.
+        :type query_constrains: :doc:`QueryConstrain </core/data/constrains>`
+        :return: Configured DataBehavior
+        :rtype: DataBehavior
+        """
+        obj =  super().__call__(**kwargs)
+        obj._query_constrain = is_set(query_constrain, "DataBehavior.query_constrain")
+        return obj
