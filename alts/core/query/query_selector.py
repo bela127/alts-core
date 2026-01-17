@@ -36,7 +36,7 @@ class QuerySelector(ExperimentModule, QueryConstrained):
     """
     query_optimizer: QueryOptimizer = init()
     query_decider: QueryDecider = init()
-    _query_constrain: QueryConstrain = post_init()
+    _query_constrain: QueryConstrainedGetter = post_init()
 
     def post_init(self):
         """
@@ -45,8 +45,9 @@ class QuerySelector(ExperimentModule, QueryConstrained):
         |   Initializes ``query_optimizer`` and ``query_Decider`` with its experiment modules.
         """
         super().post_init()
-        self.query_optimizer = self.query_optimizer(exp_modules = self.exp_modules, query_constrain= self.query_constrain())
-        self.query_decider = self.query_decider(exp_modules = self.exp_modules, query_constrain= self.query_constrain())
+        self._query_constrain = self.exp_modules.oracles.query_constrain
+        self.query_optimizer = self.query_optimizer(exp_modules = self.exp_modules, query_constrain= self.query_constrain)
+        self.query_decider = self.query_decider(exp_modules = self.exp_modules, query_constrain= self.query_constrain)
 
 
     def decide(self):
@@ -71,7 +72,7 @@ class QuerySelector(ExperimentModule, QueryConstrained):
         :return: Own query constrains
         :rtype: :doc:`QueryConstrain </core/data/constrains>`
         """
-        return self._query_constrain
+        return self._query_constrain()
     
     def result_constrain(self) -> ResultConstrain:
         """
@@ -82,22 +83,7 @@ class QuerySelector(ExperimentModule, QueryConstrained):
         :return: Own result constrains
         :rtype: :doc:`ResultConstrain </core/data/constrains>`
         """
-        return ResultConstrain(None, self.query_constrain().shape, self.query_constrain().ranges)
-
-    def __call__(self, query_constrain: Required[QueryConstrainedGetter], **kwargs) -> Self: # type: ignore
-        """
-        __call__(self, query_constrain, **kwargs) -> Self
-        | **Description**
-        |   Returns a QuerySelector with the given query constraint.
-
-        :param query_constrain: Constrains of the queries in the oracle.
-        :type query_constrains: :doc:`QueryConstrain </core/data/constrains>`
-        :return: Configured QuerySelector
-        :rtype: QuerySelector
-        """
-        obj =  super().__call__(**kwargs)
-        obj._query_constrain = is_set(query_constrain, "QuerySelector.query_constrain")
-        return obj
+        return ResultConstrain(None, self._query_constrain().shape, None)
 
 
 

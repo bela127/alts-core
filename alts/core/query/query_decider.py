@@ -9,9 +9,12 @@ from typing import TYPE_CHECKING
 
 from dataclasses import dataclass, field
 from abc import abstractmethod
+from typing_extensions import Self
 
+from alts.core.configuration import post_init
 from alts.core.experiment_module import ExperimentModule
-from alts.core.data.constrains import QueryConstrained, QueryConstrain, ResultConstrain
+from alts.core.data.constrains import QueryConstrained, QueryConstrain, ResultConstrain, QueryConstrainedGetter
+from alts.core.experiment_modules import ExperimentModules
 
 if TYPE_CHECKING:
     from typing import Tuple, Optional
@@ -25,6 +28,7 @@ class QueryDecider(ExperimentModule, QueryConstrained):
     |   This module decides which best-scoring queries are worth the resources needed to obtain their results.
     |   Outside the first learning iteration of the model you can expect the QueryDecider to receive a non-empty list of query candidates.
     """
+    _query_constrain: QueryConstrainedGetter = post_init()
 
     @abstractmethod
     def decide(self, query_candidates: NDArray[Shape["query_nr, ... query_dims"], Number], scores: NDArray[Shape["query_nr, [query_score]"], Number]) -> Tuple[bool, NDArray[Shape["query_nr, ... query_dims"], Number]]: # type: ignore
