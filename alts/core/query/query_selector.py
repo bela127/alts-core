@@ -10,9 +10,9 @@ from dataclasses import dataclass
 from alts.core.subscriber import ProcessDataSubscriber, ResultDataSubscriber, StreamDataSubscriber
 from alts.core.query.query_optimizer import QueryOptimizer
 from alts.core.query.query_decider import QueryDecider
-from alts.core.configuration import Required, init
+from alts.core.configuration import Required, init, is_set, post_init
 from alts.core.experiment_module import ExperimentModule
-from alts.core.data.constrains import QueryConstrained
+from alts.core.data.constrains import QueryConstrained, QueryConstrain, ResultConstrain, QueryConstrainedGetter
 
 
 
@@ -36,6 +36,7 @@ class QuerySelector(ExperimentModule, QueryConstrained):
     """
     query_optimizer: QueryOptimizer = init()
     query_decider: QueryDecider = init()
+    _query_constrain: QueryConstrain = post_init()
 
     def post_init(self):
         """
@@ -44,8 +45,8 @@ class QuerySelector(ExperimentModule, QueryConstrained):
         |   Initializes ``query_optimizer`` and ``query_Decider`` with its experiment modules.
         """
         super().post_init()
-        self.query_optimizer = self.query_optimizer(exp_modules = self.exp_modules)
-        self.query_decider = self.query_decider(exp_modules = self.exp_modules)
+        self.query_optimizer = self.query_optimizer(exp_modules = self.exp_modules, query_constrain= self.query_constrain())
+        self.query_decider = self.query_decider(exp_modules = self.exp_modules, query_constrain= self.query_constrain())
 
 
     def decide(self):
@@ -60,6 +61,45 @@ class QuerySelector(ExperimentModule, QueryConstrained):
         query_flag, queries = self.query_decider.decide(query_candidates, scores)
         if query_flag:
             self.oracles.add(queries)
+
+    def query_constrain(self) -> QueryConstrain:
+        """
+        query_constrain(self) -> QueryConstrain
+        | **Description**
+        |   Returns its query constrains.
+
+        :return: Own query constrains
+        :rtype: :doc:`QueryConstrain </core/data/constrains>`
+        """
+        return self._query_constrain
+    
+    def result_constrain(self) -> ResultConstrain:
+        """
+        result_constrain(self) -> ResultConstrain
+        | **Description**
+        |   Returns its result constrains.
+
+        :return: Own result constrains
+        :rtype: :doc:`ResultConstrain </core/data/constrains>`
+        """
+        return ResultConstrain(None, self.query_constrain().shape, self.query_constrain().ranges)
+
+    def __call__(self, query_constrain: Required[QueryConstrainedGetter], **kwargs) -> Self: # type: ignore
+        """
+        __call__(self, query_constrain, **kwargs) -> Self
+        | **Description**
+        |   Returns a QuerySelector with the given query constraint.
+
+        :param query_constrain: Constrains of the queries in the oracle.
+        :type query_constrains: :doc:`QueryConstrain </core/data/constrains>`
+        :return: Configured QuerySelector
+        :rtype: QuerySelector
+        """
+        obj =  super().__call__(**kwargs)
+        obj._query_constrain = is_set(query_constrain, "QuerySelector.query_constrain")
+        return obj
+
+
 
 class ResultQuerySelector(QuerySelector, ResultDataSubscriber):
     """
