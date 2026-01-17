@@ -211,8 +211,14 @@ class QueryConstrain(Constrain):
     :return: No return
     :rtype: None
     """
-    ...
-
+    def queries_from_norm_pos(self, norm_pos: NDArray[Shape["element_nr, ... element_dims"], np.dtype[np.number]]) -> NDArray[Shape["element_nr, ... element_dims"], np.dtype[np.number]]: 
+        return self.elements_from_norm_pos(norm_pos=norm_pos)
+    
+    def queries_from_index(self, indexes) -> NDArray[Shape["element_nr, ... element_shape"], np.dtype[np.number]]: 
+        return self.elements_from_index(indexes= indexes)
+    
+    def all_queries(self) -> NDArray[Shape["element_nr, ... element_shape"], np.dtype[np.number]]: 
+        return self.all_queries()
 
 @dataclass
 class ResultConstrain(Constrain):
