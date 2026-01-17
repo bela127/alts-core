@@ -49,7 +49,7 @@ class QueryDecider(ExperimentModule, QueryConstrained):
         raise NotImplementedError()
 
     def query_constrain(self) -> QueryConstrain:
-        return QueryConstrain(count=None,shape=None,ranges=None)
+        return self._query_constrain()
     
     def result_constrain(self) -> ResultConstrain:
-        return ResultConstrain(count=None,shape=None,ranges=None)
+        return ResultConstrain(count=None,shape=self._query_constrain().shape,ranges=None)
