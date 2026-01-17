@@ -43,7 +43,7 @@ class ExperimentModules(Publisher):
         |   Initializes the ``query_selector`` with its configuration.
         """
         super().post_init()
-        self.query_selector = self.query_selector(exp_modules = self) # type: ignore
+        self.query_selector = self.query_selector(exp_modules = self, query_constrain=self.oracles.query_constrain()) # type: ignore
     
     def initialize(self):
         """
