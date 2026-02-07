@@ -47,7 +47,7 @@ class QueryOptimizer(ExperimentModule, QueryConstrained):
         |   Initializes ``selection_criteria`` with its experiment modules.
         """
         super().post_init()
-        self.selection_criteria = self.selection_criteria(query_constrain=self.query_constrain ,exp_modules = self.exp_modules)
+        self.selection_criteria = self.selection_criteria(exp_modules = self.exp_modules, query_constrain=self._query_constrain)
 
     def select(self, num_queries = None) -> Tuple[NDArray[Shape["query_nr, ... query_dims"], Number], NDArray[Shape["query_nr, [query_score]"], Number]]: # type: ignore
         """
@@ -64,8 +64,6 @@ class QueryOptimizer(ExperimentModule, QueryConstrained):
         raise NotImplementedError
     
     def query_constrain(self) -> QueryConstrain:
-        if not is_set(self._query_constrain):
-            raise ValueError
         return self._query_constrain()
     
     def result_constrain(self) -> ResultConstrain:
