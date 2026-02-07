@@ -87,7 +87,7 @@ class Constraint():
         """
         if self.ranges is None:
             return True
-        if(elements.shape[-1] == 2):
+        if(self.ranges.shape[-1] == 2):
             for element in elements:
                 for idx, value in np.ndenumerate(element):
                     if value < self.ranges[idx][0] or value >= self.ranges[idx][1]:
