@@ -47,7 +47,7 @@ class QueryOptimizer(ExperimentModule, QueryConstrained):
         |   Initializes ``selection_criteria`` with its experiment modules.
         """
         super().post_init()
-        self.selection_criteria = self.selection_criteria(exp_modules = self.exp_modules)
+        self.selection_criteria = self.selection_criteria(query_constrain=self.query_constrain ,exp_modules = self.exp_modules)
 
     def select(self, num_queries = None) -> Tuple[NDArray[Shape["query_nr, ... query_dims"], Number], NDArray[Shape["query_nr, [query_score]"], Number]]: # type: ignore
         """

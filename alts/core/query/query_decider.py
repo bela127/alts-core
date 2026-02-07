@@ -11,7 +11,7 @@ from dataclasses import dataclass, field
 from abc import abstractmethod
 from typing_extensions import Self
 
-from alts.core.configuration import post_init
+from alts.core.configuration import post_init, is_set, Required
 from alts.core.experiment_module import ExperimentModule
 from alts.core.data.constrains import QueryConstrained, QueryConstrain, ResultConstrain, QueryConstrainedGetter
 from alts.core.experiment_modules import ExperimentModules
@@ -53,3 +53,18 @@ class QueryDecider(ExperimentModule, QueryConstrained):
     
     def result_constrain(self) -> ResultConstrain:
         return ResultConstrain(count=None,shape=self._query_constrain().shape,ranges=None)
+    
+    def __call__(self, query_constrain: Required[QueryConstrainedGetter], **kwargs) -> Self:
+        """
+        __call__(self, query_constrain, **kwargs) -> Self
+        | **Description**
+        |   Returns a QueryDecider with the given query constraint.
+
+        :param query_constrain: Constraints of the QueryDecider.
+        :type query_constrains: :doc:`QueryConstrain </core/data/constrains>`
+        :return: Configured QueryDecider
+        :rtype: QueryDecider
+        """
+        obj =  super().__call__(**kwargs)
+        obj._query_constrain = is_set(query_constrain, "QueryDecider.query_constrain")
+        return obj
