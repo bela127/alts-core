@@ -69,7 +69,7 @@ class SelectionCriteria(ExperimentModule, Queryable):
         :return: Constrains around results
         :rtype: ResultConstrain
         """
-        return ResultConstrain(self._query_constrain().count, (self.query_constrain().shape[0],1), np.asarray((0,1)))
+        return ResultConstrain(count=self._query_constrain().count, shape=(self.query_constrain().shape[0],1), ranges=np.asarray((0,1)))
 
     def __call__(self, query_constrain: Required[QueryConstrainedGetter], **kwargs) -> Self:
         """
