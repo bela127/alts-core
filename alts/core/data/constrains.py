@@ -18,7 +18,7 @@ if TYPE_CHECKING:
     from nptyping import NDArray, Shape
 
 @dataclass 
-class Constrain():
+class Constraint():
     """
     Constrain(count, shape, ranges)
     | **Description**
@@ -32,9 +32,10 @@ class Constrain():
     :param ranges: A set of all permitted element values for discrete data sources OR of lower/upper bound per dimension for continuous data sources
     :type ranges: Union of `NDArrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
     """
+    shape: Tuple[int, ...]
     count: Optional[int] = None
-    shape: Tuple[int, ...] = (1,)
     ranges: Optional[Union[NDArray[Shape["... element_dims,[xi_min, xi_max]"], np.dtype[np.number]], NDArray[Shape["... element_dims,[xi]"], np.dtype[np.number]]]] = None
+
 
     def matches_shape(self, elements) -> bool:
         """
@@ -86,13 +87,13 @@ class Constrain():
         """
         if self.ranges is None:
             return True
-        try:
+        if(elements.shape[-1] == 2):
             for element in elements:
                 for idx, value in np.ndenumerate(element):
                     if value < self.ranges[idx][0] or value >= self.ranges[idx][1]:
                         return False
             return True
-        except(IndexError):
+        else:
             for element in elements:
                 if not element in self.ranges:
                     return False
@@ -195,7 +196,7 @@ class Constrain():
         return self.ranges
 
 @dataclass
-class QueryConstrain(Constrain):
+class QueryConstrain(Constraint):
     """
     QueryConstrain(count, shape, ranges)
     | **Description**
@@ -221,14 +222,14 @@ class QueryConstrain(Constrain):
         return self.all_queries()
 
 @dataclass
-class ResultConstrain(Constrain):
+class ResultConstrain(Constraint):
     """
     ResultConstrain(shape, ranges)
     | **Description**
     |   A ``ResultConstrain`` describes what kind of results the given ``Queryable`` object gives.
     |   Results can be constrained in 2 ways: shape, and value ranges.
 
-    :param count: How many queries can be made
+    :param count: How many elements of the given shape are expected to be returned
     :type count: ``int``
     :param shape: What shape the queries must have
     :type shape: `Array Shape <https://www.w3schools.com/python/numpy/numpy_array_shape.asp>`_
@@ -300,3 +301,5 @@ class Constrained(QueryConstrained, ResultConstrained):
 ResultConstrainGetter = Callable[[],ResultConstrain]
 
 QueryConstrainedGetter = Callable[[],QueryConstrain]
+
+ConstrainedGetter = Callable[[],Constraint]
