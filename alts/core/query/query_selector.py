@@ -42,7 +42,7 @@ class QuerySelector(ExperimentModule, QueryConstrained):
         """
         post_init(self) -> None
         | **Description**
-        |   Initializes ``query_optimizer`` and ``query_Decider`` with its experiment modules.
+        |   Initializes ``query_optimizer`` and ``query_decider`` with its experiment modules.
         """
         super().post_init()
         self._query_constrain = self.exp_modules.oracles.query_constrain
@@ -83,7 +83,7 @@ class QuerySelector(ExperimentModule, QueryConstrained):
         :return: Own result constrains
         :rtype: :doc:`ResultConstrain </core/data/constrains>`
         """
-        return ResultConstrain(None, self._query_constrain().shape, None)
+        return ResultConstrain(shape=self._query_constrain().shape)
 
 
 

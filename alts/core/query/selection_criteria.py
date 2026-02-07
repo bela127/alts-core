@@ -19,8 +19,6 @@ if TYPE_CHECKING:
     from nptyping import NDArray, Shape, Number
     
 
-
-
 class SelectionCriteria(ExperimentModule, Queryable):
     """
     SelectionCriteria()
@@ -28,9 +26,6 @@ class SelectionCriteria(ExperimentModule, Queryable):
     |   A ``SelectionCriteria`` is an algorithm which gives scores to query candidates. Higher scores correspond to more informative/valuable queries.    
     """
     _query_constrain: QueryConstrainedGetter = post_init()
-
-    def post_init(self):
-        self._query_constrain = self.exp_modules.query_selector.query_constrain
 
     @abstractmethod
     def query(self, queries: NDArray[Shape["query_nr, ... query_shape"], Number]) -> Tuple[NDArray[Shape["query_nr, ... query_shape"], Number], NDArray[Shape["query_nr, [score]"], Number]]: # type: ignore
@@ -57,8 +52,7 @@ class SelectionCriteria(ExperimentModule, Queryable):
         :return: Constrains around queries
         :rtype: QueryConstrain
         """
-        return QueryConstrain(count=None, shape=(2,), ranges=None)
-        #return self.query_constrain()
+        return self._query_constrain()
 
     def result_constrain(self) -> ResultConstrain:
         """
@@ -69,7 +63,7 @@ class SelectionCriteria(ExperimentModule, Queryable):
         :return: Constrains around results
         :rtype: ResultConstrain
         """
-        return ResultConstrain(count=self._query_constrain().count, shape=(self.query_constrain().shape[0],1), ranges=np.asarray((0,1)))
+        return ResultConstrain(count=self._query_constrain().count, shape=(self._query_constrain().shape[0],1), ranges=np.asarray((0,1)))
 
     def __call__(self, query_constrain: Required[QueryConstrainedGetter], **kwargs) -> Self:
         """
