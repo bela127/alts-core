@@ -25,15 +25,15 @@ class Constraint():
     |   A ``Constrain`` describes constraints around data.
     |   Data can be constrained in 3 ways: count, shape, and value ranges.
 
-    :param count: How many data elements are expected
-    :type count: ``int``
+    :param count: How many data elements are expected at most OR a list of permitted count values
+    :type count: ``int`` or Iterable[int] (values >= 0)
     :param shape: What shape the elements must have
     :type shape: `Array Shape <https://www.w3schools.com/python/numpy/numpy_array_shape.asp>`_
     :param ranges: A set of all permitted element values for discrete data sources OR of lower/upper bound per dimension for continuous data sources
-    :type ranges: Union of `NDArrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
+    :type ranges: `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_ with shape (..., 1) or (..., 2) 
     """
-    shape: Tuple[int, ...]
-    count: Optional[int] = None
+    shape: Optional[Tuple[int, ...]]
+    count: Optional[Union[int, NDArray[Shape["xi"], np.dtype[np.unsignedinteger]]]] = None
     ranges: Optional[Union[NDArray[Shape["... element_dims,[xi_min, xi_max]"], np.dtype[np.number]], NDArray[Shape["... element_dims,[xi]"], np.dtype[np.number]]]] = None
 
 
@@ -69,7 +69,9 @@ class Constraint():
         """
         if self.count is None:
             return True
-        if len(elements) <= self.count:
+        if isinstance(self.count, int) and len(elements) <= self.count:
+            return True
+        if isinstance(self.count, np.ndarray) and len(elements) in self.count:
             return True
         return False
     
@@ -203,15 +205,14 @@ class QueryConstrain(Constraint):
     |   A ``QueryConstrain`` describes what kind of queries the given ``Queryable`` object accepts.
     |   Queries can be constrained in 3 ways: count, shape, and value ranges.
 
-    :param count: How many queries can be made
-    :type count: ``int``
-    :param shape: What shape the queries must have
+    :param count: How many data elements are expected at most OR a list of permitted count values
+    :type count: ``int`` or Iterable[int] (values >= 0)
+    :param shape: What shape the elements must have
     :type shape: `Array Shape <https://www.w3schools.com/python/numpy/numpy_array_shape.asp>`_
-    :param ranges: A set of all permitted query values for discrete data sources OR of lower/upper bound per dimension for continuous data sources
-    :type ranges: Union of `NDArrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
-    :return: No return
-    :rtype: None
+    :param ranges: A set of all permitted element values for discrete data sources OR of lower/upper bound per dimension for continuous data sources
+    :type ranges: `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_ with shape (..., 1) or (..., 2) 
     """
+
     def queries_from_norm_pos(self, norm_pos: NDArray[Shape["element_nr, ... element_dims"], np.dtype[np.number]]) -> NDArray[Shape["element_nr, ... element_dims"], np.dtype[np.number]]: 
         return self.elements_from_norm_pos(norm_pos=norm_pos)
     
@@ -232,13 +233,15 @@ class ResultConstrain(Constraint):
     |   A ``ResultConstrain`` describes what kind of results the given ``Queryable`` object gives.
     |   Results can be constrained in 2 ways: shape, and value ranges.
 
-    :param count: How many elements of the given shape are expected to be returned
-    :type count: ``int``
-    :param shape: What shape the queries must have
+    :param count: How many data elements are expected at most OR a list of permitted count values
+    :type count: ``int`` or Iterable[int] (values >= 0)
+    :param shape: What shape the elements must have
     :type shape: `Array Shape <https://www.w3schools.com/python/numpy/numpy_array_shape.asp>`_
-    :param ranges: A set of all permitted query values
-    :type ranges: Union of `NDArrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
+    :param ranges: A set of all permitted element values for discrete data sources OR of lower/upper bound per dimension for continuous data sources
+    :type ranges: `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_ with shape (..., 1) or (..., 2) 
     """
+    shape: Tuple[int, ...]
+
     def to_query_constrain(self) -> QueryConstrain:
         return QueryConstrain(count= self.count, shape= self.shape, ranges= self.ranges)
 
@@ -302,8 +305,8 @@ class Constrained(QueryConstrained, ResultConstrained):
     """
     pass
 
-ResultConstrainGetter = Callable[[],ResultConstrain]
+ResultConstraintGetter = Callable[[],ResultConstrain]
 
-QueryConstrainedGetter = Callable[[],QueryConstrain]
+QueryConstraintGetter = Callable[[],QueryConstrain]
 
-ConstrainedGetter = Callable[[],Constraint]
+ConstraintGetter = Callable[[],Constraint]
