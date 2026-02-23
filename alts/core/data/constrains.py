@@ -220,6 +220,9 @@ class QueryConstrain(Constraint):
     
     def all_queries(self) -> NDArray[Shape["element_nr, ... element_shape"], np.dtype[np.number]]: 
         return self.all_queries()
+    
+    def to_result_constrain(self) -> ResultConstrain:
+        return ResultConstrain(count= self.count, shape= self.shape, ranges= self.ranges)
 
 @dataclass
 class ResultConstrain(Constraint):
@@ -236,7 +239,8 @@ class ResultConstrain(Constraint):
     :param ranges: A set of all permitted query values
     :type ranges: Union of `NDArrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_
     """
-    ...
+    def to_query_constrain(self) -> QueryConstrain:
+        return QueryConstrain(count= self.count, shape= self.shape, ranges= self.ranges)
 
     
 class QueryConstrained():
