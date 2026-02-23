@@ -14,7 +14,7 @@ import numpy as np
 
 from alts.core.configuration import post_init, is_set, Required
 from alts.core.experiment_module import ExperimentModule
-from alts.core.data.constrains import QueryConstrained, ResultConstrain, QueryConstrain, ResultConstrain, QueryConstraintGetter
+from alts.core.data.constrains import QueryConstrained, ResultConstrained, QueryConstrain, ResultConstrain, QueryConstraintGetter
 from alts.core.experiment_modules import ExperimentModules
 
 if TYPE_CHECKING:
