@@ -45,7 +45,7 @@ class QuerySelector(ExperimentModule, ResultConstrained):
         """
         super().post_init()
         self.query_optimizer = self.query_optimizer(exp_modules = self.exp_modules)
-        self.query_decider = self.query_decider(exp_modules = self.exp_modules)
+        self.query_decider = self.query_decider(exp_modules = self.exp_modules, query_constrain = self.query_optimizer.result_constrain().to_query_constrain())
 
 
     def decide(self):
@@ -60,7 +60,7 @@ class QuerySelector(ExperimentModule, ResultConstrained):
         query_flag, queries = self.query_decider.decide(query_candidates, scores)
         if query_flag:
             self.oracles.add(queries)
-    
+
     def result_constrain(self) -> ResultConstrain:
         """
         result_constrain(self) -> ResultConstrain
@@ -70,7 +70,7 @@ class QuerySelector(ExperimentModule, ResultConstrained):
         :return: Own result constrains
         :rtype: :doc:`ResultConstrain </core/data/constrains>`
         """
-        ...
+        return self.query_decider.result_constrain()
 
 
 

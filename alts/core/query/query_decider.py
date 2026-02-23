@@ -14,7 +14,7 @@ import numpy as np
 
 from alts.core.configuration import post_init, is_set, Required
 from alts.core.experiment_module import ExperimentModule
-from alts.core.data.constrains import QueryConstrained, QueryConstrain, ResultConstrain, QueryConstrainedGetter
+from alts.core.data.constrains import QueryConstrained, QueryConstrain, ResultConstrain, QueryConstraintGetter
 from alts.core.experiment_modules import ExperimentModules
 
 if TYPE_CHECKING:
@@ -29,7 +29,7 @@ class QueryDecider(ExperimentModule, QueryConstrained):
     |   This module decides which best-scoring queries are worth the resources needed to obtain their results.
     |   Outside the first learning iteration of the model you can expect the QueryDecider to receive a non-empty list of query candidates.
     """
-    _query_constrain: QueryConstrainedGetter = post_init()
+    _query_constrain: QueryConstraintGetter
 
     @abstractmethod
     def decide(self, query_candidates: NDArray[Shape["query_nr, ... query_dims"], Number], scores: NDArray[Shape["query_nr, [query_score]"], Number]) -> Tuple[bool, NDArray[Shape["query_nr, ... query_dims"], Number]]: # type: ignore
@@ -50,11 +50,14 @@ class QueryDecider(ExperimentModule, QueryConstrained):
         raise NotImplementedError()
 
     def query_constrain(self) -> QueryConstrain:
-        return self.exp_modules.query_selector.query_optimizer.result_constrain().to_result_constrain()
-    def result_constrain(self) -> ResultConstrain:
-        return ResultConstrain(count=None,shape=self._query_constrain().shape,ranges=None)
+        return self._query_constrain()
     
-    def __call__(self, query_constrain: Required[QueryConstrainedGetter], **kwargs) -> Self:
+    @abstractmethod
+    def result_constrain(self) -> ResultConstrain:
+        raise NotImplementedError("Use a non-abstract QueryDecider.")
+
+
+    def __call__(self, query_constrain: Required[QueryConstraintGetter], **kwargs) -> Self:
         """
         __call__(self, query_constrain, **kwargs) -> Self
         | **Description**

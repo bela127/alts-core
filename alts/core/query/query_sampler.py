@@ -34,8 +34,6 @@ class QuerySampler(ExperimentModule):
     :type num_queries: int
     """
     num_queries: int = init(default=1)
-    _query_constrain: QueryConstrain = post_init()
-    _result_constrain: ResultConstrain = post_init()
 
     @abstractmethod
     def sample(self, num_queries: Optional[int] = None) -> NDArray[Shape["query_nr, ... query_dims"], Number]: # type: ignore
@@ -52,45 +50,13 @@ class QuerySampler(ExperimentModule):
         """
         raise NotImplementedError("Please use a non abstract ...QuerySampler.")
     
-    @abstractmethod
-    def query_constrain(self) -> QueryConstrain:
-        """
-        query_constrain(self) -> QueryConstrain
-        | **Description**
-        |   See :func:`DataSource.query_constrain()`
-        |   This method is abstract.
-
-        :return: Constrains around queries
-        :rtype: QueryConstrain
-        :throws: NotImplemntedError
-        """
-        return self._query_constrain
-    
-    @abstractmethod
     def result_constrain(self) -> ResultConstrain:
         """
-        resuöt_constrain(self) -> ResultConstrain
+        result_constrain(self) -> ResultConstrain
         | **Description**
         |   See :func:`DataSource.result_constrain()`
-        |   This method is abstract.
 
         :return: Constrains around results
         :rtype: QueryResult
-        :throws: NotImplemntedError
         """
-        return self._result_constrain
-    
-    def __call__(self, query_constrain: Required[QueryConstrainedGetter], **kwargs) -> Self:
-        """
-        __call__(self, query_constrain, **kwargs) -> Self
-        | **Description**
-        |   Returns a QuerySampler with the given query constraint.
-
-        :param query_constrain: Constrains of the queries the queue holds.
-        :type query_constrains: :doc:`QueryConstrain </core/data/constrains>`
-        :return: Configured QueryOptimizer
-        :rtype: QueryOptimizer
-        """
-        obj =  super().__call__(**kwargs)
-        obj._query_constrain = is_set(query_constrain, "QuerySampler.query_constrain") # type: ignore
-        return obj
+        return ResultConstrain(count=None, shape=self.oracles.query_constrain().shape, ranges=self.oracles.query_constrain().ranges)

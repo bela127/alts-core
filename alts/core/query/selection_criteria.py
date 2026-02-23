@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING
 
 from alts.core.configuration import post_init, Required, is_set
 from alts.core.experiment_module import ExperimentModule
-from alts.core.data.constrains import QueryConstrain, ResultConstrain, QueryConstrainedGetter
+from alts.core.data.constrains import Constrained, QueryConstrain, ResultConstrain, QueryConstraintGetter
 from alts.core.query.queryable import Queryable
 
 if TYPE_CHECKING:
@@ -19,12 +19,13 @@ if TYPE_CHECKING:
     from nptyping import NDArray, Shape, Number
     
 
-class SelectionCriteria(ExperimentModule, Queryable):
+class SelectionCriteria(ExperimentModule, Queryable, Constrained):
     """
     SelectionCriteria()
     | **Description**
     |   A ``SelectionCriteria`` is an algorithm which gives scores to query candidates. Higher scores correspond to more informative/valuable queries.    
     """
+    _query_constrain: QueryConstraintGetter
 
     @abstractmethod
     def query(self, queries: NDArray[Shape["query_nr, ... query_shape"], Number]) -> Tuple[NDArray[Shape["query_nr, ... query_shape"], Number], NDArray[Shape["query_nr, [score]"], Number]]: # type: ignore
@@ -51,7 +52,7 @@ class SelectionCriteria(ExperimentModule, Queryable):
         :return: Constrains around queries
         :rtype: QueryConstrain
         """
-        return self.oracles.query_constrain()
+        return self._query_constrain()
 
     def result_constrain(self) -> ResultConstrain:
         """
@@ -62,4 +63,19 @@ class SelectionCriteria(ExperimentModule, Queryable):
         :return: Constrains around results
         :rtype: ResultConstrain
         """
-        return ResultConstrain(count=self.oracles.query_constrain().count, shape=(self.oracles.query_constrain().shape[0],1), ranges=np.asarray((0,1)))
+        return self._query_constrain().to_result_constrain()
+    
+    def __call__(self, query_constrain: Required[QueryConstraintGetter], **kwargs) -> Self:
+        """
+        __call__(self, query_constrain, **kwargs) -> Self
+        | **Description**
+        |   Returns a SelectionCriteria with the given query constraint.
+
+        :param query_constrain: Constraints of the SelectionCriteria.
+        :type query_constrains: :doc:`QueryConstrain </core/data/constrains>`
+        :return: Configured SelectionCriteria
+        :rtype: SelectionCriteria
+        """
+        obj =  super().__call__(**kwargs)
+        obj._query_constrain = is_set(query_constrain, "SelectionCriteria.query_constrain")
+        return obj

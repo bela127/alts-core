@@ -26,7 +26,7 @@ if TYPE_CHECKING:
     from nptyping import NDArray, Number, Shape
     
 @dataclass
-class QueryOptimizer(ExperimentModule, ResultConstrained):
+class QueryOptimizer(ExperimentModule):
     """
     QueryOptimizer(selection_criteria)
     | **Description**
@@ -47,7 +47,7 @@ class QueryOptimizer(ExperimentModule, ResultConstrained):
         |   Initializes ``selection_criteria`` with its experiment modules.
         """
         super().post_init()
-        self.selection_criteria = self.selection_criteria(exp_modules = self.exp_modules)
+        self.selection_criteria = self.selection_criteria(exp_modules = self.exp_modules, query_constrain = self.result_constrain().to_query_constrain())
 
     def select(self, num_queries = None) -> Tuple[NDArray[Shape["query_nr, ... query_dims"], Number], NDArray[Shape["query_nr, [query_score]"], Number]]: # type: ignore
         """
@@ -64,4 +64,4 @@ class QueryOptimizer(ExperimentModule, ResultConstrained):
         raise NotImplementedError
     
     def result_constrain(self) -> ResultConstrain:
-        return ResultConstrain(count=self.oracles.query_constrain().count, shape=(self.oracles.query_constrain().shape[0],1), ranges=np.asarray((0,1)))
+        return ResultConstrain(count=None, shape=self.oracles.query_constrain().shape, ranges=self.oracles.query_constrain().ranges)
