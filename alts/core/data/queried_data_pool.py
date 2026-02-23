@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 
     from nptyping import  NDArray, Number, Shape
 
-    from alts.core.data.constrains import ResultConstrainGetter, QueryConstraintGetter, Constrained
+    from alts.core.data.constrains import ResultConstraintGetter, QueryConstraintGetter, Constrained
 
 
 class QueriedDataPool(DelayedPublisher, Queryable):
@@ -30,7 +30,7 @@ class QueriedDataPool(DelayedPublisher, Queryable):
     |   It contains queries, results and the last added queries and results.
     """
     _query_constrain: QueryConstraintGetter = post_init()
-    _result_constrain: ResultConstrainGetter = post_init()
+    _result_constrain: ResultConstraintGetter = post_init()
 
     def __init__(self):
         """
@@ -72,7 +72,7 @@ class QueriedDataPool(DelayedPublisher, Queryable):
 
         self.request_update()
         
-    def __call__(self, query_constrain: Required[QueryConstraintGetter] = None, result_constrain: Required[ResultConstrainGetter] = None, **kwargs) -> Self:
+    def __call__(self, query_constrain: Required[QueryConstraintGetter] = None, result_constrain: Required[ResultConstraintGetter] = None, **kwargs) -> Self:
         """
         __call__(self, query_constrain, result_constrain) -> Self
         | **Description**
