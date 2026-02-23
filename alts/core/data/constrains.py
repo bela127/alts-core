@@ -32,7 +32,7 @@ class Constraint():
     :param ranges: A set of all permitted element values for discrete data sources OR of lower/upper bound per dimension for continuous data sources
     :type ranges: `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_ with shape (..., 1) or (..., 2) 
     """
-    shape: Optional[Tuple[int, ...]]
+    shape: Tuple[int, ...]
     count: Optional[Union[int, Tuple[int, ...]]] = None
     ranges: Optional[Union[NDArray[Shape["... element_dims,[xi_min, xi_max]"], np.dtype[np.number]], NDArray[Shape["... element_dims,[xi]"], np.dtype[np.number]]]] = None
 
@@ -240,7 +240,6 @@ class ResultConstrain(Constraint):
     :param ranges: A set of all permitted element values for discrete data sources OR of lower/upper bound per dimension for continuous data sources
     :type ranges: `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_ with shape (..., 1) or (..., 2) 
     """
-    shape: Tuple[int, ...]
 
     def to_query_constrain(self) -> QueryConstrain:
         return QueryConstrain(count= self.count, shape= self.shape, ranges= self.ranges)
