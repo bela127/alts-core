@@ -33,7 +33,7 @@ class Constraint():
     :type ranges: `NDArray <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`_ with shape (..., 1) or (..., 2) 
     """
     shape: Optional[Tuple[int, ...]]
-    count: Optional[Union[int, NDArray[Shape["xi"], np.dtype[np.unsignedinteger]]]] = None
+    count: Optional[Union[int, Tuple[int, ...]]] = None
     ranges: Optional[Union[NDArray[Shape["... element_dims,[xi_min, xi_max]"], np.dtype[np.number]], NDArray[Shape["... element_dims,[xi]"], np.dtype[np.number]]]] = None
 
 
@@ -71,7 +71,7 @@ class Constraint():
             return True
         if isinstance(self.count, int) and len(elements) <= self.count:
             return True
-        if isinstance(self.count, np.ndarray) and len(elements) in self.count:
+        if isinstance(self.count, tuple) and len(elements) in self.count:
             return True
         return False
     
