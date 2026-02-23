@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING
 from dataclasses import dataclass, field
 from abc import abstractmethod
 from typing_extensions import Self
+import numpy as np
 
 from alts.core.configuration import post_init, is_set, Required
 from alts.core.experiment_module import ExperimentModule
@@ -49,8 +50,7 @@ class QueryDecider(ExperimentModule, QueryConstrained):
         raise NotImplementedError()
 
     def query_constrain(self) -> QueryConstrain:
-        return self._query_constrain()
-    
+        return self.exp_modules.query_selector.query_optimizer.result_constrain().to_result_constrain()
     def result_constrain(self) -> ResultConstrain:
         return ResultConstrain(count=None,shape=self._query_constrain().shape,ranges=None)
     

@@ -10,8 +10,9 @@ from dataclasses import dataclass
 from alts.core.configuration import Required, init, post_init, is_set
 
 from alts.core.experiment_module import ExperimentModule
-from alts.core.data.constrains import QueryConstrained, QueryConstrainedGetter, ResultConstrain
+from alts.core.data.constrains import ResultConstrained, QueryConstrainedGetter, ResultConstrain
 from numpy import shape
+import numpy as np
 
 if TYPE_CHECKING:
     from typing_extensions import Self #type: ignore
@@ -25,7 +26,7 @@ if TYPE_CHECKING:
     from nptyping import NDArray, Number, Shape
     
 @dataclass
-class QueryOptimizer(ExperimentModule, QueryConstrained):
+class QueryOptimizer(ExperimentModule, ResultConstrained):
     """
     QueryOptimizer(selection_criteria)
     | **Description**
@@ -38,7 +39,6 @@ class QueryOptimizer(ExperimentModule, QueryConstrained):
     :type selection_criteria: SelectionCriteria
     """
     selection_criteria: SelectionCriteria = init()
-    _query_constrain: QueryConstrainedGetter = post_init()
 
     def post_init(self):
         """
@@ -47,7 +47,7 @@ class QueryOptimizer(ExperimentModule, QueryConstrained):
         |   Initializes ``selection_criteria`` with its experiment modules.
         """
         super().post_init()
-        self.selection_criteria = self.selection_criteria(exp_modules = self.exp_modules, query_constrain=self._query_constrain)
+        self.selection_criteria = self.selection_criteria(exp_modules = self.exp_modules)
 
     def select(self, num_queries = None) -> Tuple[NDArray[Shape["query_nr, ... query_dims"], Number], NDArray[Shape["query_nr, [query_score]"], Number]]: # type: ignore
         """
@@ -63,23 +63,5 @@ class QueryOptimizer(ExperimentModule, QueryConstrained):
         """
         raise NotImplementedError
     
-    def query_constrain(self) -> QueryConstrain:
-        return self._query_constrain()
-    
     def result_constrain(self) -> ResultConstrain:
-        return ResultConstrain(shape=self.query_constrain().shape)
-    
-    def __call__(self, query_constrain: Required[QueryConstrainedGetter], **kwargs) -> Self:
-        """
-        __call__(self, query_constrain, **kwargs) -> Self
-        | **Description**
-        |   Returns a QueryOptimizer with the given query constraint.
-
-        :param query_constrain: Constrains of the queries the queue holds.
-        :type query_constrains: :doc:`QueryConstrain </core/data/constrains>`
-        :return: Configured QueryOptimizer
-        :rtype: QueryOptimizer
-        """
-        obj =  super().__call__(**kwargs)
-        obj._query_constrain = is_set(query_constrain, "QueryOptimizer.query_constrain")
-        return obj
+        return ResultConstrain(count=self.oracles.query_constrain().count, shape=(self.oracles.query_constrain().shape[0],1), ranges=np.asarray((0,1)))

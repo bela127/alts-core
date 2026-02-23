@@ -12,7 +12,7 @@ from alts.core.query.query_optimizer import QueryOptimizer
 from alts.core.query.query_decider import QueryDecider
 from alts.core.configuration import Required, init, is_set, post_init
 from alts.core.experiment_module import ExperimentModule
-from alts.core.data.constrains import QueryConstrained, QueryConstrain, ResultConstrain, QueryConstrainedGetter
+from alts.core.data.constrains import ResultConstrained, QueryConstrain, ResultConstrain, QueryConstrainedGetter
 
 
 
@@ -22,7 +22,7 @@ if TYPE_CHECKING:
     from alts.core.subscribable import Subscribable
 
 @dataclass
-class QuerySelector(ExperimentModule, QueryConstrained):
+class QuerySelector(ExperimentModule, ResultConstrained):
     """
     QuerySelector(query_optimizer, query_decider)
     | **Description**
@@ -36,7 +36,6 @@ class QuerySelector(ExperimentModule, QueryConstrained):
     """
     query_optimizer: QueryOptimizer = init()
     query_decider: QueryDecider = init()
-    _query_constrain: QueryConstrainedGetter = post_init()
 
     def post_init(self):
         """
@@ -45,9 +44,8 @@ class QuerySelector(ExperimentModule, QueryConstrained):
         |   Initializes ``query_optimizer`` and ``query_decider`` with its experiment modules.
         """
         super().post_init()
-        self._query_constrain = self.exp_modules.oracles.query_constrain
-        self.query_optimizer = self.query_optimizer(exp_modules = self.exp_modules, query_constrain= self.query_constrain)
-        self.query_decider = self.query_decider(exp_modules = self.exp_modules, query_constrain= self.query_constrain)
+        self.query_optimizer = self.query_optimizer(exp_modules = self.exp_modules)
+        self.query_decider = self.query_decider(exp_modules = self.exp_modules)
 
 
     def decide(self):
@@ -62,17 +60,6 @@ class QuerySelector(ExperimentModule, QueryConstrained):
         query_flag, queries = self.query_decider.decide(query_candidates, scores)
         if query_flag:
             self.oracles.add(queries)
-
-    def query_constrain(self) -> QueryConstrain:
-        """
-        query_constrain(self) -> QueryConstrain
-        | **Description**
-        |   Returns its query constrains.
-
-        :return: Own query constrains
-        :rtype: :doc:`QueryConstrain </core/data/constrains>`
-        """
-        return self._query_constrain()
     
     def result_constrain(self) -> ResultConstrain:
         """
@@ -83,7 +70,7 @@ class QuerySelector(ExperimentModule, QueryConstrained):
         :return: Own result constrains
         :rtype: :doc:`ResultConstrain </core/data/constrains>`
         """
-        return ResultConstrain(shape=self._query_constrain().shape)
+        ...
 
 
 

@@ -25,7 +25,6 @@ class SelectionCriteria(ExperimentModule, Queryable):
     | **Description**
     |   A ``SelectionCriteria`` is an algorithm which gives scores to query candidates. Higher scores correspond to more informative/valuable queries.    
     """
-    _query_constrain: QueryConstrainedGetter = post_init()
 
     @abstractmethod
     def query(self, queries: NDArray[Shape["query_nr, ... query_shape"], Number]) -> Tuple[NDArray[Shape["query_nr, ... query_shape"], Number], NDArray[Shape["query_nr, [score]"], Number]]: # type: ignore
@@ -52,7 +51,7 @@ class SelectionCriteria(ExperimentModule, Queryable):
         :return: Constrains around queries
         :rtype: QueryConstrain
         """
-        return self._query_constrain()
+        return self.oracles.query_constrain()
 
     def result_constrain(self) -> ResultConstrain:
         """
@@ -63,19 +62,4 @@ class SelectionCriteria(ExperimentModule, Queryable):
         :return: Constrains around results
         :rtype: ResultConstrain
         """
-        return ResultConstrain(count=self._query_constrain().count, shape=(self._query_constrain().shape[0],1), ranges=np.asarray((0,1)))
-
-    def __call__(self, query_constrain: Required[QueryConstrainedGetter], **kwargs) -> Self:
-        """
-        __call__(self, query_constrain, **kwargs) -> Self
-        | **Description**
-        |   Returns a SelectionCriteria with the given query constraint.
-
-        :param query_constrain: Constraints of the SelectionCriteria.
-        :type query_constrains: :doc:`QueryConstrain </core/data/constrains>`
-        :return: Configured SelectionCriteria
-        :rtype: SelectionCriteria
-        """
-        obj =  super().__call__(**kwargs)
-        obj._query_constrain = is_set(query_constrain, "SelectionCriteria.query_constrain")
-        return obj
+        return ResultConstrain(count=self.oracles.query_constrain().count, shape=(self.oracles.query_constrain().shape[0],1), ranges=np.asarray((0,1)))
