@@ -25,7 +25,7 @@ class SelectionCriteria(ExperimentModule, Queryable, Constrained):
     | **Description**
     |   A ``SelectionCriteria`` is an algorithm which gives scores to query candidates. Higher scores correspond to more informative/valuable queries.    
     """
-    _query_constrain: QueryConstraintGetter
+    _query_constrain: QueryConstraintGetter = post_init()
 
     @abstractmethod
     def query(self, queries: NDArray[Shape["query_nr, ... query_shape"], Number]) -> Tuple[NDArray[Shape["query_nr, ... query_shape"], Number], NDArray[Shape["query_nr, [score]"], Number]]: # type: ignore

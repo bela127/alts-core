@@ -29,7 +29,7 @@ class QueryDecider(ExperimentModule, QueryConstrained):
     |   This module decides which best-scoring queries are worth the resources needed to obtain their results.
     |   Outside the first learning iteration of the model you can expect the QueryDecider to receive a non-empty list of query candidates.
     """
-    _query_constrain: QueryConstraintGetter
+    _query_constrain: QueryConstraintGetter = post_init()
 
     @abstractmethod
     def decide(self, query_candidates: NDArray[Shape["query_nr, ... query_dims"], Number], scores: NDArray[Shape["query_nr, [query_score]"], Number]) -> Tuple[bool, NDArray[Shape["query_nr, ... query_dims"], Number]]: # type: ignore
