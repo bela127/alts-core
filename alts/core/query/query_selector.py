@@ -45,7 +45,7 @@ class QuerySelector(ExperimentModule, ResultConstrained):
         """
         super().post_init()
         self.query_optimizer = self.query_optimizer(exp_modules = self.exp_modules)
-        self.query_decider = self.query_decider(exp_modules = self.exp_modules, query_constrain = self.query_optimizer.result_constrain().to_query_constrain())
+        self.query_decider = self.query_decider(exp_modules = self.exp_modules, query_constrain = self.query_optimizer.result_constrain().to_query_constrain)
 
 
     def decide(self):
