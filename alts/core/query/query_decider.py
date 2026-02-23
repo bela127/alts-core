@@ -14,7 +14,7 @@ import numpy as np
 
 from alts.core.configuration import post_init, is_set, Required
 from alts.core.experiment_module import ExperimentModule
-from alts.core.data.constrains import QueryConstrained, QueryConstrain, ResultConstrain, QueryConstraintGetter
+from alts.core.data.constrains import QueryConstrained, ResultConstrain, QueryConstrain, ResultConstrain, QueryConstraintGetter
 from alts.core.experiment_modules import ExperimentModules
 
 if TYPE_CHECKING:
@@ -22,7 +22,7 @@ if TYPE_CHECKING:
     from nptyping import NDArray, Number, Shape
 
 @dataclass
-class QueryDecider(ExperimentModule, QueryConstrained):
+class QueryDecider(ExperimentModule, QueryConstrained, ResultConstrained):
     """
     QueryDecider()
     | **Description**

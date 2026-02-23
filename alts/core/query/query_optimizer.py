@@ -26,7 +26,7 @@ if TYPE_CHECKING:
     from nptyping import NDArray, Number, Shape
     
 @dataclass
-class QueryOptimizer(ExperimentModule):
+class QueryOptimizer(ExperimentModule, ResultConstrained):
     """
     QueryOptimizer(selection_criteria)
     | **Description**

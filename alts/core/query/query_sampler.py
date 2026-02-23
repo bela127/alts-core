@@ -19,11 +19,11 @@ if TYPE_CHECKING:
     from typing_extensions import Self #type: ignore
     from typing import Optional
     from nptyping import NDArray, Number, Shape
-    from alts.core.data.constrains import QueryConstrain, ResultConstrain, QueryConstraintGetter
+    from alts.core.data.constrains import QueryConstrain, ResultConstrain, ResultConstrained, QueryConstraintGetter
 
 
 @dataclass
-class QuerySampler(ExperimentModule):
+class QuerySampler(ExperimentModule, ResultConstrained):
     """
     QuerySampler(num_queries)
     | **Description**
