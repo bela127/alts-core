@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from typing_extensions import Self
     from typing import Tuple
     from nptyping import  NDArray, Shape
-    from alts.core.data.constrains import QueryConstrainedGetter, QueryConstrain
+    from alts.core.data.constrains import QueryConstraintGetter, QueryConstrain
 
 @dataclass
 class DataBehavior(Configurable, QueryConstrained):
@@ -45,7 +45,7 @@ class DataBehavior(Configurable, QueryConstrained):
     start_time: float = init(default=0)
     stop_time: float = init(default=600)
 
-    _query_constrain: QueryConstrainedGetter = post_init()
+    _query_constrain: QueryConstraintGetter = post_init()
 
     def behavior(self) -> 'Tuple[NDArray[Shape["change_times"], np.dtype[np.number]], NDArray[Shape["change_values"], np.dtype[np.number]]]': 
         """
@@ -65,7 +65,7 @@ class DataBehavior(Configurable, QueryConstrained):
     def result_constrain(self) -> ResultConstrain:
         return ResultConstrain(shape=self.query_constrain().shape)
 
-    def __call__(self, query_constrain: Required[QueryConstrainedGetter], **kwargs) -> Self:
+    def __call__(self, query_constrain: Required[QueryConstraintGetter], **kwargs) -> Self:
         """
         __call__(self, query_constrain, **kwargs) -> Self
         | **Description**

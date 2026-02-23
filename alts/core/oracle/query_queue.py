@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from typing_extensions import Self
     from nptyping import NDArray, Shape, Number
     from typing import  Tuple
-    from alts.core.data.constrains import QueryConstrainedGetter, QueryConstrain
+    from alts.core.data.constrains import QueryConstraintGetter, QueryConstrain
 
 @dataclass
 class QueryQueue(DelayedPublisher, QueryConstrained):
@@ -27,7 +27,7 @@ class QueryQueue(DelayedPublisher, QueryConstrained):
     |   A buffer for queries in shape of a query. 
     """
     queries: NDArray[Shape["query_nr, ... query_shape"], Number] = post_init() # type: ignore
-    _query_constrain: QueryConstrainedGetter = post_init()
+    _query_constrain: QueryConstraintGetter = post_init()
 
     _latest_add: NDArray[Shape[" ... query_shape"], Number] = post_init() # type: ignore
     _latest_pop: NDArray[Shape[" ... query_shape"], Number] = post_init() # type: ignore
@@ -171,7 +171,7 @@ class QueryQueue(DelayedPublisher, QueryConstrained):
         """
         return ResultConstrain(count=None,shape=self._query_constrain().shape,ranges=None)
 
-    def __call__(self, query_constrain: Required[QueryConstrainedGetter], **kwargs) -> Self:
+    def __call__(self, query_constrain: Required[QueryConstraintGetter], **kwargs) -> Self:
         """
         __call__(self, query_constrain, **kwargs) -> Self
         | **Description**

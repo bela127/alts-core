@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     from typing_extensions import Self #type: ignore
     from typing import Optional
     from nptyping import NDArray, Number, Shape
-    from alts.core.data.constrains import QueryConstrain, ResultConstrain, QueryConstrainedGetter
+    from alts.core.data.constrains import QueryConstrain, ResultConstrain, QueryConstraintGetter
 
 
 @dataclass

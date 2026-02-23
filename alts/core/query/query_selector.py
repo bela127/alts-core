@@ -12,7 +12,7 @@ from alts.core.query.query_optimizer import QueryOptimizer
 from alts.core.query.query_decider import QueryDecider
 from alts.core.configuration import Required, init, is_set, post_init
 from alts.core.experiment_module import ExperimentModule
-from alts.core.data.constrains import ResultConstrained, QueryConstrain, ResultConstrain, QueryConstrainedGetter
+from alts.core.data.constrains import ResultConstrained, QueryConstrain, ResultConstrain, QueryConstraintGetter
 
 
 

@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from alts.core.configuration import Required, init, post_init, is_set
 
 from alts.core.experiment_module import ExperimentModule
-from alts.core.data.constrains import ResultConstrained, QueryConstrainedGetter, ResultConstrain
+from alts.core.data.constrains import ResultConstrained, QueryConstraintGetter, ResultConstrain
 from numpy import shape
 import numpy as np
 

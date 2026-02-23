@@ -10,7 +10,7 @@ from abc import abstractmethod, abstractproperty
 
 
 from alts.core.configuration import Configurable, Required, is_set
-from alts.core.data.constrains import Constrained, QueryConstrain, ResultConstrain, QueryConstrainedGetter, ResultConstrainGetter
+from alts.core.data.constrains import Constrained, QueryConstrain, ResultConstrain, QueryConstraintGetter, ResultConstrainGetter
 
 
 if TYPE_CHECKING:
