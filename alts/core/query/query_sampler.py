@@ -13,13 +13,12 @@ from typing_extensions import Self
 from alts.core.experiment_module import ExperimentModule
 from alts.core.configuration import init, post_init, Required, is_set
 from alts.core.experiment_modules import ExperimentModules
-from alts.core.data.constrains import ResultConstrained
+from alts.core.data.constrains import ResultConstrained, ResultConstrain
 
 if TYPE_CHECKING:
     from typing_extensions import Self #type: ignore
     from typing import Optional
     from nptyping import NDArray, Number, Shape
-    from alts.core.data.constrains import QueryConstrain, ResultConstrain, QueryConstraintGetter
 
 
 @dataclass
